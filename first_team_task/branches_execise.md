@@ -10,6 +10,8 @@ jcs4ua - I forgot how to ride a bike
 
 hrk9bk: I'm a big Los Angeles Lakers Fan!
 
+ss4yr: I love photography
+
 #### This line should stay in the file and nothing should be changed in the section below
 
 After you override the line #5, you should commit it and create a pull request.
