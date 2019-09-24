@@ -14,6 +14,8 @@ ss4yr: I love photography
 
 agy8gc - I'm a huge fan of horror movies!
 
+sam6tn: I used to swim!
+
 #### This line should stay in the file and nothing should be changed in the section below
 
 After you override the line #5, you should commit it and create a pull request.
