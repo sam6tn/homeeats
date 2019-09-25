@@ -21,27 +21,27 @@ As a cook, I should be able to set when I am open and closed, so that customers 
 As a cook, I should be able to accept or reject meal orders so that I have control over what meals and how many meals I am making
 As a cook, I should be able to set an estimated cooking and delivery time, so that customers are aware of an approximate waiting time
 
-Customer/Diner Users:
-As a customer, I should be able to see the ingredients in the dishes I plan to order
-As a customer, I should be able to see a picture of the dish I plan to order
-As a customer, I should be able to see the cost of the dish I plan to order
-As a customer, I should be able to see the estimated time of cooking for the dish I plan to order
-As a customer, I should be able to view the type of food I plan to order (e.g. Chinese, Thai, Indian, Mexican, etc.)
-As a customer I should be able to sort the dishes by price
-As a customer I should be able to sort the dishes by rating
-As a customer I should be able to sort the dishes by the distance where the cooks are from me
-As a customer I should be able to sort the dishes by the type of food I plan to order (e.g. Chinese, Thai, Indian, Mexican, etc.)
-As a customer I should be able to rate the food I purchase on a scale of 0-5 stars
-As a customer, I should be able to favorite a cook or a dish, so that I can easily find the cook or dish again
-As a customer, I should be able to order at least 3 hours in advance
-As a customer, I should be able to review the dishes that I order, so that other customers are aware of the quality of that dish
-As a customer, I should be able to see a delivery status that indicates started cooking, on the way, and delivered so that I know when to expect my food
-As a customer, I should be able to set multiple addresses so that my food can be delivered to a location, even if I am not yet there
-As a customer, I should be able to see an average rating for each dish if the data is available
-As a customer, I should be able to cancel an order that has not started cooking yet so that I don’t waste food and money if I change my mind
+Customer/Diner Users: <br/>
+- As a customer, I should be able to see the ingredients in the dishes I plan to order <br/>
+- As a customer, I should be able to see a picture of the dish I plan to order <br/>
+- As a customer, I should be able to see the cost of the dish I plan to order <br/>
+- As a customer, I should be able to see the estimated time of cooking for the dish I plan to order <br/>
+- As a customer, I should be able to view the type of food I plan to order (e.g. Chinese, Thai, Indian, Mexican, etc.) <br/>
+- As a customer I should be able to sort the dishes by price <br/>
+- As a customer I should be able to sort the dishes by rating <br/>
+- As a customer I should be able to sort the dishes by the distance where the cooks are from me <br/>
+- As a customer I should be able to sort the dishes by the type of food I plan to order (e.g. Chinese, Thai, Indian, Mexican, etc.) <br/>
+- As a customer I should be able to rate the food I purchase on a scale of 0-5 stars <br/>
+- As a customer, I should be able to favorite a cook or a dish, so that I can easily find the cook or dish again <br/>
+- As a customer, I should be able to order at least 3 hours in advance <br/>
+- As a customer, I should be able to review the dishes that I order, so that other customers are aware of the quality of that dish <br/>
+- As a customer, I should be able to see a delivery status that indicates started cooking, on the way, and delivered so that I know when to expect my food
+- As a customer, I should be able to set multiple addresses so that my food can be delivered to a location, even if I am not yet there
+- As a customer, I should be able to see an average rating for each dish if the data is available
+- As a customer, I should be able to cancel an order that has not started cooking yet so that I don’t waste food and money if I change my mind
 
-Added From Meeting Notes:
-As a system administrator I want to ensure that a payment option is selected prior to an order being processed, so that I can ensure meals are paid for before a cook begins to prepare the dish. 
-As a customer I want to be able to tip the chef preparing my dish so that I can reward and encourage my favorite chefs. 
-As a customer I want to be able to message my cook to be able to customize the order to my liking. 
-As a customer, I want to be personal information to be anonymous when messaging the cook, so that my information is kept private
+Added From Meeting Notes: <br/>
+- As a system administrator I want to ensure that a payment option is selected prior to an order being processed, so that I can ensure meals are paid for before a cook begins to prepare the dish. <br/>
+- As a customer I want to be able to tip the chef preparing my dish so that I can reward and encourage my favorite chefs. <br/>
+- As a customer I want to be able to message my cook to be able to customize the order to my liking. <br/>
+- As a customer, I want to be personal information to be anonymous when messaging the cook, so that my information is kept private <br/>
