@@ -1,21 +1,21 @@
-Admin Users <br/>
-As an admin, I want to approve any cook account before it is created, so that I can guarantee the customers a reliable experience
-As an admin, I want to make sure any updates to a cook’s personal account information are reviewed, to maintain their accuracy
-As an admin, I want to be able to review reports and reviews, and potentially ban users or cooks, to keep the site safe from bad actors
+Admin Users: <br/>
+- As an admin, I want to approve any cook account before it is created, so that I can guarantee the customers a reliable experience <br/>
+- As an admin, I want to make sure any updates to a cook’s personal account information are reviewed, to maintain their accuracy <br/>
+- As an admin, I want to be able to review reports and reviews, and potentially ban users or cooks, to keep the site safe from bad actors <br/>
 
 Cook Users:
-As a cook, I should be able to apply as a cook with my First Name, Last Name, Address, and Kitchen License
-As a cook, I should not be able to login to my account unless my application has been approved
-As a cook, I should be able to set what plates are available as soon as I log in, so that I can quickly get online and start receiving orders
-As a cook, I should be required to enter/edit my name, email, phone and address, so that I can be contacted in many ways
-As a cook, I should be able to add a new dish to my list of available dishes
-As a cook, I should be able to set a picture, ingredients, price, time to deliver, name, and type of food
-As a cook, I should be able to set which dishes I’m willing to make, so that I don’t have to make dishes that I don’t have their ingredients.
-As a cook, I should be able to report customers and their reviews, in order to protect my reputation from unfounded criticism and ban disrespectful or malicious customers
-As a cook, I should be able to make a separate account if I want to order through the site, so that I don’t get confused between things I’ve ordered and things I have to cook
-As a cook, I should be able to set my own delivery range centered at my address, so that I am not pressured to deliver outside of my comfort zone
-As a cook, I should be able to tag food as vegan, allergy, etc. so that customers can choose foods which are suitable for them
-As a cook, I should be able to set a certain mileage I’m willing to travel so that I can have quick and efficient delivery service
+- As a cook, I should be able to apply as a cook with my First Name, Last Name, Address, and Kitchen License <br/>
+- As a cook, I should not be able to login to my account unless my application has been approved <br/>
+- As a cook, I should be able to set what plates are available as soon as I log in, so that I can quickly get online and start receiving orders <br/>
+- As a cook, I should be required to enter/edit my name, email, phone and address, so that I can be contacted in many ways <br/>
+- As a cook, I should be able to add a new dish to my list of available dishes <br/>
+- As a cook, I should be able to set a picture, ingredients, price, time to deliver, name, and type of food <br/>
+- As a cook, I should be able to set which dishes I’m willing to make, so that I don’t have to make dishes that I don’t have their ingredients. <br/>
+- As a cook, I should be able to report customers and their reviews, in order to protect my reputation from unfounded criticism and ban disrespectful or malicious customers <br/>
+- As a cook, I should be able to make a separate account if I want to order through the site, so that I don’t get confused between things I’ve ordered and things I have to cook <br/>
+- As a cook, I should be able to set my own delivery range centered at my address, so that I am not pressured to deliver outside of my comfort zone <br/>
+- As a cook, I should be able to tag food as vegan, allergy, etc. so that customers can choose foods which are suitable for them
+- As a cook, I should be able to set a certain mileage I’m willing to travel so that I can have quick and efficient delivery service
 As a cook, I should be able to set a limit on how many meals I can make in a specified time frame, so that I don’t get overbooked
 As a cook, I should be able to set when I am open and closed, so that customers can’t attempt to order food from me when I am not available
 As a cook, I should be able to accept or reject meal orders so that I have control over what meals and how many meals I am making
