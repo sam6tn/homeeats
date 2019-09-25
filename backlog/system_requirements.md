@@ -14,12 +14,12 @@ Cook Users:
 - As a cook, I should be able to report customers and their reviews, in order to protect my reputation from unfounded criticism and ban disrespectful or malicious customers <br/>
 - As a cook, I should be able to make a separate account if I want to order through the site, so that I don’t get confused between things I’ve ordered and things I have to cook <br/>
 - As a cook, I should be able to set my own delivery range centered at my address, so that I am not pressured to deliver outside of my comfort zone <br/>
-- As a cook, I should be able to tag food as vegan, allergy, etc. so that customers can choose foods which are suitable for them
-- As a cook, I should be able to set a certain mileage I’m willing to travel so that I can have quick and efficient delivery service
-As a cook, I should be able to set a limit on how many meals I can make in a specified time frame, so that I don’t get overbooked
-As a cook, I should be able to set when I am open and closed, so that customers can’t attempt to order food from me when I am not available
-As a cook, I should be able to accept or reject meal orders so that I have control over what meals and how many meals I am making
-As a cook, I should be able to set an estimated cooking and delivery time, so that customers are aware of an approximate waiting time
+- As a cook, I should be able to tag food as vegan, allergy, etc. so that customers can choose foods which are suitable for them <br/>
+- As a cook, I should be able to set a certain mileage I’m willing to travel so that I can have quick and efficient delivery service <br/>
+- As a cook, I should be able to set a limit on how many meals I can make in a specified time frame, so that I don’t get overbooked <br/>
+- As a cook, I should be able to set when I am open and closed, so that customers can’t attempt to order food from me when I am not available <br/>
+- As a cook, I should be able to accept or reject meal orders so that I have control over what meals and how many meals I am making <br/>
+- As a cook, I should be able to set an estimated cooking and delivery time, so that customers are aware of an approximate waiting time <br/>
 
 Customer/Diner Users: <br/>
 - As a customer, I should be able to see the ingredients in the dishes I plan to order <br/>
