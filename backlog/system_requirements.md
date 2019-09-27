@@ -4,6 +4,7 @@
 - As an admin, I want to make sure any updates to a cook’s personal account information are reviewed, to maintain their accuracy <br/>
 - As an admin, I want to be able to review reports and reviews, and potentially ban users or cooks, to keep the site safe from bad actors <br/>
 - As a system administrator I want to ensure that a payment option is selected prior to an order being processed, so that I can ensure meals are paid for before a cook begins to prepare the dish. <br/>
+
 *Cook Users:* <br/>
 - As a cook, I should be able to apply as a cook with my First Name, Last Name, Address, and Kitchen License <br/>
 - As a cook, I should not be able to login to my account unless my application has been approved <br/>
@@ -21,6 +22,7 @@
 - As a cook, I should be able to set when I am open and closed, so that customers can’t attempt to order food from me when I am not available <br/>
 - As a cook, I should be able to accept or reject meal orders so that I have control over what meals and how many meals I am making <br/>
 - As a cook, I should be able to set an estimated cooking and delivery time, so that customers are aware of an approximate waiting time <br/>
+
 *Customer/Diner Users:* <br/>
 - As a customer, I should be able to see the ingredients in the dishes I plan to order <br/>
 - As a customer, I should be able to see a picture of the dish I plan to order <br/>
@@ -41,12 +43,15 @@
 - As a customer I want to be able to tip the chef preparing my dish so that I can reward and encourage my favorite chefs. <br/>
 
 **Desired:** <br/>
+
 *Cook Users:* <br/>
 - As a cook, I should be able to set a limit on how many meals I can make in a specified time frame, so that I don’t get overbooked <br/>
+
 *Customer/Diner Users:* <br/>
 - As a customer, I should be able to order at least 3 hours in advance <br/>
 
 **Optional:** <br/>
+
 *Customer/Diner Users:* <br/>
 - As a customer, I want to be personal information to be anonymous when messaging the cook, so that my information is kept private <br/>
 - As a customer I want to be able to message my cook to be able to customize the order to my liking. <br/>
