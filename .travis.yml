@@ -6,4 +6,4 @@ install:
   - pip install -r requirements-travis.txt
 # command to run tests
 script:
-  - python3 manage.py test
+  - cd app/homeeats/ && python3 manage.py test
