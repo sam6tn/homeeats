@@ -3,6 +3,12 @@
 - As an admin, I want to approve any cook account before it is created, so that I can guarantee the customers a reliable experience <br/>
 - As an admin, I want to make sure any updates to a cook’s personal account information are reviewed, to maintain their accuracy <br/>
 - As an admin, I want to be able to review reports and reviews, and potentially ban users or cooks, to keep the site safe from bad actors <br/>
+- As an admin, I want to be able to view cooks' online time and offline time per week. <br/>
+- As an admin, I want to be able to view the orders that a cook has received. <br/>
+- As an admin, I want to be able to view all accepted orders with total amount paid including amount going to the cook and HomeEats. <br/>
+- As an admin, I want to be able to view cooks' cancelled order history with reasons. <br/>
+- As an admin, I want to be able to view revenue reports that can be adjusted to a specific timeframe (week,month,quarter,semi-annual,annual,custom). <br/>
+- As an admin, I want to be able to set which reasons a cook can give for cancelling an order. <br/>
 - As a system administrator I want to ensure that a payment option is selected prior to an order being processed, so that I can ensure meals are paid for before a cook begins to prepare the dish. <br/>
 
 *Cook Users:* <br/>
