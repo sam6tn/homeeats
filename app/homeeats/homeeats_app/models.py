@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 
+class Address(models.Model):
+  street_address = models.CharField(max_length=60) 
 
 class Cook(models.Model):
   first_name = models.CharField(max_length=30)
@@ -18,5 +20,3 @@ class Cook(models.Model):
             models.CharField(max_length=10, blank=True),
           )
 
-class Address(models.Mode):
-  street_address = models.CharField(max_length=60) 
