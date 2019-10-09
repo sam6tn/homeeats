@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.postgres.fields import ArrayField
+#from django.contrib.postgres.fields import ArrayField
 
 class Address(models.Model):
   street_address = models.CharField(max_length=60) 
@@ -16,7 +16,8 @@ class Cook(models.Model):
   )
   approved = models.BooleanField(default=False)
   kitchen_license = models.CharField(max_length=30)
-  cuisines = ArrayField(
-            models.CharField(max_length=10, blank=True),
-          )
+#  cuisines = ArrayField(
+#            models.CharField(max_length=10, blank=True),
+#            null=True
+#          )
 
