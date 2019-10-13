@@ -2,19 +2,11 @@ from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.core.validators import MinValueValidator, MaxValueValidator
 
-class Address(models.Model):
-  street_address = models.CharField(max_length=60) 
-
 class Cook(models.Model):
   first_name = models.CharField(max_length=30)
   last_name = models.CharField(max_length=30)
   email = models.CharField(max_length=30)
   password = models.CharField(max_length=30)
-  address = models.OneToOneField(
-    Address,
-    on_delete=models.CASCADE,
-    primary_key=True,
-  )
   approved = models.BooleanField(default=False)
   kitchen_license = models.CharField(max_length=30)
 #  cuisines = ArrayField(
@@ -34,3 +26,8 @@ class Dish_Review(models.Model):
   report_flag = models.BooleanField(default=False)
   customer = models.OneToOneField(Customer, on_delete=models.CASCADE)
   dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
+
+class Address(models.Model):
+  street_address = models.CharField(max_length=60) 
+  cook = models.ForeignKey(Cook, on_delete=models.CASCADE)
+  customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
