@@ -25,7 +25,7 @@ SECRET_KEY = '8f+^&t-r*=3kkys3l-0l&lwfv0)@a_da!ikdr1b*l@w74m^-_h'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['128.143.67.97']
 
 
 # Application definition
@@ -76,11 +76,14 @@ WSGI_APPLICATION = 'homeeats.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'ecqsarnp',
+        'USER': 'ecqsarnp',
+        'PASSWORD': 'o_SFqQ58sOwaiT2nYTP6ru4z2pbSx027',
+        'HOST': 'salt.db.elephantsql.com',
+        'PORT': '5432'
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
