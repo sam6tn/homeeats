@@ -1,0 +1,215 @@
+*{ margin:0; padding:0; }
+
+input { background-color: rgb(249, 249, 249); }
+
+.TopBar button { border-style: solid; border-width: 1px; height: 30px; color: white;
+    border-color: black; border-radius: 5px; font-size: 1em; font-weight: bold;
+    background-color: rgb(105, 105, 105); position: relative; top: 12px;
+    padding-left: 5px; padding-right: 5px; font-family: 'Roboto', sans-serif; }
+
+.TopBar a { border-style: solid; border-width: 1px; height: 30px; color: white;
+    border-color: black; border-radius: 5px; font-size: 1em; font-weight: bold;
+    background-color: rgb(105, 105, 105); position: relative; top: 18px;
+    font-family: 'Roboto', sans-serif; text-decoration: none;
+    padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px;}
+
+.TopBar {
+    position: relative;
+    background-color: limegreen;
+    width: 100%;
+    height: 54px;
+    box-shadow: 0px 0px 7px 0px rgba(0,0,0,0.75);
+}
+
+.current {
+    position: absolute;
+    height: 50px; width: 320px;
+}
+
+.TopBar h1 {
+    font-family: 'Roboto', sans-serif;
+    position: relative; top: 25px;
+    display: inline-block;
+    margin-top: -50px;
+    margin-left: 10px;
+    color: white;
+}
+
+
+.navigate {
+    display: inline-block;
+}
+
+[class="TopBar"] [name="hr1"] {
+    position: relative; top: 30px;
+    display: inline-block;
+    margin-top: -60px;
+    height: 40px;
+    width: 1.5px;
+    border: none;
+    background-color: white;
+    margin-left: 10px; margin-right: 15px;
+}
+
+
+[class="TopBar"] [name="calendar"] {
+    position: absolute;
+    top: 14px; right: 320px;
+    height: auto;
+}
+
+
+.actions {
+    position: absolute;
+    right: 0; top: 0;
+    height: 50px;
+    width: 300px;
+}
+
+[class="TopBar"] [name="hr2"] {
+    position: absolute;
+    top: 10%; left: 0;
+    height: 80%;
+    width: 1.5px;
+    border: none;
+    background-color: white;
+}
+
+[class="actions"] [name="action"] {
+    position: absolute;
+    top: 9px; left: 20px;
+    height: auto;
+    width: auto;
+    color: white;
+    font-size: 1.17em;
+    font-weight: bold;
+    background-color: rgb(63, 139, 250);
+    padding-top: 5px; padding-bottom: 5px;
+    cursor: pointer;
+}
+
+.profile {
+    position: absolute;
+    top: 10px; right: 13px;
+    width: 36px; height: 36px;
+    background-image: url("ProfileAlpha.png");
+    background-size: contain;
+    cursor: pointer;
+}
+
+
+/* vv PROFILE POPUP vv */
+/* Popup container */
+.p-popup, .sp-popup {
+    z-index: 6;
+    position: absolute;
+    right: 20px;
+    top: 60px;
+    width: 250px; height: 160px;
+    display: none;
+}
+
+/* The actual popup (appears on top) */
+.p-popuptext {
+    width: 100%; height: 100%;
+    visibility: hidden;
+    background-color: white;
+    color: black;
+    z-index: 7;
+    border-style: solid;
+    border-color: black;
+    border-width: 1px;
+    border-radius: 6px;
+    padding: 7px;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+    text-align: center;
+}
+
+.p-popuptext h3 {
+    margin-bottom: 4px;
+    text-align: center;
+}
+
+.p-popuptext p {
+    text-align: center;
+}
+
+[name="ProfileLine"] {
+    margin-top: 10px;
+    border: none;
+    background-color: blue;
+    width: 100%;
+    height: 1.4px;
+}
+
+[name="LogoutBtn"], [name="ProfileBtn"],
+[name="FeedbackBtn"], [name="AboutBtn"] {
+    position: absolute;
+    padding-top: 6px; padding-bottom: 6px;
+    padding-left: 7px; padding-right: 7px;
+    border-width: 0;
+    border-radius: 5px;
+    font-family: 'Roboto', sans-serif;
+    font-size: .95em;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+[name="LogoutBtn"] {
+    bottom: 0; right: 0;
+    color: black;
+    background-color: rgb(213, 213, 213);
+}
+
+[name="ProfileBtn"] {
+    bottom: 0; left: 15px;
+    color: white;
+    background-color: #3666A4;
+}
+
+[name="FeedbackBtn"] {
+    bottom: 45px; left: 15px;
+    color: white;
+    background-color: #3666A4;
+}
+
+[name="AboutBtn"] {
+    bottom: 45px; right: 12px;
+    color: white;
+    background-color: #3666A4;
+}
+
+/* show or hide the popup when Add Course is clicked */
+.p-popup .show {
+    visibility: visible;
+    -webkit-animation: fadeIn 1s;
+    animation: fadeIn 0.3s
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+    from {opacity: 0;} 
+    to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity:1 ;}
+}
+
+.p-background {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    top: 0; left: 0;
+    z-index: 5; /* Sit on top */
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+}
+
+[name="10pxDivide"] { /* 10px of horizontal blank space */
+    visibility: hidden;
+    border: none;
+    height: 10px;
+}
