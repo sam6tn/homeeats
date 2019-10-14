@@ -4,6 +4,19 @@ from django.contrib.postgres.fields import ArrayField
 class Address(models.Model):
   street_address = models.CharField(max_length=60) 
 
+# Adding customer class model with basic information
+class Customer(models.Model):
+  first_name = models.CharField(max_length=30)
+  last_name = models.CharField(max_length=30)
+  email = models.CharField(max_length=30)
+  password = models.CharField(max_length=30)
+
+#Adding Dish model with basic attributes
+class Dish(models.Model):
+  title = models.CharField(max_length= 90)
+  cuisine = models.CharField(max_length = 60)
+  description = models.CharField(max_length = 90)
+  
 class Cook(models.Model):
   first_name = models.CharField(max_length=30)
   last_name = models.CharField(max_length=30)
