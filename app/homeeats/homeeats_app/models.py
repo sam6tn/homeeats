@@ -18,6 +18,8 @@ class Cook(models.Model):
   )
   approved = models.BooleanField(default=False)
   kitchen_license = models.CharField(max_length=30)
+  user = models.OneToOneField(User,
+  on_delete=models.CASCADE,blank=True, null=True)
 #  cuisines = ArrayField(
 #            models.CharField(max_length=10, blank=True),
 #            null=True
