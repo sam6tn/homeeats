@@ -3,9 +3,9 @@ from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import User
 from django import forms
 from .models import Cook
+from .models import Customer
 
-
-class CustomerForm(forms.ModelForm):
+class CustomerCreateForm(forms.ModelForm):
     
     first_name = forms.CharField(label='First Name',required=True,
         error_messages={'required':'Please enter your first name.'},)
