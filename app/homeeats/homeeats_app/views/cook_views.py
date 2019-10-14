@@ -18,9 +18,8 @@ def create(request):
     else:
       return render(request, 'cook_templates/cook_create.html', {'userForm': form})
   else:
-    cookForm = forms.CookCreateForm()
-    userForm = forms.UserForm()
-    return render(request, 'cook_templates/cook_create.html', {'cookForm': cookForm, 'userForm': userForm})
+    userForm = forms.RegisterForm()
+    return render(request, 'cook_templates/cook_create.html', {'userForm': userForm})
 
 def login(request):
   return HttpResponse("cook_login")
