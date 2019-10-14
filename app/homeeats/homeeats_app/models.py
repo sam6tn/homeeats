@@ -21,30 +21,12 @@ class Cook(models.Model):
   last_name = models.CharField(max_length=30, null = True)
   approved = models.BooleanField(default=False)
   kitchen_license = models.CharField(max_length=30)
-  user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
-
-  @receiver(post_save, sender=User)
-  def create_user_cook(sender, instance, created, **kwargs):
-    if created:
-      Cook.objects.create(user=instance).save()
-
-  @receiver(post_save, sender=User)
-  def save_user_cook(sender, instance, **kwargs):
-    instance.cook.save()
+  user = models.OneToOneField(User, on_delete=models.CASCADE)
 
 class Customer(models.Model):
   first_name = models.CharField(max_length=30)
   last_name = models.CharField(max_length=30)
-  user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
-
-  @receiver(post_save, sender=User)
-  def create_user_customer(sender, instance, created, **kwargs):
-    if created:
-      Customer.objects.create(user=instance).save()
-
-  @receiver(post_save, sender=User)
-  def save_user_customer(sender, instance, **kwargs):
-    instance.customer.save()
+  user = models.OneToOneField(User, on_delete=models.CASCADE)
 
 class Dish(models.Model):
   title = models.CharField(max_length=30)
