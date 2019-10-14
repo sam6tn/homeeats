@@ -1,3 +1,8 @@
-from urls.cook_urls import urlpatterns as cook_urls
+#from urls.cook_urls import urlpatterns as cook_urls
+from . import views
 
-urlpatterns+=cook_urls
+urlpatterns = [
+    path('', views.index, name='index'),
+]
+
+#urlpatterns+=cook_urls

@@ -10,27 +10,27 @@
     {% csrf_token %}
 
     <div style="margin:10px;text-align: left;">
-      {{ form.first_name.label_tag }}
+      {{ userForm.first_name.label_tag }}
       <div style="float:right;">
-        {{ form.first_name }}
+        {{ userForm.first_name }}
       </div>
     </div>
     <div style="margin:10px;text-align: left;">
-      {{ form.last_name.label_tag }}
+      {{ userForm.last_name.label_tag }}
       <div style="float:right;">
-        {{ form.last_name }}
+        {{ userForm.last_name }}
       </div>
     </div>
     <div style="margin:10px;text-align: left;">
-      {{ form.email.label_tag }}
+      {{ userForm.username.label_tag }}
       <div style="float:right;">
-        {{ form.email }}
+        {{ userForm.email }}
       </div>
     </div>
     <div style="margin:10px;text-align: left;">
-      {{ form.password.label_tag }}
+      {{ userForm.password.label_tag }}
       <div style="float:right;">
-        {{ form.password }}
+        {{ userForm.password }}
       </div>
     </div>
     <input type="submit" value="Create cook account" class="btn btn-primary">
