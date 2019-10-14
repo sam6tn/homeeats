@@ -28,7 +28,7 @@ def signup(request):
       return render(request, 'customer_templates/customer_signup.html', {'userForm': form})
   else:
     userForm = forms.RegisterForm()
-    return render(request, 'cook_templates/cook_create.html', {'userForm': userForm})
+    return render(request, 'customer_templates/customer_signup.html', {'userForm': userForm})
 
 def userLogin(request):
     if request.method == 'POST':
