@@ -19,5 +19,6 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('homeeats_app.urls.main_urls')),
-    path('cook/', include('homeeats_app.urls.cook_urls'))
+    path('cook/', include('homeeats_app.urls.cook_urls')),
+    path('customer/', include('homeeats_app.urls.customer_urls'))
 ]

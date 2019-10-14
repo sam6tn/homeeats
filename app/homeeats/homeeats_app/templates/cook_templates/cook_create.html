@@ -1,31 +1,39 @@
-<h2>Sign up</h2>
+<head>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <style>
+
+  </style>
+</head>
+<div style="text-align: center;width:25%;margin: 20px auto;">
+  <h2>Cook Registration</h2>
   <form method="post">
     {% csrf_token %}
-    {% for field in userForm %}
-      <p>
-        {{ field.label_tag }}<br>
-        {{ field }}
-        {% if field.help_text %}
-          <small style="color: grey">{{ field.help_text }}</small>
-        {% endif %}
-        {% for error in field.errors %}
-          <p style="color: red">{{ error }}</p>
-        {% endfor %}
-      </p>
-    {% endfor %}
 
-    {% for field in cookForm %}
-      <p>
-        {{ field.label_tag }}<br>
-        {{ field }}
-        {% if field.help_text %}
-          <small style="color: grey">{{ field.help_text }}</small>
-        {% endif %}
-        {% for error in field.errors %}
-          <p style="color: red">{{ error }}</p>
-        {% endfor %}
-      </p>
-    {% endfor %}
-    <button type="submit">Sign up</button>
+    <div style="margin:10px;text-align: left;">
+      {{ userForm.first_name.label_tag }}
+      <div style="float:right;">
+        {{ userForm.first_name }}
+      </div>
+    </div>
+    <div style="margin:10px;text-align: left;">
+      {{ userForm.last_name.label_tag }}
+      <div style="float:right;">
+        {{ userForm.last_name }}
+      </div>
+    </div>
+    <div style="margin:10px;text-align: left;">
+      {{ userForm.username.label_tag }}
+      <div style="float:right;">
+        {{ userForm.email }}
+      </div>
+    </div>
+    <div style="margin:10px;text-align: left;">
+      {{ userForm.password.label_tag }}
+      <div style="float:right;">
+        {{ userForm.password }}
+      </div>
+    </div>
+    <input type="submit" value="Create cook account" class="btn btn-primary">
   </form>
 
+</div>
