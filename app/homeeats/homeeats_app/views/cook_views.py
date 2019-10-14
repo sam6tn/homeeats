@@ -12,6 +12,7 @@ def create(request):
       data = form.cleaned_data
       user = User.objects.create_user(username=data['username'], password=data['password'])
       cook = models.Cook.objects.create(first_name=data['first_name'], last_name=data['last_name'], user_id=user.id)
+      user.has_perm('cook')
       user.save()
       cook.save()
       return HttpResponseRedirect(reverse('cook_login'))

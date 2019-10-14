@@ -20,6 +20,7 @@ def signup(request):
       data = form.cleaned_data
       user = User.objects.create_user(username=data['username'], password=data['password'])
       customer = models.Customer.objects.create(first_name=data['first_name'], last_name=data['last_name'], user_id=user.id)
+      user.has_perm('customer')
       user.save()
       customer.save()
       return HttpResponse('ok')
