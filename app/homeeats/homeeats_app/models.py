@@ -10,12 +10,18 @@ class Customer(models.Model):
   last_name = models.CharField(max_length=30)
   email = models.CharField(max_length=30)
   password = models.CharField(max_length=30)
+  total_ratings = models.IntegerField()
+  total_number_ratings = models.IntegerField()
+  #Foreign Keys to try and handle one-to-many relationships
+  address = models.ForeignKey(Address)
+  dish = models.ForeignKey(Dish)
 
 #Adding Dish model with basic attributes
 class Dish(models.Model):
   title = models.CharField(max_length= 90)
   cuisine = models.CharField(max_length = 60)
   description = models.CharField(max_length = 90)
+
 class Admin(models.Model):
   first_name = models.CharField(max_length=30)
   last_name = models.CharField(max_length=30)
