@@ -1,21 +1,50 @@
 from django.db import models
+from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+#class CustomUser(AbstractUser):
+#  username = None
+#  email = models.EmailField(_('email_address'), unique=True)
+#
+#  USERNAME_FIELD = 'email'
+#  REQUIRED_FIELDS = []
+#  objects = CustomUserManager()
+#
+#  def __str__(self):
+#    return self.email
 
 class Cook(models.Model):
   first_name = models.CharField(max_length=30)
-  last_name = models.CharField(max_length=30)
-  email = models.CharField(max_length=30)
-  password = models.CharField(max_length=30)
+  last_name = models.CharField(max_length=30, null = True)
   approved = models.BooleanField(default=False)
   kitchen_license = models.CharField(max_length=30)
-#  cuisines = ArrayField(
-#            models.CharField(max_length=10, blank=True),
-#            null=True
-#          )
+  user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
+
+  @receiver(post_save, sender=User)
+  def create_user_cook(sender, instance, created, **kwargs):
+    if created:
+      Cook.objects.create(user=instance).save()
+
+  @receiver(post_save, sender=User)
+  def save_user_cook(sender, instance, **kwargs):
+    instance.cook.save()
 
 class Customer(models.Model):
   first_name = models.CharField(max_length=30)
+  last_name = models.CharField(max_length=30)
+  user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
+
+  @receiver(post_save, sender=User)
+  def create_user_customer(sender, instance, created, **kwargs):
+    if created:
+      Customer.objects.create(user=instance).save()
+
+  @receiver(post_save, sender=User)
+  def save_user_customer(sender, instance, **kwargs):
+    instance.customer.save()
 
 class Dish(models.Model):
   title = models.CharField(max_length=30)
