@@ -22,6 +22,7 @@ class Dish(models.Model):
   cuisine = models.CharField(max_length = 60)
   description = models.CharField(max_length = 90)
 
+#Initial attributes for admin model 
 class Admin(models.Model):
   first_name = models.CharField(max_length=30)
   last_name = models.CharField(max_length=30)
