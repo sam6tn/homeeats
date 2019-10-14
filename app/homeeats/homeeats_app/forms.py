@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import User
+from django import forms
+from .models import Cook
 
 
 class CustomerForm(forms.ModelForm):
@@ -15,3 +17,9 @@ class CustomerForm(forms.ModelForm):
     class Meta:
         model = Customer 
         fields = ('first_name','last_name','password','email','address',)
+
+
+class CookCreateForm(forms.ModelForm):
+    class Meta:
+      model = Cook
+      fields = ['first_name', 'last_name', 'email', 'password'] 

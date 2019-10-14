@@ -1,0 +1,39 @@
+<head>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <style>
+
+  </style>
+</head>
+<div style="text-align: center;width:25%;margin: 20px auto;">
+  <h2>Cook Registration</h2>
+  <form method="post">
+    {% csrf_token %}
+
+    <div style="margin:10px;text-align: left;">
+      {{ form.first_name.label_tag }}
+      <div style="float:right;">
+        {{ form.first_name }}
+      </div>
+    </div>
+    <div style="margin:10px;text-align: left;">
+      {{ form.last_name.label_tag }}
+      <div style="float:right;">
+        {{ form.last_name }}
+      </div>
+    </div>
+    <div style="margin:10px;text-align: left;">
+      {{ form.email.label_tag }}
+      <div style="float:right;">
+        {{ form.email }}
+      </div>
+    </div>
+    <div style="margin:10px;text-align: left;">
+      {{ form.password.label_tag }}
+      <div style="float:right;">
+        {{ form.password }}
+      </div>
+    </div>
+    <input type="submit" value="Create cook account" class="btn btn-primary">
+  </form>
+
+</div>
