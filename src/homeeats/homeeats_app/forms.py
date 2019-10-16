@@ -26,9 +26,12 @@ class UserForm(forms.ModelForm):
         fields = ('username', 'password')
 
 class CookCreateForm(forms.ModelForm):
+    kitchen_license = forms.CharField(label='Kitchen License')
+    phone_number = forms.CharField(label='Phone Number')
+    
     class Meta:
-      model = Cook
-      fields = ['first_name', 'last_name']
+      model = User
+      fields = ['first_name', 'last_name', 'email', 'password']
 
 class RegisterForm(forms.ModelForm):
   first_name = forms.CharField()
