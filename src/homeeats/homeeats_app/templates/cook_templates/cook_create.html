@@ -10,27 +10,39 @@
     {% csrf_token %}
 
     <div style="margin:10px;text-align: left;">
-      {{ userForm.first_name.label_tag }}
+      {{ cook_create_form.first_name.label_tag }}
       <div style="float:right;">
-        {{ userForm.first_name }}
+        {{ cook_create_form.first_name }}
       </div>
     </div>
     <div style="margin:10px;text-align: left;">
-      {{ userForm.last_name.label_tag }}
+      {{ cook_create_form.last_name.label_tag }}
       <div style="float:right;">
-        {{ userForm.last_name }}
+        {{ cook_create_form.last_name }}
       </div>
     </div>
     <div style="margin:10px;text-align: left;">
-      {{ userForm.username.label_tag }}
+      {{ cook_create_form.email.label_tag }}
       <div style="float:right;">
-        {{ userForm.username }}
+        {{ cook_create_form.email }}
       </div>
     </div>
     <div style="margin:10px;text-align: left;">
-      {{ userForm.password.label_tag }}
+      {{ cook_create_form.password.label_tag }}
       <div style="float:right;">
-        {{ userForm.password }}
+        {{ cook_create_form.password }}
+      </div>
+    </div>
+    <div style="margin:10px;text-align: left;">
+      <label for="kitchen_license">Kitchen License:</label>
+      <div style="float:right;">
+        <input id="kitchen_license" type="text" name="kitchen_license" required>
+      </div>
+    </div>
+    <div style="margin:10px;text-align: left;">
+      <label for="phone_number">Phone Number:</label>
+      <div style="float:right;">
+        <input id="phone_number" type="text" name="phone_number" required>
       </div>
     </div>
     <input type="submit" value="Create cook account" class="btn btn-primary">

@@ -1,17 +1,9 @@
-<html>
-    <head>
-        {% load static %}
-        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-        <link rel="stylesheet" href="{% static 'TopNav.css' %}"/>
-    </head>
+{% extends 'base.html' %}
+{% load staticfiles %}
 
-    <!-- Header -->
-    <div class=TopBar>
-        <h1> HomeEats </h1>
-        <hr name="hr1">
-        <div class=navigate>
-        </div>
-        <div class=actions>
-        </div>
-    </div>
-</html>
+{% block title %}Home{% endblock %}
+{% block pagecontent %}
+<div>
+    home
+</div>
+{% endblock %}

@@ -21,11 +21,13 @@ class Cook(models.Model):
   last_name = models.CharField(max_length=30, null = True)
   approved = models.BooleanField(default=False)
   kitchen_license = models.CharField(max_length=30)
+  phone_number = models.CharField(max_length=30, default="")
   user = models.OneToOneField(User, on_delete=models.CASCADE)
 
 class Customer(models.Model):
   first_name = models.CharField(max_length=30)
   last_name = models.CharField(max_length=30)
+  phone_number = models.CharField(max_length=30, default="")
   user = models.OneToOneField(User, on_delete=models.CASCADE)
   email = models.EmailField()
   password = models.CharField(max_length=30)
@@ -50,6 +52,9 @@ class Dish_Review(models.Model):
   dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
 
 class Address(models.Model):
-  street_address = models.CharField(max_length=60) 
+  street_name = models.CharField(max_length=60, default="")
+  city = models.CharField(max_length=60, default="")
+  state = models.CharField(max_length=20, default="")
+  zipcode = models.CharField(max_length=20, default="")
   cook = models.ForeignKey(Cook, on_delete=models.CASCADE)
   customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
