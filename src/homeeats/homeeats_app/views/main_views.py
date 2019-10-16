@@ -39,12 +39,18 @@ def userLogin(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                messages.info(request, f"You are now logged in as {username}")
-                return redirect('/')
+                messages.info(request, "You are now logged in as {username}")
+                try:
+                  models.Cook.objects.get(user=request.user)
+                  is_cook = True
+                except models.Cook.DoesNotExist:
+                  is_cook = False
+                if (is_cook):
+                  return redirect('/cook/home')
             else:
                 messages.error(request, "Invalid username or password.")
         else:
             messages.error(request, "Invalid username or password.")
-    
+
     form = AuthenticationForm()
     return render(request = request, template_name = "../templates/login.html", context={"form":form})
