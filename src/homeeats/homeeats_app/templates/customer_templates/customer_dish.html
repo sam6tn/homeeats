@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}Dish {{dish_id}} {% endblock %}
+{% block pagecontent %}
+
+<h1>ID: {{dish.id}}</h1>
+<h1>Title: {{dish.title}}</h1>
+<h3>Description: {{dish.description}} </h3>
+<h3>Image Name: {{dish.dish_image.name}} </h3>
+<img src="{{ dish.dish_image.url }}">
+<h3>Cook time: {{dish.cook_time}} </h3>
+<h3>Cook: {{dish.cook.first_name}} {{dish.cook.last_name}}</h3>
+<br>
+<h2>Reviews</h4>
+{% for review in reviews %}
+    <h3>{{review.dish_rating}}: {{review.description}}</h3>
+{% endfor %}
+
+{% endblock %}
