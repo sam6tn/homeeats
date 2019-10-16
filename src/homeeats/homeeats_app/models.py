@@ -27,6 +27,17 @@ class Customer(models.Model):
   first_name = models.CharField(max_length=30)
   last_name = models.CharField(max_length=30)
   user = models.OneToOneField(User, on_delete=models.CASCADE)
+  email = models.EmailField()
+  password = models.CharField(max_length=30)
+  address = models.ForeignKey(
+    Address,
+    on_delete=models.CASCADE,
+)
+  favorites = models.ManyToManyField(Dish)
+
+  def __str__(self):
+    return self.last_name + ", " + self.first_name
+  
 
 class Dish(models.Model):
   title = models.CharField(max_length=30)
