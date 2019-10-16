@@ -23,26 +23,23 @@ class Cook(models.Model):
   kitchen_license = models.CharField(max_length=30)
   phone_number = models.CharField(max_length=30, default="")
   user = models.OneToOneField(User, on_delete=models.CASCADE)
+  email = models.EmailField(blank=False,unique=True,null=False,default="")
+  password = models.CharField(max_length=30,null=False,blank=False,default="")
+
+class Dish(models.Model):
+  title = models.CharField(max_length=30)
 
 class Customer(models.Model):
   first_name = models.CharField(max_length=30)
   last_name = models.CharField(max_length=30)
   phone_number = models.CharField(max_length=30, default="")
   user = models.OneToOneField(User, on_delete=models.CASCADE)
-  email = models.EmailField()
-  password = models.CharField(max_length=30)
-  address = models.ForeignKey(
-    Address,
-    on_delete=models.CASCADE,
-)
+  email = models.EmailField(blank=False,unique=True,null=False,default="")
+  password = models.CharField(max_length=30,null=False,blank=False,default="")
   favorites = models.ManyToManyField(Dish)
 
   def __str__(self):
     return self.last_name + ", " + self.first_name
-  
-
-class Dish(models.Model):
-  title = models.CharField(max_length=30)
 
 class Dish_Review(models.Model):
   dish_rating = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)])
