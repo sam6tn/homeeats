@@ -31,7 +31,12 @@ class Customer(models.Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE)
 
 class Dish(models.Model):
-  title = models.CharField(max_length=30)
+  title = models.CharField(default="", max_length=30)
+  cuisine = models.CharField(default="", max_length=30)
+  description = models.CharField(default="", max_length=200)
+  dish_image = models.ImageField(default="", upload_to='dishes')
+  cook_time = models.IntegerField(default=0)
+  cook = models.ForeignKey(Cook, on_delete=models.CASCADE)
 
 class Dish_Review(models.Model):
   dish_rating = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)])
