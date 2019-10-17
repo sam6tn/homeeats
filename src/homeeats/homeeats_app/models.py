@@ -31,22 +31,6 @@ class Cook(models.Model):
   email = models.EmailField(blank=False,unique=True,null=False,default="")
   password = models.CharField(max_length=30,null=False,blank=False,default="")
 
-class Customer(models.Model):
-  first_name = models.CharField(max_length=30)
-  last_name = models.CharField(max_length=30)
-  phone_number = models.CharField(max_length=30, default="")
-  user = models.OneToOneField(User, on_delete=models.CASCADE)
-  email = models.EmailField(blank=False,unique=True,null=False,default="")
-  password = models.CharField(max_length=30,null=False,blank=False,default="")
-  #favorites = models.ManyToManyField(Dish)
-
-  def __str__(self):
-    return "Customer " + self.first_name + " " + self.last_name + " (" + str(self.id) + ")"
-
-class Cuisine(models.Model):
-  type = models.CharField(default="", max_length=30)
-  cook = models.ForeignKey(Cook, on_delete=models.CASCADE)
-
 class Dish(models.Model):
   title = models.CharField(default="", max_length=30)
   cuisine = models.ForeignKey(Cuisine, on_delete=models.CASCADE)
@@ -58,6 +42,22 @@ class Dish(models.Model):
 
   def __str__(self):
     return self.title + " (" + str(self.id) + ")"
+
+class Customer(models.Model):
+  first_name = models.CharField(max_length=30)
+  last_name = models.CharField(max_length=30)
+  phone_number = models.CharField(max_length=30, default="")
+  user = models.OneToOneField(User, on_delete=models.CASCADE)
+  email = models.EmailField(blank=False,unique=True,null=False,default="")
+  password = models.CharField(max_length=30,null=False,blank=False,default="")
+  favorites = models.ManyToManyField(Dish)
+
+  def __str__(self):
+    return "Customer " + self.first_name + " " + self.last_name + " (" + str(self.id) + ")"
+
+class Cuisine(models.Model):
+  type = models.CharField(default="", max_length=30)
+  cook = models.ForeignKey(Cook, on_delete=models.CASCADE)
 
 class Dish_Review(models.Model):
   dish_rating = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)])
