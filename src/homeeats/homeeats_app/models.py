@@ -43,9 +43,13 @@ class Customer(models.Model):
   def __str__(self):
     return "Customer " + self.first_name + " " + self.last_name + " (" + str(self.id) + ")"
 
+class Cuisine(models.Model):
+  type = models.CharField(default="", max_length=30)
+  cook = models.ForeignKey(Cook, on_delete=models.CASCADE)
+
 class Dish(models.Model):
   title = models.CharField(default="", max_length=30)
-  cuisine = models.CharField(default="", max_length=30)
+  cuisine = models.ForeignKey(Cuisine, on_delete=models.CASCADE)
   description = models.CharField(default="", max_length=200)
   ingredients = ArrayField(models.CharField(max_length=30, blank=True), default=list)
   dish_image = models.ImageField(default="", upload_to='dishes')
