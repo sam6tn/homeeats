@@ -10,7 +10,6 @@ from .models import Customer
 Information the customer needs to enter to create an account
 '''
 class CustomerCreateForm(forms.ModelForm):
-    
     first_name = forms.CharField(label='First Name',required=True,
     error_messages={'required':'Please enter your first name.'},)
     last_name = forms.CharField(label='Last Name', required=True,error_messages={'required':'Please enter your last name.'})

@@ -21,23 +21,15 @@ from django.dispatch import receiver
 Columns in the cook database table
 '''
 class Cook(models.Model):
-  first_name = models.CharField(max_length=30)
-  last_name = models.CharField(max_length=30, null = True)
   approved = models.BooleanField(default=False)
   online = models.BooleanField(default=False)
   kitchen_license = models.CharField(max_length=30)
   phone_number = models.CharField(max_length=30, default="")
   user = models.OneToOneField(User, on_delete=models.CASCADE)
-  email = models.EmailField(blank=False,unique=True,null=False,default="")
-  password = models.CharField(max_length=30,null=False,blank=False,default="")
 
 class Customer(models.Model):
-  first_name = models.CharField(max_length=30)
-  last_name = models.CharField(max_length=30)
   phone_number = models.CharField(max_length=30, default="")
   user = models.OneToOneField(User, on_delete=models.CASCADE)
-  email = models.EmailField(blank=False,unique=True,null=False,default="")
-  password = models.CharField(max_length=30,null=False,blank=False,default="")
   #favorites = models.ManyToManyField(Dish)
 
   def __str__(self):

@@ -12,10 +12,8 @@ def create(request):
     cook_create_form = forms.CookCreateForm(request.POST)
     if cook_create_form.is_valid():
       data = cook_create_form.cleaned_data
-      user = User.objects.create_user(username=data['email'], password=data['password'])
+      user = User.objects.create_user(username=data['email'], password=data['password'], first_name=data['first_name'], last_name=data['last_name'])
       cook = models.Cook.objects.create(
-        first_name=data['first_name'],
-        last_name=data['last_name'],
         kitchen_license=data['kitchen_license'],
         phone_number=data['phone_number'],
         user_id=user.id
