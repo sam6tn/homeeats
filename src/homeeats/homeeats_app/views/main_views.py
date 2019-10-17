@@ -30,6 +30,48 @@ def index(request):
 #     userForm = forms.RegisterForm()
 #     return render(request, 'customer_templates/customer_create.html', {'userForm': userForm})
 
+'''
+View of the customer creation form with form validation.
+'''
+def customercreate(request):
+  if request.method == 'POST':
+    form = forms.CustomerCreateForm(request.POST)
+    if form.is_valid():
+      data = form.cleaned_data
+      user = User.objects.create_user(username=data['email'], password=data['password'], first_name=data['first_name'], last_name=data['last_name'])
+      customer = models.Customer.objects.create(phone_number=data['phone_number'], user_id=user.id)
+      user.has_perm('customer')
+      user.save()
+      customer.save()
+      return HttpResponse('ok')
+    else:
+      return render(request, 'customer_create.html', {'form': form})
+  else:
+    form = forms.CustomerCreateForm()
+    return render(request, 'customer_create.html', {'form': form})
+
+def cookcreate(request):
+  if request.method == 'POST':
+    cook_create_form = forms.CookCreateForm(request.POST)
+    if cook_create_form.is_valid():
+      data = cook_create_form.cleaned_data
+      user = User.objects.create_user(username=data['email'], password=data['password'], first_name=data['first_name'], last_name=data['last_name'])
+      cook = models.Cook.objects.create(
+        kitchen_license=data['kitchen_license'],
+        phone_number=data['phone_number'],
+        user_id=user.id
+      )
+      user.has_perm('cook')
+      user.save()
+      cook.save()
+      return HttpResponseRedirect(reverse('login'))
+    else:
+      return render(request, 'cook_create.html', {'cook_create_form': cook_create_form})
+  else:
+    cook_create_form = forms.CookCreateForm()
+    return render(request, 'cook_create.html', {'cook_create_form': cook_create_form})
+
+
 def logout_view(request):
   logout(request)
   return redirect('/')
