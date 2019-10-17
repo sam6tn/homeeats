@@ -4,12 +4,22 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from ..models import Dish
 
+'''
+Homepage view before login
+'''
+def index(request):
+    template = loader.get_template('../templates/index.html')
+    return HttpResponse(template.render())
+
+'''
+View of the customer creation form with form validation.
+'''
 def create(request):
   if request.method == 'POST':
     form = CustomerCreateForm(request.POST)
     if form.is_valid():
-        cook = form.save(commit=False)
-        cook.save()
+        customer = form.save(commit=False)
+        customer.save()
         return HttpResponseRedirect(reverse('customer_login'))
   else:
     form = CustomerCreateForm()

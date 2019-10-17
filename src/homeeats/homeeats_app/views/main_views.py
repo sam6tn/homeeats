@@ -25,10 +25,10 @@ def signup(request):
       customer.save()
       return HttpResponse('ok')
     else:
-      return render(request, 'customer_templates/customer_signup.html', {'userForm': form})
+      return render(request, 'customer_templates/customer_create.html', {'userForm': form})
   else:
     userForm = forms.RegisterForm()
-    return render(request, 'customer_templates/customer_signup.html', {'userForm': userForm})
+    return render(request, 'customer_templates/customer_create.html', {'userForm': userForm})
 
 def userLogin(request):
     if request.method == 'POST':

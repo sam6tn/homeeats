@@ -17,6 +17,9 @@ from django.dispatch import receiver
 #  def __str__(self):
 #    return self.email
 
+'''
+Columns in the cook database table
+'''
 class Cook(models.Model):
   first_name = models.CharField(max_length=30)
   last_name = models.CharField(max_length=30, null = True)
@@ -24,6 +27,11 @@ class Cook(models.Model):
   kitchen_license = models.CharField(max_length=30)
   phone_number = models.CharField(max_length=30, default="")
   user = models.OneToOneField(User, on_delete=models.CASCADE)
+  email = models.EmailField(blank=False,unique=True,null=False,default="")
+  password = models.CharField(max_length=30,null=False,blank=False,default="")
+
+class Dish(models.Model):
+  title = models.CharField(max_length=30)
 
   def __str__(self):
     return "Cook " + self.first_name + " " + self.last_name + " (" + str(self.id) + ")"
@@ -33,6 +41,9 @@ class Customer(models.Model):
   last_name = models.CharField(max_length=30)
   phone_number = models.CharField(max_length=30, default="")
   user = models.OneToOneField(User, on_delete=models.CASCADE)
+  email = models.EmailField(blank=False,unique=True,null=False,default="")
+  password = models.CharField(max_length=30,null=False,blank=False,default="")
+  #favorites = models.ManyToManyField(Dish)
 
   def __str__(self):
     return "Customer " + self.first_name + " " + self.last_name + " (" + str(self.id) + ")"
