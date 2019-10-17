@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.template import loader
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 
 def index(request):
@@ -29,6 +29,10 @@ def index(request):
 #   else:
 #     userForm = forms.RegisterForm()
 #     return render(request, 'customer_templates/customer_create.html', {'userForm': userForm})
+
+def logout_view(request):
+  logout(request)
+  return redirect('/')
 
 def userLogin(request):
     if request.method == 'POST':

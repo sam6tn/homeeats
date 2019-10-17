@@ -23,17 +23,17 @@ def create(request):
     form = forms.CustomerCreateForm(request.POST)
     if form.is_valid():
       data = form.cleaned_data
-      user = User.objects.create_user(username=data['username'], password=data['password'], first_name=data['first_name'], last_name=data['last_name'])
+      user = User.objects.create_user(username=data['email'], password=data['password'], first_name=data['first_name'], last_name=data['last_name'])
       customer = models.Customer.objects.create(phone_number=data['phone_number'], user_id=user.id)
       user.has_perm('customer')
       user.save()
       customer.save()
       return HttpResponse('ok')
     else:
-      return render(request, 'customer_templates/customer_create.html', {'userForm': form})
+      return render(request, 'customer_templates/customer_create.html', {'form': form})
   else:
-    userForm = forms.RegisterForm()
-    return render(request, 'customer_templates/customer_create.html', {'userForm': userForm})
+    form = forms.CustomerCreateForm()
+    return render(request, 'customer_templates/customer_create.html', {'form': form})
 
 def dish(request, dish_id):
   dish = Dish.objects.get(id=dish_id)
