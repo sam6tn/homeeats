@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block pagecontent %}
+<div class="container">
+    <div class="card my-3 mx-auto" style="max-width:800px">
+        <div class="row no-gutters">
+            <div class="col-md-12">
+                <h4 class="card-header">{% block content %}
+<div class="container">
+    <div class="card my-3 mx-auto" style="max-width:800px">
+        <div class="row no-gutters">
+            <div class="col-md-12">
+                <h4 class="card-header"><!--{{ post.headline }}--></h4>
+            </div>
+        </div>
+        <div class="row no-gutters">
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-subtitle mb-3"><!--{{ post.info }}--></h5>
+                    <h6 class="card-subtitle mb-3"><!--{{ post.info }}--></h6>
+                    <p class="card-text"><!--{{ post.info }}--></p>
+                    <p class="card-text">
+                        <small class="text-muted"><!--{{ post.info }}--></small>
+                    </p>
+                    <p class="card-text font-weight-bold text-secondary mb-2">Price: $<!--{{ post.price }}--></p>
+                    <p class="card-text">Sold by
+                        <a class="card-link" href="/seller/{{ post.seller.username }}">
+                            <!--{{ cook.info }}-->
+                        </a>
+                    </p>
+                    <p class="small text-muted"><!--{{ post.info}}--></p>
+                </div>
+            </div>
+            <div class="col-md-4" id="image-container">
+                <img class="image" src="{{ post.pet.photo }}">
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
