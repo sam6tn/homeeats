@@ -24,6 +24,7 @@ class Cook(models.Model):
   first_name = models.CharField(max_length=30)
   last_name = models.CharField(max_length=30, null = True)
   approved = models.BooleanField(default=False)
+  online = models.BooleanField(default=False)
   kitchen_license = models.CharField(max_length=30)
   phone_number = models.CharField(max_length=30, default="")
   user = models.OneToOneField(User, on_delete=models.CASCADE)
