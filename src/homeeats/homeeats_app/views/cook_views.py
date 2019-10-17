@@ -21,7 +21,7 @@ def create(request):
       user.has_perm('cook')
       user.save()
       cook.save()
-      return HttpResponseRedirect(reverse('cook_login'))
+      return HttpResponseRedirect(reverse('login'))
     else:
       return render(request, 'cook_templates/cook_create.html', {'cook_create_form': cook_create_form})
   else:
