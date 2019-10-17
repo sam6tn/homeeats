@@ -25,7 +25,7 @@ SECRET_KEY = '8f+^&t-r*=3kkys3l-0l&lwfv0)@a_da!ikdr1b*l@w74m^-_h'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['128.143.67.97', 'localhost']
+ALLOWED_HOSTS = ['128.143.67.97', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'homeeats_app'
+    'homeeats_app',
 ]
 
 MIDDLEWARE = [
@@ -122,3 +122,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}Home{% endblock %}
+{% block pagecontent %}
+
+<p> Welcome: {{cook.first_name}} {{cook.last_name}} </a>
+<div class="container">
+    <div class="card my-3 mx-auto" style="max-width:800px">
+        <div class="row no-gutters">
+            <div class="col-md-12">
+                <h4 class="card-header">Blah<!--{{ post.headline }}--></h4>
+            </div>
+        </div>
+        <div class="row no-gutters">
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-subtitle mb-3">blah<!--{{ post.info }}--></h5>
+                    <h6 class="card-subtitle mb-3">blah<!--{{ post.info }}--></h6>
+                    <p class="card-text">blah<!--{{ post.body }}--></p>
+                    <p class="card-text">
+                        <small class="text-muted">blah<!--{{ post.info }}--></small>
+                    </p>
+                    <p class="card-text font-weight-bold text-secondary mb-2">$blah<!--{{ post.price}}--></p>
+                    <p class="card-text">Sold by blah
+                    </p>
+                    <p class="small text-muted">blah<!--{{ post.info }}--></p>
+                </div>
+            </div>
+            <div class="col-md-4" id="image-container">
+                <img class="" src="">
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
