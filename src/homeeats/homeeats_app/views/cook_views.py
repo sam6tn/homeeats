@@ -30,9 +30,6 @@ def create(request):
     cook_create_form = forms.CookCreateForm()
     return render(request, 'cook_templates/cook_create.html', {'cook_create_form': cook_create_form})
 
-def login(request):
-  return HttpResponse("cook_login")
-
 @login_required
 def home(request):
   cook = get(request)

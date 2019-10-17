@@ -25,9 +25,6 @@ def create(request):
     form = CustomerCreateForm()
     return render(request, 'customer_templates/customer_create.html', {'form': form})
 
-def login(request):
-  return render(request, 'login.html')
-
 def dish(request, dish_id):
   dish = Dish.objects.get(id=dish_id)
   reviews = dish.dish_review_set.all()
