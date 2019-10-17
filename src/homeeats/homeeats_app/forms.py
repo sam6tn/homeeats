@@ -10,6 +10,7 @@ from .models import Customer
 Information the customer needs to enter to create an account
 '''
 class CustomerCreateForm(forms.ModelForm):
+    
     first_name = forms.CharField(label='First Name',required=True,
     error_messages={'required':'Please enter your first name.'},)
     last_name = forms.CharField(label='Last Name', required=True,error_messages={'required':'Please enter your last name.'})
@@ -39,10 +40,3 @@ class CookCreateForm(forms.ModelForm):
     class Meta:
       model = User
       fields = ['first_name', 'last_name', 'email', 'password']
-
-class RegisterForm(forms.ModelForm):
-  first_name = forms.CharField()
-  last_name = forms.CharField()
-  class Meta:
-    model = User
-    fields = ('username','password')
