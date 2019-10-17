@@ -30,12 +30,6 @@ class Cook(models.Model):
   email = models.EmailField(blank=False,unique=True,null=False,default="")
   password = models.CharField(max_length=30,null=False,blank=False,default="")
 
-class Dish(models.Model):
-  title = models.CharField(max_length=30)
-
-  def __str__(self):
-    return "Cook " + self.first_name + " " + self.last_name + " (" + str(self.id) + ")"
-
 class Customer(models.Model):
   first_name = models.CharField(max_length=30)
   last_name = models.CharField(max_length=30)
