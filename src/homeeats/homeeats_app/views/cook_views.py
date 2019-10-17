@@ -44,5 +44,3 @@ def home(request):
 def get(request):
   cook = get_object_or_404(models.Cook, user_id=request.user.id)
   return model_to_dict(cook)
-
-
