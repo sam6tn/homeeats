@@ -16,6 +16,6 @@ def index(request):
     return HttpResponse(template.render())
 
 def dish(request, dish_id):
-  dish = Dish.objects.get(id=dish_id)
-  reviews = dish.dish_review_set.all()
+  dish = Dish.objects.get(id=dish_id) #get Dish object from dish_id
+  reviews = dish.dish_review_set.all() #get all reviews for that Dish
   return render(request, 'customer_templates/customer_dish.html', {'dish': dish, 'reviews':reviews})
