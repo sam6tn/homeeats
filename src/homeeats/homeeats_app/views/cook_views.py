@@ -7,10 +7,12 @@ from django.urls import reverse
 from django.forms import model_to_dict
 from django.contrib.auth.decorators import login_required
 
+
+#cook home page after login
 @login_required
-def home(request):
+def home(request): 
   cook = get(request)
-  context = {
+  context = {  #pass in cook information
     'cook': cook
   }
   return render(request, 'cook_templates/cook_home.html', context)

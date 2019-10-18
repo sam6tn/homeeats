@@ -86,7 +86,7 @@ def userLogin(request):
             if user is not None:
                 login(request, user)
                 messages.info(request, "You are now logged in as {username}")
-                try:
+                try: #check if the user is a cook or a customer
                   models.Cook.objects.get(user=request.user)
                   is_cook = True
                 except models.Cook.DoesNotExist:
