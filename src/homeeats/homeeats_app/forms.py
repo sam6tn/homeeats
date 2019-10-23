@@ -2,9 +2,8 @@ from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import User
 from django import forms
-from django.contrib.auth.models import User
-from .models import Cook
-from .models import Customer
+from .models import Cook, Customer, Dish, Cuisine
+
 
 '''
 Information the customer needs to enter to create an account
@@ -40,3 +39,21 @@ class CookCreateForm(forms.ModelForm):
     class Meta:
       model = User
       fields = ['first_name', 'last_name', 'email', 'password']
+
+class DishSearchForm(forms.Form):
+    search = forms.CharField(label="Search",max_length=30, required=False)
+    SORT_CHOICES = (
+        ('none', '(no selection)'),
+        ('rating', 'Rating'),
+        ('price', 'Price: Low to High'),
+        ('reverse_price', 'Price: High to Low'),
+        ('distance', 'Distance'),
+    )
+    cuisine_types = Cuisine.objects.values_list('type', flat=True)
+    cuisines = [('none','(no selection)')]
+    for cuisine in cuisine_types:
+        cuisine.append((cuisine,cuisine))
+    #cuisines = [('none','(no selection)'),('mexican','Mexican'),('other','Other')]
+    sort = forms.ChoiceField(choices=SORT_CHOICES, widget=forms.Select, required=False)
+    cuisine = forms.ChoiceField(choices=cuisines, widget=forms.Select, required=False)
+
