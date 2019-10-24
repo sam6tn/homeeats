@@ -31,7 +31,7 @@ class Cook(models.Model):
 
 class Cuisine(models.Model):
   name = models.CharField(default="", max_length=30)
-  cook = models.ManyToManyField(Cook, blank=True)
+  cooks = models.ManyToManyField(Cook, related_name="cooks")
 
 class Dish(models.Model):
   title = models.CharField(default="", max_length=30)
