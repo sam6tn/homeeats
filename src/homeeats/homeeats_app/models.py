@@ -41,7 +41,7 @@ class Dish(models.Model):
   ingredients = ArrayField(models.CharField(max_length=30, blank=True), default=list)
   dish_image = models.ImageField(default="", upload_to='dishes')
   cook_time = models.IntegerField(default=0)
-  #price = models.IntegerField(default=0)
+  price = models.IntegerField(default=0)
   cook = models.ForeignKey(Cook, on_delete=models.CASCADE)
 
   def __str__(self):
