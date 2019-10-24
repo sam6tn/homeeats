@@ -49,11 +49,10 @@ class DishSearchForm(forms.Form):
         ('reverse_price', 'Price: High to Low'),
         ('distance', 'Distance'),
     )
-    cuisine_types = Cuisine.objects.values_list('type', flat=True)
+    cuisine_types = Cuisine.objects.all()
     cuisines = [('none','(no selection)')]
     for cuisine in cuisine_types:
-        cuisine.append((cuisine,cuisine))
-    #cuisines = [('none','(no selection)'),('mexican','Mexican'),('other','Other')]
+        cuisines.append((cuisine.id,cuisine.name))
     sort = forms.ChoiceField(choices=SORT_CHOICES, widget=forms.Select, required=False)
     cuisine = forms.ChoiceField(choices=cuisines, widget=forms.Select, required=False)
 

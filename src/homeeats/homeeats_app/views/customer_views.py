@@ -26,7 +26,11 @@ def home(request):
       if form.is_valid():
         data = form.cleaned_data
         search = data['search']
+        sort = data['sort']
+        cuisine = data['cuisine']
         dishes = Dish.objects.filter(title__icontains=search)
+        if (cuisine != 'none'):
+          dishes = dishes.filter(cuisine=cuisine)
         return render(request, 'customer_templates/customer_home.html', {'dishes':dishes, 'form': form})
       else:
         dishes = Dish.objects.all()

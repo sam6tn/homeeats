@@ -35,6 +35,8 @@ class Cook(models.Model):
 class Cuisine(models.Model):
   name = models.CharField(default="", max_length=30)
   cook = models.ManyToManyField(Cook, blank=True)
+  def __str__(self):
+    return self.name + " cuisine (" + str(self.id) + ")"
 
 class Dish(models.Model):
   title = models.CharField(default="", max_length=30)
@@ -43,17 +45,17 @@ class Dish(models.Model):
   ingredients = ArrayField(models.CharField(max_length=30, blank=True), default=list)
   dish_image = models.ImageField(default="", upload_to='dishes')
   cook_time = models.IntegerField(default=0)
-  price = models.IntegerField(default=0)
+  #price = models.IntegerField(default=0)
   cook = models.ForeignKey(Cook, on_delete=models.CASCADE)
-
   def __str__(self):
     return self.title + " (" + str(self.id) + ")"
+  class Meta:
+    verbose_name_plural = "Dishes"
 
 class Customer(models.Model):
   phone_number = models.CharField(max_length=30, default="")
   user = models.OneToOneField(User, on_delete=models.CASCADE)
   favorites = models.ManyToManyField(Dish, blank=True)
-
   def __str__(self):
     return "Customer " + self.user.first_name + " " + self.user.last_name + " (" + str(self.id) + ")"
 
@@ -64,9 +66,11 @@ class Dish_Review(models.Model):
   report_flag = models.BooleanField(default=False)
   customer = models.OneToOneField(Customer, on_delete=models.CASCADE)
   dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
-
   def __str__(self):
     return self.dish.title + " Review (" + str(self.id) + ")"
+  class Meta:
+    verbose_name = "Dish Review"
+    verbose_name_plural = "Dish Reviews"
 
 class Address(models.Model):
   street_name = models.CharField(max_length=60, default="")
