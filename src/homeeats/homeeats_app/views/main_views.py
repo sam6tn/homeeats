@@ -93,6 +93,8 @@ def userLogin(request):
                   is_cook = False
                 if (is_cook):
                   return redirect('/cook/home')
+                else:
+                  return redirect('/customer/home')
             else:
                 messages.error(request, "Invalid username or password.")
         else:

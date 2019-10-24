@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
 from django.template import loader
 from ..forms import CustomerCreateForm
@@ -7,6 +7,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from ..models import Dish
 from .. import models
+from django.contrib.auth.decorators import login_required
 
 '''
 Homepage view before login
@@ -20,7 +21,9 @@ def dish(request, dish_id):
     reviews = dish.dish_review_set.all() #get all reviews for that Dish
     return render(request, 'customer_templates/customer_dish.html', {'dish': dish, 'reviews':reviews})
 
+@login_required
 def home(request):
+    customer = get_object_or_404(models.Customer, user_id=request.user.id)
     if request.method == 'POST':
       form = forms.DishSearchForm(request.POST)
       if form.is_valid():
