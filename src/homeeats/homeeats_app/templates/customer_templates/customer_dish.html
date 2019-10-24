@@ -10,7 +10,7 @@
 <h3>Image Name: {{dish.dish_image.name}} </h3>
 <img src="{{ dish.dish_image.url }}">
 <h3>Cook time: {{dish.cook_time}} </h3>
-<h3>Cook: {{dish.cook.first_name}} {{dish.cook.last_name}}</h3>
+<h3>Cook: {{dish.cook.user.first_name}} {{dish.cook.user.last_name}}</h3>
 <br>
 <h2>Reviews</h4>
 {% for review in reviews %}
