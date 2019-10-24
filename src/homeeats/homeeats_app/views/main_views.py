@@ -43,7 +43,7 @@ def customercreate(request):
       user.has_perm('customer')
       user.save()
       customer.save()
-      return HttpResponse('ok')
+      return HttpResponseRedirect(reverse('login'))
     else:
       return render(request, 'customer_create.html', {'form': form})
   else:
