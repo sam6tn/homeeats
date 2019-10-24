@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block pagecontent %}
+
+<form method="POST">
+    {% csrf_token %}
+    {{form}}
+    <button  type="submit">Search</button>
+</form>
+
+{% for dish in dishes %}
+    <p>{{dish.title}} - {{dish.cuisine.name}} - {{dish.description}}</p>
+{% endfor %}
+
+{% endblock %}
