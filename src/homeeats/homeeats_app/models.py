@@ -31,8 +31,8 @@ class Cook(models.Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE)
 
 class Cuisine(models.Model):
-  type = models.CharField(default="", max_length=30)
-  cook = models.ForeignKey(Cook, on_delete=models.CASCADE)
+  name = models.CharField(default="", max_length=30)
+  cook = models.ManyToManyField(Cook, blank=True)
 
 class Dish(models.Model):
   title = models.CharField(default="", max_length=30)
