@@ -29,6 +29,8 @@ class Cook(models.Model):
   kitchen_license = models.CharField(max_length=30)
   phone_number = models.CharField(max_length=30, default="")
   user = models.OneToOneField(User, on_delete=models.CASCADE)
+  def __str__(self):
+    return "Cook " + self.user.first_name + " " + self.user.last_name + " (" + str(self.id) + ")"
 
 class Cuisine(models.Model):
   name = models.CharField(default="", max_length=30)
@@ -50,10 +52,10 @@ class Dish(models.Model):
 class Customer(models.Model):
   phone_number = models.CharField(max_length=30, default="")
   user = models.OneToOneField(User, on_delete=models.CASCADE)
-  favorites = models.ManyToManyField(Dish)
+  favorites = models.ManyToManyField(Dish, blank=True)
 
   def __str__(self):
-    return "Customer " + self.first_name + " " + self.last_name + " (" + str(self.id) + ")"
+    return "Customer " + self.user.first_name + " " + self.user.last_name + " (" + str(self.id) + ")"
 
 
 class Dish_Review(models.Model):
