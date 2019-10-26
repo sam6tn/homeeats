@@ -13,18 +13,17 @@
                     <p class="lead">Welcome back chef, what's cooking today?</p>
                 </div>
     </div>
-    <h2>Your Top Dishes</h2>
+    <h2>Your Cuisines 
+        <button type="button" class="btn btn-success">+</button>
+    </h2>
     <ul class="list-group list-group-horizontal">
-            {% for i in '012'|make_list  %}
+            {% for cuisine in cuisines  %}
         <div class="card d-flex w-100 justify-content-between m-2">
-            <h5 class="card-header"><a href="">blah<!--{{ post.headline }}--></a></h5>
+            <h5 class="card-header"><a href="">{{cuisine.name}}</a></h5>
             <div class="card-body ">
                 <h5 class="card-title">blah<!--{{ post.info }}--></h5>
                 <p class="card-text">blah<!--{{ post.body }}--></p>
                 <p class="card-text font-weight-bold text-secondary">Price: $121<!--{{ post.body }}--></p>
-            </div>
-            <div class="card-footer">
-                <small class="text-muted">asdf<!--{{ post.info }}--></small>
             </div>
         </div>
         {% endfor %}

@@ -1,4 +1,3 @@
-from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
@@ -42,7 +41,7 @@ class Dish(models.Model):
   title = models.CharField(default="", max_length=30)
   cuisine = models.ForeignKey(Cuisine, on_delete=models.CASCADE)
   description = models.CharField(default="", max_length=200)
-  ingredients = ArrayField(models.CharField(max_length=30, blank=True), default=list)
+  #ingredients = ArrayField(models.CharField(max_length=30, blank=True), default=list)
   dish_image = models.ImageField(default="", upload_to='dishes')
   cook_time = models.IntegerField(default=0)
   #price = models.IntegerField(default=0)
