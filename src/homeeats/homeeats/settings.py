@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -75,15 +76,21 @@ WSGI_APPLICATION = 'homeeats.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     'NAME': 'ecqsarnp',
+    #     'USER': 'ecqsarnp',
+    #     'PASSWORD': 'o_SFqQ58sOwaiT2nYTP6ru4z2pbSx027',
+    #     'HOST': 'salt.db.elephantsql.com',
+    #     'PORT': '5432',
+    # }
+
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'ecqsarnp',
-        'USER': 'ecqsarnp',
-        'PASSWORD': 'o_SFqQ58sOwaiT2nYTP6ru4z2pbSx027',
-        'HOST': 'salt.db.elephantsql.com',
-        'PORT': '5432'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators

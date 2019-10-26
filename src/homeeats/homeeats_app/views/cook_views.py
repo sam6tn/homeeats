@@ -15,7 +15,6 @@ def home(request):
   context = {  #pass in context
     'cuisines': cuisines
   }
-  print(context)
   return render(request, 'cook_templates/cook_home.html', context)
 
 def get_cuisines_by_cook(request):
