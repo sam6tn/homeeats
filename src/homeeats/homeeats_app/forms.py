@@ -40,3 +40,16 @@ class CookCreateForm(forms.ModelForm):
     class Meta:
       model = User
       fields = ['first_name', 'last_name', 'email', 'password']
+
+#class CuisineCreateForm(forms.Form):
+    
+
+class DishCreateForm(forms.Form):
+    title = forms.CharField(required=True,)
+    #cuisine = forms.ModelChoiceField(queryset=Cuisine.objects.all())
+    description = forms.CharField(required=True,)
+    ingredients = forms.CharField()
+    dish_image = forms.ImageField()
+    cook_time = forms.IntegerField(required=True,)
+    #cook = forms.ModelChoiceField(queryset=Cook.objects.all())
+
