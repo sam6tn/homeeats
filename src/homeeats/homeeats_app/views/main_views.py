@@ -43,7 +43,7 @@ def customercreate(request):
       user.has_perm('customer')
       user.save()
       customer.save()
-      return HttpResponse('ok')
+      return HttpResponseRedirect(reverse('login'))
     else:
       return render(request, 'customer_create.html', {'form': form})
   else:
@@ -86,13 +86,15 @@ def userLogin(request):
             if user is not None:
                 login(request, user)
                 messages.info(request, "You are now logged in as {username}")
-                try:
+                try: #check if the user is a cook or a customer
                   models.Cook.objects.get(user=request.user)
                   is_cook = True
                 except models.Cook.DoesNotExist:
                   is_cook = False
                 if (is_cook):
                   return redirect('/cook/home')
+                else:
+                  return redirect('/customer/home')
             else:
                 messages.error(request, "Invalid username or password.")
         else:

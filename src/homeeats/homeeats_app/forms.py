@@ -2,9 +2,8 @@ from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import User
 from django import forms
-from django.contrib.auth.models import User
-from .models import Cook
-from .models import Customer
+from .models import Cook, Customer, Dish, Cuisine
+
 
 '''
 Information the customer needs to enter to create an account
@@ -41,6 +40,7 @@ class CookCreateForm(forms.ModelForm):
       model = User
       fields = ['first_name', 'last_name', 'email', 'password']
 
+<<<<<<< HEAD
 #class CuisineCreateForm(forms.Form):
     
 
@@ -52,4 +52,21 @@ class DishCreateForm(forms.Form):
     dish_image = forms.ImageField()
     cook_time = forms.IntegerField(required=True,)
     #cook = forms.ModelChoiceField(queryset=Cook.objects.all())
+=======
+class DishSearchForm(forms.Form):
+    search = forms.CharField(label="Search",max_length=30, required=False)
+    SORT_CHOICES = (
+        ('none', '(no selection)'),
+        ('rating', 'Rating'),
+        ('price', 'Price: Low to High'),
+        ('reverse_price', 'Price: High to Low'),
+        ('distance', 'Distance'),
+    )
+    cuisine_types = Cuisine.objects.all()
+    cuisines = [('none','(no selection)')]
+    for cuisine in cuisine_types:
+        cuisines.append((cuisine.id,cuisine.name))
+    sort = forms.ChoiceField(choices=SORT_CHOICES, widget=forms.Select, required=False)
+    cuisine = forms.ChoiceField(choices=cuisines, widget=forms.Select, required=False)
+>>>>>>> ac2e9015ec137ba6dfbdf20eb1cbc68575addc01
 
