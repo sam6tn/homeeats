@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
 from django.template import loader
-# from ..forms import CustomerCreateForm
-# from .. import forms
+from ..forms import CustomerCreateForm
+from .. import forms
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from ..models import Dish
