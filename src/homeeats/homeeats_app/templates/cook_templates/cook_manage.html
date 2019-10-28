@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}Home{% endblock %}
+{% block pagecontent %}
+
+<div class="container mt-2">
+    <h2>Your Orders 
+        <button type="button" class="btn btn-success">+Add Dish</button>
+    </h2>
+    <ul class="list-group list-group-horizontal">
+            {% for cuisine in cuisines  %}
+        <div class="card d-flex w-100 justify-content-between m-2">
+            <h5 class="card-header"><a href="{% url 'cook_cuisine_dishes' cuisine.id %}">{{cuisine.name}}</a></h5>
+            <div class="card-body ">
+                <h5 class="card-title">blah<!--{{ post.info }}--></h5>
+                <p class="card-text">blah<!--{{ post.body }}--></p>
+                <p class="card-text font-weight-bold text-secondary">Price: $121<!--{{ post.body }}--></p>
+            </div>
+        </div>
+        {% endfor %}
+    </ul>
+</div>
+        {% endblock %}

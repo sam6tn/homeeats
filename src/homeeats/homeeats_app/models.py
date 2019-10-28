@@ -81,6 +81,7 @@ class Address(models.Model):
   customer = models.ForeignKey(Customer, on_delete=models.CASCADE, blank=True, null=True)
 
 class Order(models.Model):
+  name = models.CharField(max_length=60, default="")
   customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
   cook = models.ForeignKey(Cook, on_delete=models.CASCADE)
   total = models.DecimalField(default=0, decimal_places=2, max_digits=6)
