@@ -5,19 +5,11 @@
 {% block pagecontent %}
 
 <div class="container mt-2">
-    <div class="jumbotron jumbotron-fluid">
-                <div class="container text-center">
-                    <h1 class="display-4 brand-name">HomeEats</h1>
-                    <p class="lead">Welcome back chef, what's cooking today?</p>
-                </div>
-    </div>
-    <h2>Your Cuisines 
-        <button type="button" class="btn btn-success">+Add Dish</button>
-    </h2>
+    <h2>Your {{cuisine}} Dishes</h2>
     <ul class="list-group list-group-horizontal">
-            {% for cuisine in cuisines  %}
+            {% for dish in dishes  %}
         <div class="card d-flex w-100 justify-content-between m-2">
-            <h5 class="card-header"><a href="{% url 'cook_cuisine_dishes' cuisine.id %}">{{cuisine.name}}</a></h5>
+            <h5 class="card-header"><a href="">{{dish.title}}</a></h5>
             <div class="card-body ">
                 <h5 class="card-title">blah<!--{{ post.info }}--></h5>
                 <p class="card-text">blah<!--{{ post.body }}--></p>
