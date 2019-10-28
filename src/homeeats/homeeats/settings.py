@@ -77,13 +77,14 @@ WSGI_APPLICATION = 'homeeats.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'ecqsarnp',
-        'USER': 'ecqsarnp',
-        'PASSWORD': 'o_SFqQ58sOwaiT2nYTP6ru4z2pbSx027',
-        'HOST': 'salt.db.elephantsql.com',
-        'PORT': '5432'
+        'NAME': 'homeeats',
+        'USER': 'postgres',
+        'PASSWORD': 'homeeats123',
+        'HOST': 'capstone1.cetolplhgphy.us-east-1.rds.amazonaws.com',
+        'PORT': '5432',
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators

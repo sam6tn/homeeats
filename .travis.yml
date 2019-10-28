@@ -6,4 +6,4 @@ install:
   - pip install -r src/homeeats/requirements.txt
 # command to run tests
 script:
-  - cd src/homeeats/ && python3 manage.py test
+  - cd src/homeeats/ && python3 manage.py migrate && python3 manage.py test

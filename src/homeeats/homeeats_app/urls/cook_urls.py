@@ -2,6 +2,7 @@ from ..views import cook_views
 from django.urls import path
 
 urlpatterns = [
-  path('get/', cook_views.get, name='cook_get'),
-  path('home/', cook_views.home, name='cook_home')
+  path('home/', cook_views.home, name='cook_home'),
+  path('cuisines/', cook_views.get_cuisines_by_cook, name='cook_cuisines'),
+  path('cuisine/<str:cuisine_id>/dishes', cook_views.cook_cuisine_dishes, name='cook_cuisine_dishes')
 ]

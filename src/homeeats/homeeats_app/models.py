@@ -1,4 +1,3 @@
-from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
@@ -7,6 +6,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .managers import CustomUserManager
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.postgres.fields import ArrayField
 
 
 # class CustomUser(AbstractUser):
@@ -45,7 +45,7 @@ class Dish(models.Model):
   ingredients = ArrayField(models.CharField(max_length=30, blank=True), default=list)
   dish_image = models.ImageField(default="", upload_to='dishes')
   cook_time = models.IntegerField(default=0)
-  #price = models.IntegerField(default=0)
+  price = models.DecimalField(default=0, decimal_places=2, max_digits=6)
   cook = models.ForeignKey(Cook, on_delete=models.CASCADE)
   def __str__(self):
     return self.title + " (" + str(self.id) + ")"
@@ -77,5 +77,17 @@ class Address(models.Model):
   city = models.CharField(max_length=60, default="")
   state = models.CharField(max_length=20, default="")
   zipcode = models.CharField(max_length=20, default="")
-  cook = models.ForeignKey(Cook, on_delete=models.CASCADE)
+  cook = models.ForeignKey(Cook, on_delete=models.CASCADE, blank=True, null=True)
+  customer = models.ForeignKey(Customer, on_delete=models.CASCADE, blank=True, null=True)
+
+class Order(models.Model):
   customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+  cook = models.ForeignKey(Cook, on_delete=models.CASCADE)
+  total = models.DecimalField(default=0, decimal_places=2, max_digits=6)
+  special_requests = models.CharField(max_length=120, default="")
+
+class Item(models.Model):
+  dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
+  quantity = models.IntegerField(default=0)
+  order = models.ForeignKey(Order, on_delete=models.CASCADE)
+  
