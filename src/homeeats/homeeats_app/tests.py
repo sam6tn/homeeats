@@ -4,8 +4,8 @@ import json
 from django.test import RequestFactory
 from . import views
 from django.contrib.auth.models import User
-from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review
-from forms import DishSearchForm
+from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address
+from .forms import DishSearchForm
 
 class CookHomeTest(TestCase):
     fixtures = ['test_data.json']
@@ -41,12 +41,12 @@ class AccountCreationTest(TestCase):
 
 class AddressCreationTest(TestCase):
     def setUp(self):
-        Address.objects.create(stree_name='2132 someStreet Ln', city="Chantilly", state="VA", zipcode="20151")
-        Address.objects.create(stree_name='123 Jefferson Park Av', city="Herndon", state="VA", zipcode="20166")
-        Address.objects.create(stree_name='733 Summer Grove Terr', city="Ashburn", state="MD", zipcode="12333")
+        Address.objects.create(street_name='2132 someStreet Ln', city="Chantilly", state="VA", zipcode="20151")
+        Address.objects.create(street_name='123 Jefferson Park Av', city="Herndon", state="VA", zipcode="20166")
+        Address.objects.create(street_name='733 Summer Grove Terr', city="Ashburn", state="MD", zipcode="12333")
 
     def test_fetch_all_saved_addresses(self):
         addresses = Address.objects.all()
-        self.assertContains(adresses, "2132 someStreet Ln")
-        self.assertContains(adresses, "123 Jefferson Park Av")
-        self.assertContains(adresses, "733 Summer Grove Terr")
+        self.assertContains(addresses, "2132 someStreet Ln")
+        self.assertContains(addresses, "123 Jefferson Park Av")
+        self.assertContains(addresses, "733 Summer Grove Terr")
