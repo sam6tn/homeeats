@@ -5,6 +5,7 @@ from django.test import RequestFactory
 from . import views
 from django.contrib.auth.models import User
 from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review
+from forms import DishSearchForm
 
 class CookHomeTest(TestCase):
     fixtures = ['test_data.json']
@@ -24,6 +25,9 @@ class CustomerHomeTest(TestCase):
     def test_not_logged_in_causes_redirect_to_login_for_cook_home(self):
         response = self.client.get(reverse('customer_home'))
         self.assertEquals(response.status_code, 302)
+    def test_search_form_is_valid(self):
+        form = DishSearchForm(data={'search':'', 'sort':'none', 'cuisine':'none'})
+        self.assertTrue(form.is_valid())
 
 class AccountCreationTest(TestCase):
     def test_cook_create_with_valid_data(self):
@@ -34,6 +38,7 @@ class AccountCreationTest(TestCase):
         response = self.client.post(reverse('customercreate'), {'first_name': 'Dave', 'last_name': 'Chapelle', 'street': '221 Baker Street', 'town': 'Fairfax', 'state': 'VA', 'zipcode': '22000', 'email': 'dave@dave.com', 'password': 'chapchap', 'phone_number': '8888888888'})
         self.assertEquals(response.status_code, 302)
         self.assertEquals(response.url, "/")
+
     
 
     
