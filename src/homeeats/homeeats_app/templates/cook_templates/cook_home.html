@@ -11,17 +11,16 @@
                     <p class="lead">Welcome back chef, what's cooking today?</p>
                 </div>
     </div>
-    <h2>Your Cuisines 
-        <button type="button" class="btn btn-success">+Add Dish</button>
+    <h2>Your Orders 
     </h2>
     <ul class="list-group list-group-horizontal">
-            {% for cuisine in cuisines  %}
+            {% for order in orders  %}
         <div class="card d-flex w-100 justify-content-between m-2">
-            <h5 class="card-header"><a href="{% url 'cook_cuisine_dishes' cuisine.id %}">{{cuisine.name}}</a></h5>
+            <h5 class="card-header"><a href="">{{order.name}}</a></h5>
             <div class="card-body ">
-                <h5 class="card-title">blah<!--{{ post.info }}--></h5>
+                <h5 class="card-title">#{{order.id}}</h5>
                 <p class="card-text">blah<!--{{ post.body }}--></p>
-                <p class="card-text font-weight-bold text-secondary">Price: $121<!--{{ post.body }}--></p>
+                <p class="card-text font-weight-bold text-secondary">Total: ${{order.total}}</p>
             </div>
         </div>
         {% endfor %}
