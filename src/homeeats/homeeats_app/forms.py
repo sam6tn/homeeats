@@ -40,7 +40,6 @@ class CookCreateForm(forms.ModelForm):
       model = User
       fields = ['first_name', 'last_name', 'email', 'password']
 
-<<<<<<< HEAD
 #class CuisineCreateForm(forms.Form):
     
 
@@ -52,7 +51,6 @@ class DishCreateForm(forms.Form):
     dish_image = forms.ImageField()
     cook_time = forms.IntegerField(required=True,)
     #cook = forms.ModelChoiceField(queryset=Cook.objects.all())
-=======
 class DishSearchForm(forms.Form):
     search = forms.CharField(label="Search",max_length=30, required=False)
     SORT_CHOICES = (
@@ -68,5 +66,4 @@ class DishSearchForm(forms.Form):
         cuisines.append((cuisine.id,cuisine.name))
     sort = forms.ChoiceField(choices=SORT_CHOICES, widget=forms.Select, required=False)
     cuisine = forms.ChoiceField(choices=cuisines, widget=forms.Select, required=False)
->>>>>>> ac2e9015ec137ba6dfbdf20eb1cbc68575addc01
 
