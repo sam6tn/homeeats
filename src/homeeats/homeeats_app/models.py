@@ -45,7 +45,7 @@ class Dish(models.Model):
   ingredients = ArrayField(models.CharField(max_length=30, blank=True), default=list)
   dish_image = models.ImageField(default="", upload_to='dishes')
   cook_time = models.IntegerField(default=0)
-  #price = models.IntegerField(default=0)
+  price = models.DecimalField(default=0, decimal_places=2, max_digits=6)
   cook = models.ForeignKey(Cook, on_delete=models.CASCADE)
   def __str__(self):
     return self.title + " (" + str(self.id) + ")"
@@ -79,3 +79,15 @@ class Address(models.Model):
   zipcode = models.CharField(max_length=20, default="")
   cook = models.ForeignKey(Cook, on_delete=models.CASCADE, blank=True, null=True)
   customer = models.ForeignKey(Customer, on_delete=models.CASCADE, blank=True, null=True)
+
+class Order(models.Model):
+  customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+  cook = models.ForeignKey(Cook, on_delete=models.CASCADE)
+  total = models.DecimalField(default=0, decimal_places=2, max_digits=6)
+  special_requests = models.CharField(max_length=120, default="")
+
+class Item(models.Model):
+  dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
+  quantity = models.IntegerField(default=0)
+  order = models.ForeignKey(Order, on_delete=models.CASCADE)
+  
