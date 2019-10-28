@@ -39,8 +39,14 @@ class AccountCreationTest(TestCase):
         self.assertEquals(response.status_code, 302)
         self.assertEquals(response.url, "/")
 
-    
+class AddressCreationTest(TestCase):
+    def setUp(self):
+        Address.objects.create(stree_name='2132 someStreet Ln', city="Chantilly", state="VA", zipcode="20151")
+        Address.objects.create(stree_name='123 Jefferson Park Av', city="Herndon", state="VA", zipcode="20166")
+        Address.objects.create(stree_name='733 Summer Grove Terr', city="Ashburn", state="MD", zipcode="12333")
 
-    
-
-
+    def test_fetch_all_saved_addresses(self):
+        addresses = Address.objects.all()
+        self.assertContains(adresses, "2132 someStreet Ln")
+        self.assertContains(adresses, "123 Jefferson Park Av")
+        self.assertContains(adresses, "733 Summer Grove Terr")
