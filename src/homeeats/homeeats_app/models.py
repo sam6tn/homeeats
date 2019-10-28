@@ -83,11 +83,19 @@ class Address(models.Model):
   customer = models.ForeignKey(Customer, on_delete=models.CASCADE, blank=True, null=True)
 
 class Order(models.Model):
-  name = models.CharField(max_length=60, default="")
+  name = models.CharField(max_length=60, default="") #make it first name <space> last name of customer
   customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
   cook = models.ForeignKey(Cook, on_delete=models.CASCADE)
   total = models.DecimalField(default=0, decimal_places=2, max_digits=6)
   special_requests = models.CharField(max_length=120, default="")
+  status_choices = [
+        ('p', 'Pending'),
+        ('c', 'Cooking'),
+        ('o', 'Out For Delivery'),
+        ('d', 'Delivered'),
+        ('r', 'Rejected')
+    ]
+  status = models.CharField(max_length=1, choices=status_choices, default='p')
 
 class Item(models.Model):
   dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
