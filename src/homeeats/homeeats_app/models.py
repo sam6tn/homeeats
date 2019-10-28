@@ -76,5 +76,5 @@ class Address(models.Model):
   city = models.CharField(max_length=60, default="")
   state = models.CharField(max_length=20, default="")
   zipcode = models.CharField(max_length=20, default="")
-  cook = models.ForeignKey(Cook, on_delete=models.CASCADE)
-  customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+  cook = models.ForeignKey(Cook, on_delete=models.CASCADE, blank=True, null=True)
+  customer = models.ForeignKey(Customer, on_delete=models.CASCADE, blank=True, null=True)
