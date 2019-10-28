@@ -9,8 +9,19 @@
     <button  type="submit">Search</button>
 </form>
 
+<ul class="list-group list-group-horizontal">
 {% for dish in dishes %}
-    <p>{{dish.title}} - {{dish.cuisine.name}} - {{dish.description}} - {{dish.id}}</p>
+    <div class="card d-flex w-100 justify-content-between m-2">
+        <h5 class="card-header"><a href="{% url 'customer_dish' dish.id %}">{{dish.title}}</a></h5>
+        <div class="card-body ">
+            <h5 class="card-title">Cook: {{dish.cook.user.first_name}} {{dish.cook.user.last_name}}</h5>
+            <p class="card-text">{{dish.description}}</p>
+            <img src="{{ dish.dish_image.url }}" width=200px>
+            <p class="card-text font-weight-bold text-secondary">Price: ${{dish.price}}</p>
+        </div>
+    </div>
 {% endfor %}
+</ul>
+
 
 {% endblock %}
