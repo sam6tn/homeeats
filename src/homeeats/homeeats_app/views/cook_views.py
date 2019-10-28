@@ -7,7 +7,6 @@ from django.urls import reverse
 from django.forms import model_to_dict
 from django.contrib.auth.decorators import login_required
 
-
 #cook home page after login
 @login_required
 def home(request): 

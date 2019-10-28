@@ -6,6 +6,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .managers import CustomUserManager
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.postgres.fields import ArrayField
 
 
 # class CustomUser(AbstractUser):
@@ -41,7 +42,7 @@ class Dish(models.Model):
   title = models.CharField(default="", max_length=30)
   cuisine = models.ForeignKey(Cuisine, on_delete=models.CASCADE)
   description = models.CharField(default="", max_length=200)
-  #ingredients = ArrayField(models.CharField(max_length=30, blank=True), default=list)
+  ingredients = ArrayField(models.CharField(max_length=30, blank=True), default=list)
   dish_image = models.ImageField(default="", upload_to='dishes')
   cook_time = models.IntegerField(default=0)
   #price = models.IntegerField(default=0)
