@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import User
 from django import forms
-from .models import Cook, Customer, Dish, Cuisine
+from .models import Cook, Customer, Dish, Cuisine, Dish_Review
 
 
 '''
@@ -56,3 +56,8 @@ class DishSearchForm(forms.Form):
     sort = forms.ChoiceField(choices=SORT_CHOICES, widget=forms.Select, required=False)
     cuisine = forms.ChoiceField(choices=cuisines, widget=forms.Select, required=False)
 
+class DishReviewForm(forms.ModelForm):
+    description = forms.CharField(widget=forms.Textarea(attrs={'cols': 80, 'rows': 3}))
+    class Meta:
+        model = Dish_Review
+        fields = ('dish_rating', 'description', 'report_flag')
