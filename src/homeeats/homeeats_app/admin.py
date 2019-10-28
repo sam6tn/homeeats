@@ -7,10 +7,10 @@ admin.site.site_header = "HomeEats Admin Page"
 #Customizing the display and possible filters when looking through each of these models from the admin page
 class DishAdmin(admin.ModelAdmin):
 	list_display = ('title', 'cuisine', 'cook')
-	list_filter = ('cusine',)
+	list_filter = ('cuisine',)
 
 class CookAdmin(admin.ModelAdmin):
-	list_display = ('user', 'approved', 'kitchenlicense')
+	list_display = ('user', 'approved', 'kitchen_license')
 
 class CustomerAdmin(admin.ModelAdmin):
 	list_display = ('user', 'phone_number')
