@@ -11,7 +11,7 @@ class CookHomeTest(TestCase):
     fixtures = ['test_data.json']
     def test_cuisines_on_cook_home(self):
         self.client.login(username='ramsey', password='ramseyramsey')
-        response = self.client.get(reverse('cook_home'))
+        response = self.client.get(reverse('cook_manage'))
         cuisines = response.context['cuisines']
         self.assertEquals(cuisines[0]['name'], "Indian")
         self.assertEquals(cuisines[1]['name'], "Mexican")
