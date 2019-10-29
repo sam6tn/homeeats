@@ -80,7 +80,7 @@ DATABASES = {
         'NAME': 'homeeats',
         'USER': 'postgres',
         'PASSWORD': 'homeeats123',
-        'HOST': 'capstone1.cetolplhgphy.us-east-1.rds.amazonaws.com',
+        'HOST': 'dev-homeeats.cetolplhgphy.us-east-1.rds.amazonaws.com',
         'PORT': '5432',
     }
 }
