@@ -55,3 +55,8 @@ class DishSearchForm(forms.Form):
     sort = forms.ChoiceField(choices=SORT_CHOICES, widget=forms.Select, required=False)
     cuisine = forms.ChoiceField(choices=cuisines, widget=forms.Select, required=False)
 
+class DishCreateForm(forms.ModelForm):
+    class Meta:
+        model = Dish
+        fields = ('title', 'cuisine', 'description', 'ingredients', 'cook_time', 'price')
+

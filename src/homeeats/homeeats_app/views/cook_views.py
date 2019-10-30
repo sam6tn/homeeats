@@ -38,6 +38,34 @@ def single_order_view(request, order_id):
   }
   return render(request, 'cook_templates/single_order_view.html', context)
 
+@login_required
+@cook_required
+def create_dish(request):
+  cook = get_object_or_404(Cook, user_id=request.user.id)
+  if request.method == 'POST':
+      form = forms.DishCreateForm(request.POST)
+      if form.is_valid():
+        data = form.cleaned_data
+        dish = Dish.objects.create(
+          title=data['title'], 
+          cuisine=data['cuisine'], 
+          description=data['description'], 
+          ingredients=data['ingredients'],  
+          price=data['price'], 
+          cook_time=data['cook_time'],
+          cook=cook
+          )
+        dish.save()
+        objs = Cuisine.objects.filter(cooks__in=[cook])
+        if(data['cuisine'] not in objs): #add cook to cuisine if doesn't already exist
+          data['cuisine'].cooks.add(cook)
+        return HttpResponseRedirect(reverse('cook_manage'))
+      else:
+        return render(request, 'cook_templates/create_dish.html', {'form': form})
+  else:
+    form = forms.DishCreateForm()
+    return render(request, 'cook_templates/create_dish.html', {'form':form})
+
 def get_items_by_order(order_id):
   objs = Item.objects.filter(order=order_id)
   items = []
