@@ -3,8 +3,7 @@ from django.urls import reverse
 import json 
 from django.test import RequestFactory
 from . import views
-from django.contrib.auth.models import User
-from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address
+from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address, User
 from .forms import DishSearchForm
 
 class CookHomeTest(TestCase):
@@ -38,6 +37,16 @@ class AccountCreationTest(TestCase):
         response = self.client.post(reverse('customercreate'), {'first_name': 'Dave', 'last_name': 'Chapelle', 'street': '221 Baker Street', 'town': 'Fairfax', 'state': 'VA', 'zipcode': '22000', 'email': 'dave@dave.com', 'password': 'chapchap', 'phone_number': '8888888888'})
         self.assertEquals(response.status_code, 302)
         self.assertEquals(response.url, "/")
+
+class UserGroupTest(TestCase):
+    def test_cook_create(self):
+        response = self.client.post(reverse('cookcreate'), {'first_name': 'Bob', 'last_name': 'Saget', 'email': 'bob@bob.com', 'password': 'sagetsaget', 'kitchen_license': 'asdfasdfasdf', 'phone_number': '7777777777'})
+        user = User.objects.get(username="bob@bob.com")
+        self.assertTrue(user.is_cook)
+    def test_customer_create(self):
+        response = self.client.post(reverse('customercreate'), {'first_name': 'Dave', 'last_name': 'Chapelle', 'street': '221 Baker Street', 'town': 'Fairfax', 'state': 'VA', 'zipcode': '22000', 'email': 'dave@dave.com', 'password': 'chapchap', 'phone_number': '8888888888'})
+        user = User.objects.get(username="dave@dave.com")
+        self.assertTrue(user.is_customer)
 
 # class AddressCreationTest(TestCase):
 #     def setUp(self):
