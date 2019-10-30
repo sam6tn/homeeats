@@ -8,6 +8,7 @@ from django.urls import reverse
 from ..models import Dish
 from .. import models
 from django.contrib.auth.decorators import login_required
+from ..decorators import customer_required
 
 '''
 Homepage view before login
@@ -22,6 +23,7 @@ def dish(request, dish_id):
     return render(request, 'customer_templates/customer_dish.html', {'dish': dish, 'reviews':reviews})
 
 @login_required
+@customer_required
 def home(request):
     customer = get_object_or_404(models.Customer, user_id=request.user.id)
     if request.method == 'POST':

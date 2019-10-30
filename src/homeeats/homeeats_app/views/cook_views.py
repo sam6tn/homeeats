@@ -7,9 +7,11 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.forms import model_to_dict
 from django.contrib.auth.decorators import login_required
+from ..decorators import cook_required
 
 #cook home page after login
 @login_required
+@cook_required
 def manage(request): 
   cuisines = get_cuisines_by_cook(request)
   context = {  #pass in context
@@ -18,6 +20,7 @@ def manage(request):
   return render(request, 'cook_templates/cook_manage.html', context)
 
 @login_required
+@cook_required
 def home(request):
   orders = get_orders_by_cook(request)
   context = {
@@ -26,6 +29,7 @@ def home(request):
   return render(request, 'cook_templates/cook_home.html', context)
 
 @login_required
+@cook_required
 def single_order_view(request, order_id):
   items = get_items_by_order(order_id)
   context = {
