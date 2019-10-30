@@ -6,17 +6,17 @@
 
 <div class="container mt-2">
     <h2>Your Cuisines 
-        <button type="button" class="btn btn-success">+Add Dish</button>
+        <a href="{% url 'create_dish' %}"><button type="button" class="btn btn-success">+Add Dish</button></a>
     </h2>
     <ul class="list-group list-group-horizontal">
             {% for cuisine in cuisines  %}
-        <div class="card d-flex w-100 justify-content-between m-2">
+        <div class="card justify-content-between m-2" style="width: 14rem;">
             <h5 class="card-header"><a href="{% url 'cook_cuisine_dishes' cuisine.id %}">{{cuisine.name}}</a></h5>
             <div class="card-body ">
                 <h5 class="card-title">blah<!--{{ post.info }}--></h5>
                 <p class="card-text">blah<!--{{ post.body }}--></p>
                 <p class="card-text font-weight-bold text-secondary">Price: ${{ cuisine.price }}</p>
-            </div>
+            </div> 
         </div>
         {% endfor %}
     </ul>

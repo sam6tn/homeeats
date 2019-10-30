@@ -8,12 +8,12 @@
     <h2>Your {{cuisine}} Dishes</h2>
     <ul class="list-group list-group-horizontal">
             {% for dish in dishes  %}
-        <div class="card d-flex w-100 justify-content-between m-2">
+            <div class="card justify-content-between m-2" style="width: 14rem;">
             <h5 class="card-header"><a href="">{{dish.title}}</a></h5>
             <div class="card-body ">
                 <h5 class="card-title">blah<!--{{ post.info }}--></h5>
-                <p class="card-text">blah<!--{{ post.body }}--></p>
-                <p class="card-text font-weight-bold text-secondary">Price: $121<!--{{ post.body }}--></p>
+                <p class="card-text">{{dish.description}}</p>
+                <p class="card-text font-weight-bold text-secondary">Price: ${{dish.price}}</p>
             </div>
         </div>
         {% endfor %}

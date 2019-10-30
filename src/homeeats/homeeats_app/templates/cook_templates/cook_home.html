@@ -10,10 +10,10 @@
     <ul class="list-group list-group-horizontal">
             {% for order in orders  %}
             {% if order.status == 'p' %}
-        <div class="card d-flex w-100 justify-content-between m-2">
+        <div class="card justify-content-between m-2" style="width: 14rem;">
             <h5 class="card-header"><a href="{% url 'single_order_view' order.id %}">{{order.name}}</a></h5>
             <div class="card-body ">
-                <h5 class="card-title">#{{order.id}}</h5>
+                <h5 class="card-title">Order #{{order.id}}</h5>
                 <p class="card-text">blah<!--{{ post.body }}--></p>
                 <p class="card-text font-weight-bold text-secondary">Total: ${{order.total}}</p>
             </div>
@@ -27,20 +27,20 @@
     <ul class="list-group list-group-horizontal">
         {% for order in orders  %}
         {% if order.status == 'c' %}
-    <div class="card d-flex w-100 justify-content-between m-2">
+        <div class="card justify-content-between m-2" style="width: 14rem;">
         <h5 class="card-header"><a href="{% url 'single_order_view' order.id %}">{{order.name}}</a></h5>
         <div class="card-body ">
-            <h5 class="card-title">#{{order.id}}</h5>
+            <h5 class="card-title">Order #{{order.id}}</h5>
             <p class="card-text">Cooking</p>
             <p class="card-text font-weight-bold text-secondary">Total: ${{order.total}}</p>
         </div>
     </div>
     {% endif %}
     {% if order.status == 'o' %}
-    <div class="card d-flex w-100 justify-content-between m-2">
+    <div class="card justify-content-between m-2" style="width: 14rem;">
         <h5 class="card-header"><a href="{% url 'single_order_view' order.id %}">{{order.name}}</a></h5>
         <div class="card-body ">
-            <h5 class="card-title">#{{order.id}}</h5>
+            <h5 class="card-title">Order #{{order.id}}</h5>
             <p class="card-text">Out For Delivery</p>
             <p class="card-text font-weight-bold text-secondary">Total: ${{order.total}}</p>
         </div>
