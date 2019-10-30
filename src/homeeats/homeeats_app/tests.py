@@ -3,19 +3,18 @@ from django.urls import reverse
 import json 
 from django.test import RequestFactory
 from . import views
-from django.contrib.auth.models import User
 from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address, User
 from .forms import DishSearchForm
 
 class CookHomeTest(TestCase):
     fixtures = ['test_data.json']
     def test_cuisines_on_cook_home(self):
-        self.client.login(username='ramsey', password='ramseyramsey')
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
         response = self.client.get(reverse('cook_manage'))
         cuisines = response.context['cuisines']
-        self.assertEquals(cuisines[0]['name'], "Indian")
-        self.assertEquals(cuisines[1]['name'], "Mexican")
-        self.assertEquals(cuisines[2]['name'], "Chinese")
+        self.assertEquals(cuisines[0]['name'], "Italian")
+        self.assertEquals(cuisines[1]['name'], "Indian")
+        self.assertEquals(cuisines[2]['name'], "Mexican")
         self.client.logout()
     def test_not_logged_in_causes_redirect_to_login_for_cook_home(self):
         response = self.client.get(reverse('cook_home'))
@@ -38,7 +37,7 @@ class AccountCreationTest(TestCase):
         response = self.client.post(reverse('customercreate'), {'first_name': 'Dave', 'last_name': 'Chapelle', 'street': '221 Baker Street', 'town': 'Fairfax', 'state': 'VA', 'zipcode': '22000', 'email': 'dave@dave.com', 'password': 'chapchap', 'phone_number': '8888888888'})
         self.assertEquals(response.status_code, 302)
         self.assertEquals(response.url, "/")
-
+        
 class AddressCreationTest(TestCase):
      def setUp(self):
          Address.objects.create(street_name='2132 someStreet Ln', city="Chantilly", state="VA", zipcode="20151")
