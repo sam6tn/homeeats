@@ -2,7 +2,10 @@ from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import User
 from django import forms
-from .models import Cook, Customer, Dish, Cuisine
+from .models import Cuisine
+from .models import Customer
+from .models import Cook
+from .models import Dish
 
 
 '''

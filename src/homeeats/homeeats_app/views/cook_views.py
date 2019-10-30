@@ -1,5 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.contrib.auth.models import User
+from .. import models
+from ..models import User
 from .. import forms
 from ..models import Cook, Cuisine, Dish, Order, Customer, Item
 from django.shortcuts import render, get_object_or_404

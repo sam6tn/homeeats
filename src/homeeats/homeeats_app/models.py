@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db.models.signals import post_save
@@ -19,6 +18,10 @@ from django.contrib.postgres.fields import ArrayField
 
 #  def __str__(self):
 #    return self.email
+
+class User(AbstractUser):
+  is_cook = models.BooleanField(default=False)
+  is_customer = models.BooleanField(default=False)
 
 '''
 Columns in the cook database table
