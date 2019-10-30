@@ -1,7 +1,8 @@
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.contrib.auth.models import User
+from .. import models
+from ..models import User
 from .. import forms
-from ..models import Cook, Cuisine, Dish, Order, Customer
+from ..models import Cook, Cuisine, Dish, Order, Customer, Item
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.forms import model_to_dict
@@ -23,6 +24,26 @@ def home(request):
     'orders': orders
   }
   return render(request, 'cook_templates/cook_home.html', context)
+
+@login_required
+def single_order_view(request, order_id):
+  items = get_items_by_order(order_id)
+  context = {
+    'order_id': order_id,
+    'items': items
+  }
+  return render(request, 'cook_templates/single_order_view.html', context)
+
+def get_items_by_order(order_id):
+  objs = Item.objects.filter(order=order_id)
+  items = []
+  for obj in objs:
+    dish = Dish.objects.get(id=obj.dish_id)
+    converted_dish = model_to_dict(dish)
+    converted = model_to_dict(obj)
+    converted['dish'] = converted_dish
+    items.append(converted)
+  return items
 
 def get_orders_by_cook(request):
   cook = get_object_or_404(Cook, user_id=request.user.id)

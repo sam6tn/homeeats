@@ -5,6 +5,7 @@ from django import forms
 from .models import Cook, Customer, Dish, Cuisine, Dish_Review
 
 
+
 '''
 Information the customer needs to enter to create an account
 '''

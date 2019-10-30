@@ -80,7 +80,7 @@ DATABASES = {
         'NAME': 'homeeats',
         'USER': 'postgres',
         'PASSWORD': 'homeeats123',
-        'HOST': 'capstone1.cetolplhgphy.us-east-1.rds.amazonaws.com',
+        'HOST': 'dev-homeeats1.cetolplhgphy.us-east-1.rds.amazonaws.com',
         'PORT': '5432',
     }
 }
@@ -103,6 +103,8 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+AUTH_USER_MODEL = 'homeeats_app.User'
 
 
 # Internationalization
@@ -129,3 +131,4 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 LOGIN_URL = '/'
+
