@@ -38,6 +38,8 @@ class Dish(models.Model):
   cook_time = models.IntegerField(default=0)
   price = models.DecimalField(default=0, decimal_places=2, max_digits=6)
   cook = models.ForeignKey(Cook, on_delete=models.CASCADE)
+  # total_rating = models.IntegerField(default=0)
+  # num_ratings = models.IntegerField(default=0)
   def __str__(self):
     return self.title + " (" + str(self.id) + ")"
   class Meta:
@@ -55,7 +57,7 @@ class Dish_Review(models.Model):
   dish_rating = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)])
   description = models.CharField(max_length=200)
   report_flag = models.BooleanField(default=False)
-  customer = models.OneToOneField(Customer, on_delete=models.CASCADE)
+  customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
   dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
   def __str__(self):
     return self.dish.title + " Review (" + str(self.id) + ")"
