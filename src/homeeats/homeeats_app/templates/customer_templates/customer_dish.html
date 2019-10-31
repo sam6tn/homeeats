@@ -1,20 +1,32 @@
-{% extends 'base.html' %}
+{% extends 'customer_base.html' %}
 {% load staticfiles %}
 
 {% block title %}Dish {{dish_id}} {% endblock %}
 {% block pagecontent %}
 
-<h1>ID: {{dish.id}}</h1>
-<h1>Title: {{dish.title}}</h1>
-<h3>Description: {{dish.description}} </h3>
-<h3>Image Name: {{dish.dish_image.name}} </h3>
-<img src="{{ dish.dish_image.url }}">
-<h3>Cook time: {{dish.cook_time}} </h3>
-<h3>Cook: {{dish.cook.user.first_name}} {{dish.cook.user.last_name}}</h3>
-<br>
-<h2>Reviews</h4>
-{% for review in reviews %}
-    <h3>{{review.dish_rating}}: {{review.description}}</h3>
-{% endfor %}
+<div class="row">
+    <div class="col-6">
+        <h1>{{dish.title}} <button class='btn btn-success' name="add_to_order">Add to Order</button></h1>
+        <h4>{{dish.description}} </h4>
+        <img src="{{ dish.dish_image.url }}" width=400px height=300px>
+        <h3>Cook time: {{dish.cook_time}} </h3>
+        <h3>Cook: {{dish.cook.user.first_name}} {{dish.cook.user.last_name}}</h3>
+    </div>
+    <div class="col-6">
+        <h2>Reviews <!-- will change write review to after order in future -->
+            <button class="btn btn-primary" onClick="getElementById('review_form').style.display='block'">Write Review</button>
+        </h2>
+        <form method="POST" id="review_form" style="display:none;">
+            {% csrf_token %}
+            {{form.as_p}}
+            <input type="submit" name="review_submit">
+        </form>
+        {% for review in reviews %}
+            <h3>{{review.dish_rating}}: {{review.description}}</h3>
+        {% endfor %}
+
+    </div>
+
+</div>
 
 {% endblock %}

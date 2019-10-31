@@ -1,8 +1,7 @@
-<head>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <style>
 
-  </style>
+{% extends 'none_base.html' %}
+{% block pagecontent %}
+
 </head>
 <div style="text-align: center;width:25%;margin: 20px auto;">
   <h2>Login</h2>
@@ -24,5 +23,7 @@
     <input type="submit" value="Login" class="btn btn-primary">
   </form>
 
-    Don't have an account? <a href="/register" target="blank"><strong>register here</strong></a>!
+    Create <a href="/cookcreate"><strong>Cook account</strong></a> or <a href="/customercreate"><strong>Customer account</strong></a>!
 </div>
+
+{% endblock %}

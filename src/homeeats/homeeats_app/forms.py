@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django import forms
-from .models import User, Cuisine, Customer, Cook, Dish
+from .models import User, Cuisine, Customer, Cook, Dish, Dish_Review
+
 
 
 '''
@@ -55,8 +56,13 @@ class DishSearchForm(forms.Form):
     sort = forms.ChoiceField(choices=SORT_CHOICES, widget=forms.Select, required=False)
     cuisine = forms.ChoiceField(choices=cuisines, widget=forms.Select, required=False)
 
+class DishReviewForm(forms.ModelForm):
+    description = forms.CharField(widget=forms.Textarea(attrs={'cols': 80, 'rows': 3}))
+    class Meta:
+        model = Dish_Review
+        fields = ('dish_rating', 'description', 'report_flag')
+
 class DishCreateForm(forms.ModelForm):
     class Meta:
         model = Dish
         fields = ('title', 'cuisine', 'description', 'ingredients', 'cook_time', 'price')
-
