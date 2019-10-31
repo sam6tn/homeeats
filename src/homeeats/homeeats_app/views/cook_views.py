@@ -7,9 +7,11 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.forms import model_to_dict
 from django.contrib.auth.decorators import login_required
+from ..decorators import cook_required
 
 #cook home page after login
 @login_required
+@cook_required
 def manage(request): 
   cuisines = get_cuisines_by_cook(request)
   context = {  #pass in context
@@ -18,6 +20,7 @@ def manage(request):
   return render(request, 'cook_templates/cook_manage.html', context)
 
 @login_required
+@cook_required
 def home(request):
   orders = get_orders_by_cook(request)
   context = {
@@ -26,6 +29,7 @@ def home(request):
   return render(request, 'cook_templates/cook_home.html', context)
 
 @login_required
+@cook_required
 def single_order_view(request, order_id):
   items = get_items_by_order(order_id)
   context = {
@@ -33,6 +37,49 @@ def single_order_view(request, order_id):
     'items': items
   }
   return render(request, 'cook_templates/single_order_view.html', context)
+
+@login_required
+@cook_required
+def create_dish(request):
+  cook = get_object_or_404(Cook, user_id=request.user.id)
+  if request.method == 'POST':
+      form = forms.DishCreateForm(request.POST)
+      if form.is_valid():
+        data = form.cleaned_data
+        dish = Dish.objects.create(
+          title=data['title'], 
+          cuisine=data['cuisine'], 
+          description=data['description'], 
+          ingredients=data['ingredients'],  
+          price=data['price'], 
+          cook_time=data['cook_time'],
+          cook=cook
+          )
+        dish.save()
+        objs = Cuisine.objects.filter(cooks__in=[cook])
+        if(data['cuisine'] not in objs): #add cook to cuisine if doesn't already exist
+          data['cuisine'].cooks.add(cook)
+        return HttpResponseRedirect(reverse('cook_manage'))
+      else:
+        return render(request, 'cook_templates/create_dish.html', {'form': form})
+  else:
+    form = forms.DishCreateForm()
+    return render(request, 'cook_templates/create_dish.html', {'form':form})
+
+@login_required
+@cook_required
+def delete_dish(request, dish_id):
+  dish = Dish.objects.get(id=dish_id)
+  cuisine = Cuisine.objects.get(id=dish.cuisine_id)
+  cook = Cook.objects.get(user_id=request.user.id)
+  if (dish.cook == cook): #only allow a cook to delete his/her own dish
+    dish.delete()
+    objs = Dish.objects.filter(cook=cook, cuisine=cuisine)
+    if not objs: #check if they are deleting the only dish left in the cuisine
+      cuisine.cooks.remove(cook) #if so, remove them from the cuisine
+      return HttpResponseRedirect(reverse('cook_manage')) #cuisine doesn't exist so redirect to cook/manage
+    return HttpResponseRedirect(reverse('cook_cuisine_dishes', args=[cuisine.id])) #redirect to cuisine because it exists
+  return HttpResponseRedirect(reverse('cook_manage'))
 
 def get_items_by_order(order_id):
   objs = Item.objects.filter(order=order_id)
@@ -61,6 +108,8 @@ def get_cuisines_by_cook(request):
     cuisines.append(model_to_dict(obj))
   return cuisines
 
+@login_required
+@cook_required
 def cook_cuisine_dishes(request, cuisine_id):
   cook = get_object_or_404(Cook, user_id=request.user.id)
   cuisine = get_object_or_404(Cuisine, id=cuisine_id)

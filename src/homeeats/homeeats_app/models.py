@@ -7,18 +7,6 @@ from .managers import CustomUserManager
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.postgres.fields import ArrayField
 
-
-# class CustomUser(AbstractUser):
-#  username = None
-#  email = models.EmailField(_('email_address'), unique=True)
-
-#  USERNAME_FIELD = 'email'
-#  REQUIRED_FIELDS = []
-#  objects = CustomUserManager()
-
-#  def __str__(self):
-#    return self.email
-
 class User(AbstractUser):
   is_cook = models.BooleanField(default=False)
   is_customer = models.BooleanField(default=False)

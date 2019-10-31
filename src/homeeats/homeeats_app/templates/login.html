@@ -1,14 +1,29 @@
+
 {% extends 'base2.html' %}
 {% block pagecontent %}
-<div style="text-align: center;width:27%;margin: 100px auto;">
-    <div class="container">
-        <form method="POST">
-        {% csrf_token %}
-        {{form.as_p}}
-            <button  type="submit">Login</button>
-        </form>
-        <p>Don't have an account?</p>
-        <p>Create <a href="/cookcreate"><strong>cook account</strong></a> or <a href="/customercreate"><strong>customer account</strong></a></p>
+
+</head>
+<div style="text-align: center;width:25%;margin: 20px auto;">
+  <h2>Login</h2>
+  <form method="post">
+    {% csrf_token %}
+
+    <div style="margin:10px;text-align: left;">
+        Username
+      <div style="float:right;">
+        {{ form.username }}
+      </div>
     </div>
+    <div style="margin:10px;text-align: left;">
+        Password
+      <div style="float:right;">
+        {{ form.password }}
+      </div>
+    </div>
+    <input type="submit" value="Login" class="btn btn-primary">
+  </form>
+
+    Don't have an account? <a href="/register" target="blank"><strong>register here</strong></a>!
 </div>
+
 {% endblock %}

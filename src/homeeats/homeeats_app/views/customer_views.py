@@ -10,6 +10,8 @@ from .. import models
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
+from ..decorators import customer_required
+
 
 '''
 Homepage view before login
@@ -46,6 +48,7 @@ def dish(request, dish_id):
       return render(request, 'customer_templates/customer_dish.html', {'dish': dish, 'reviews':reviews, 'form':form})
 
 @login_required
+@customer_required
 def home(request):
     try:
       customer = Customer.objects.get(user_id=request.user.id)

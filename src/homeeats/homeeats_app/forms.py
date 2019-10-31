@@ -1,8 +1,7 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
-from django.contrib.auth.models import User
 from django import forms
-from .models import Cook, Customer, Dish, Cuisine, Dish_Review
+from .models import User, Cuisine, Customer, Cook, Dish, Dish_Review
 
 
 
@@ -62,3 +61,8 @@ class DishReviewForm(forms.ModelForm):
     class Meta:
         model = Dish_Review
         fields = ('dish_rating', 'description', 'report_flag')
+
+class DishCreateForm(forms.ModelForm):
+    class Meta:
+        model = Dish
+        fields = ('title', 'cuisine', 'description', 'ingredients', 'cook_time', 'price')
