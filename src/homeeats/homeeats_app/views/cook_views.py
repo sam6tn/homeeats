@@ -66,6 +66,20 @@ def create_dish(request):
     form = forms.DishCreateForm()
     return render(request, 'cook_templates/create_dish.html', {'form':form})
 
+@login_required
+@cook_required
+def delete_dish(request, dish_id):
+  dish = Dish.objects.get(id=dish_id)
+  cuisine = Cuisine.objects.get(id=dish.cuisine_id)
+  cook = Cook.objects.get(user_id=request.user.id)
+  if (dish.cook == cook): #only allow a cook to delete his/her own dish
+    dish.delete()
+  objs = Dish.objects.filter(cook=cook, cuisine=cuisine)
+  if not objs: #check if they are deleting the only dish left in the cuisine
+    cuisine.cooks.remove(cook) #if so, remove them from the cuisine
+    return HttpResponseRedirect(reverse('cook_manage')) #cuisine doesn't exist so redirect to cook/manage
+  return HttpResponseRedirect(reverse('cook_cuisine_dishes', args=[cuisine.id])) #redirect to cuisine because it exists
+
 def get_items_by_order(order_id):
   objs = Item.objects.filter(order=order_id)
   items = []
@@ -93,6 +107,8 @@ def get_cuisines_by_cook(request):
     cuisines.append(model_to_dict(obj))
   return cuisines
 
+@login_required
+@cook_required
 def cook_cuisine_dishes(request, cuisine_id):
   cook = get_object_or_404(Cook, user_id=request.user.id)
   cuisine = get_object_or_404(Cuisine, id=cuisine_id)
