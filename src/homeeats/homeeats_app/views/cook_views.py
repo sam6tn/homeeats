@@ -74,11 +74,12 @@ def delete_dish(request, dish_id):
   cook = Cook.objects.get(user_id=request.user.id)
   if (dish.cook == cook): #only allow a cook to delete his/her own dish
     dish.delete()
-  objs = Dish.objects.filter(cook=cook, cuisine=cuisine)
-  if not objs: #check if they are deleting the only dish left in the cuisine
-    cuisine.cooks.remove(cook) #if so, remove them from the cuisine
-    return HttpResponseRedirect(reverse('cook_manage')) #cuisine doesn't exist so redirect to cook/manage
-  return HttpResponseRedirect(reverse('cook_cuisine_dishes', args=[cuisine.id])) #redirect to cuisine because it exists
+    objs = Dish.objects.filter(cook=cook, cuisine=cuisine)
+    if not objs: #check if they are deleting the only dish left in the cuisine
+      cuisine.cooks.remove(cook) #if so, remove them from the cuisine
+      return HttpResponseRedirect(reverse('cook_manage')) #cuisine doesn't exist so redirect to cook/manage
+    return HttpResponseRedirect(reverse('cook_cuisine_dishes', args=[cuisine.id])) #redirect to cuisine because it exists
+  return HttpResponseRedirect(reverse('cook_manage'))
 
 def get_items_by_order(order_id):
   objs = Item.objects.filter(order=order_id)

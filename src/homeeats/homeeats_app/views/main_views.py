@@ -74,7 +74,6 @@ def cookcreate(request):
     cook_create_form = forms.CookCreateForm()
     return render(request, 'cook_create.html', {'cook_create_form': cook_create_form})
 
-
 def logout_view(request):
   logout(request)
   return redirect('/')
