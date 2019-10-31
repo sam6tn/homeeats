@@ -4,7 +4,7 @@ import json
 from django.test import RequestFactory
 from . import views
 from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address, User
-from .forms import DishSearchForm
+from .forms import DishSearchForm, CustomerCreateForm
 
 class CookHomeTest(TestCase):
     fixtures = ['test_data.json']
@@ -99,3 +99,32 @@ class AddressCreationTest(TestCase):
 
      def test_correctly_saves_address_cook(self):
          self.assertTrue(self.cook.id == self.cook_address.cook.id)
+
+class CustomerCreateFormTest(Test):
+    def test_valid_data(self):
+        form = CustomerCreateForm({
+            'first_name': "First",
+            'last_name': "Last",
+            'password': "password",
+            'email': "first@email.com",
+            'street': "123 rotunda",
+            'town': "Charlottesville",
+            'state': "VA",
+            'zipcode': "22903",
+            'phone_number': "0123456789"
+        })
+        self.assertTrue(form.is_valid())
+
+    def test_invalid_data(self):
+        form = CustomerCreateForm({
+            'first_name': "First",
+            'last_name': "Last",
+            'password': "password",
+            'email': "first",
+            'street': "123 rotunda",
+            'town': "Charlottesville",
+            'state': "VA",
+            'zipcode': "22903",
+            'phone_number': "0123456789"
+        })      
+        self.assertFalse(form.is_valid())
