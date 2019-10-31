@@ -38,8 +38,8 @@ class Dish(models.Model):
   cook_time = models.IntegerField(default=0)
   price = models.DecimalField(default=0, decimal_places=2, max_digits=6)
   cook = models.ForeignKey(Cook, on_delete=models.CASCADE)
-  total_rating = models.IntegerField(default=0)
-  num_ratings = models.IntegerField(default=0)
+  # total_rating = models.IntegerField(default=0)
+  # num_ratings = models.IntegerField(default=0)
   def __str__(self):
     return self.title + " (" + str(self.id) + ")"
   class Meta:
