@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
-from .models import Cook, Customer, Dish, Dish_Review, Cuisine
+from .models import Cook, Customer, Dish, Dish_Review, Cuisine, Order, Item, Address
 
 admin.site.site_header = "HomeEats Admin Page"
 
@@ -22,4 +22,7 @@ admin.site.register(Cook, CookAdmin)
 admin.site.register(Customer, CustomerAdmin)
 admin.site.register(Dish, DishAdmin)
 admin.site.register(Dish_Review)
-#admin.site.register(Cuisine)
+admin.site.register(Cuisine)
+admin.site.register(Order)
+admin.site.register(Item)
+admin.site.register(Address)

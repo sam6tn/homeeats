@@ -5,26 +5,48 @@
 {% block pagecontent %}
 
 <div class="container mt-2">
-    <div class="jumbotron jumbotron-fluid">
-                <div class="container text-center">
-                    <h1 class="display-4 brand-name">HomeEats</h1>
-                    <p class="lead">Welcome back chef, what's cooking today?</p>
-                </div>
-    </div>
-    <h2>Your Cuisines 
-        <button type="button" class="btn btn-success">+Add Dish</button>
-    </h2>
+    <h4>Your Pending Orders 
+    </h4>
     <ul class="list-group list-group-horizontal">
-            {% for cuisine in cuisines  %}
-        <div class="card d-flex w-100 justify-content-between m-2">
-            <h5 class="card-header"><a href="{% url 'cook_cuisine_dishes' cuisine.id %}">{{cuisine.name}}</a></h5>
+            {% for order in orders  %}
+            {% if order.status == 'p' %}
+        <div class="card justify-content-between m-2" style="width: 14rem;">
+            <h5 class="card-header"><a href="{% url 'single_order_view' order.id %}">{{order.name}}</a></h5>
             <div class="card-body ">
-                <h5 class="card-title">blah<!--{{ post.info }}--></h5>
+                <h5 class="card-title">Order #{{order.id}}</h5>
                 <p class="card-text">blah<!--{{ post.body }}--></p>
-                <p class="card-text font-weight-bold text-secondary">Price: $121<!--{{ post.body }}--></p>
+                <p class="card-text font-weight-bold text-secondary">Total: ${{order.total}}</p>
             </div>
         </div>
+        {% endif %}
         {% endfor %}
     </ul>
+
+    <h4>Orders In Progress 
+    </h4>
+    <ul class="list-group list-group-horizontal">
+        {% for order in orders  %}
+        {% if order.status == 'c' %}
+        <div class="card justify-content-between m-2" style="width: 14rem;">
+        <h5 class="card-header"><a href="{% url 'single_order_view' order.id %}">{{order.name}}</a></h5>
+        <div class="card-body ">
+            <h5 class="card-title">Order #{{order.id}}</h5>
+            <p class="card-text">Cooking</p>
+            <p class="card-text font-weight-bold text-secondary">Total: ${{order.total}}</p>
+        </div>
+    </div>
+    {% endif %}
+    {% if order.status == 'o' %}
+    <div class="card justify-content-between m-2" style="width: 14rem;">
+        <h5 class="card-header"><a href="{% url 'single_order_view' order.id %}">{{order.name}}</a></h5>
+        <div class="card-body ">
+            <h5 class="card-title">Order #{{order.id}}</h5>
+            <p class="card-text">Out For Delivery</p>
+            <p class="card-text font-weight-bold text-secondary">Total: ${{order.total}}</p>
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+</ul>
 </div>
         {% endblock %}

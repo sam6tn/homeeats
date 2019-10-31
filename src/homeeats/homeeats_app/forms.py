@@ -1,8 +1,7 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
-from django.contrib.auth.models import User
 from django import forms
-from .models import Cook, Customer, Dish, Cuisine
+from .models import User, Cuisine, Customer, Cook, Dish
 
 
 '''
@@ -66,4 +65,9 @@ class DishSearchForm(forms.Form):
         cuisines.append((cuisine.id,cuisine.name))
     sort = forms.ChoiceField(choices=SORT_CHOICES, widget=forms.Select, required=False)
     cuisine = forms.ChoiceField(choices=cuisines, widget=forms.Select, required=False)
+
+class DishCreateForm(forms.ModelForm):
+    class Meta:
+        model = Dish
+        fields = ('title', 'cuisine', 'description', 'ingredients', 'cook_time', 'price')
 

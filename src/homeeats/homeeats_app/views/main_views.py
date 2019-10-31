@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth.models import User
 from .. import forms
 from .. import models
+from ..models import User
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.template import loader
@@ -40,9 +40,12 @@ def customercreate(request):
       data = form.cleaned_data
       user = User.objects.create_user(username=data['email'], password=data['password'], first_name=data['first_name'], last_name=data['last_name'])
       customer = models.Customer.objects.create(phone_number=data['phone_number'], user_id=user.id)
-      user.has_perm('customer')
+      user.is_customer = True
       user.save()
       customer.save()
+      customer = models.Customer.objects.get(user_id=user.id)
+      address = models.Address.objects.create(customer=customer, street_name=data['street'], city=data['town'], state=data['state'], zipcode=data['zipcode'])
+      address.save()
       return HttpResponseRedirect(reverse('login'))
     else:
       return render(request, 'customer_create.html', {'form': form})
@@ -61,7 +64,7 @@ def cookcreate(request):
         phone_number=data['phone_number'],
         user_id=user.id
       )
-      user.has_perm('cook')
+      user.is_cook = True
       user.save()
       cook.save()
       return HttpResponseRedirect(reverse('login'))
@@ -70,7 +73,6 @@ def cookcreate(request):
   else:
     cook_create_form = forms.CookCreateForm()
     return render(request, 'cook_create.html', {'cook_create_form': cook_create_form})
-
 
 def logout_view(request):
   logout(request)

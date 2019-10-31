@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db.models.signals import post_save
@@ -8,17 +7,9 @@ from .managers import CustomUserManager
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.postgres.fields import ArrayField
 
-
-# class CustomUser(AbstractUser):
-#  username = None
-#  email = models.EmailField(_('email_address'), unique=True)
-
-#  USERNAME_FIELD = 'email'
-#  REQUIRED_FIELDS = []
-#  objects = CustomUserManager()
-
-#  def __str__(self):
-#    return self.email
+class User(AbstractUser):
+  is_cook = models.BooleanField(default=False)
+  is_customer = models.BooleanField(default=False)
 
 '''
 Columns in the cook database table
@@ -81,10 +72,19 @@ class Address(models.Model):
   customer = models.ForeignKey(Customer, on_delete=models.CASCADE, blank=True, null=True)
 
 class Order(models.Model):
+  name = models.CharField(max_length=60, default="") #make it first name <space> last name of customer
   customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
   cook = models.ForeignKey(Cook, on_delete=models.CASCADE)
   total = models.DecimalField(default=0, decimal_places=2, max_digits=6)
   special_requests = models.CharField(max_length=120, default="")
+  status_choices = [
+        ('p', 'Pending'),
+        ('c', 'Cooking'),
+        ('o', 'Out For Delivery'),
+        ('d', 'Delivered'),
+        ('r', 'Rejected')
+    ]
+  status = models.CharField(max_length=1, choices=status_choices, default='p')
 
 class Item(models.Model):
   dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
