@@ -13,8 +13,8 @@ admin.site.index_title = "HomeEats Administration"
 
 #Customizing the Dish Page
 class DishAdmin(admin.ModelAdmin):
-  	search_fields = ['title', 'cuisine', 'cook', 'price']
-	list_display = ('title', 'cuisine', 'cook', 'cook_time', 'price')
+	search_fields = ['title', 'cuisine', 'cook', 'price']	
+	list_display = ('title', 'cuisine', 'cook', 'cook_time', 'price')	
 	list_filter = ('cuisine', 'cook_time', 'price',)
 
 #Customizing the Cook Page
@@ -47,7 +47,7 @@ class AddressAdmin(admin.ModelAdmin):
 class DishReviewAdmin(admin.ModelAdmin):
 	search_fields = ['dish']
 	list_display = ('dish_rating', 'report_flag', 'customer', 'dish')
-	list_filter = ('dish rating',)
+	list_filter = ('dish_rating',)
 
 # Register all the models here.
 # Unregistered the Group model (default)
