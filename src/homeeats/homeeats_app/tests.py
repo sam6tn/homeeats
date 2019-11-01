@@ -28,6 +28,11 @@ class CookManageTest(TestCase):
         response = self.client.get(reverse('cook_cuisine_dishes', args=[1]))
         dishes = response.context['dishes']
         self.assertEquals(len(dishes),1)
+    def test_delete_dish_redirects_to_cook_cuisine_dishes(self):
+       self.client.login(username=‘ramsey@ramsey.com’, password=‘ramseyramsey’)
+       response = self.client.get(reverse(‘delete_dish’, args=[2]))
+       self.assertEquals(response.status_code, 302)
+       self.assertEquals(response.url, “/cook/cuisine/1/dishes”)
 
 class CustomerHomeTest(TestCase):
     def test_not_logged_in_causes_redirect_to_login_for_cook_home(self):
