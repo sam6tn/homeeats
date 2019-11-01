@@ -89,12 +89,15 @@ def userLogin(request):
                 login(request, user)
                 messages.info(request, "You are now logged in as {username}")
                 try: #check if the user is a cook or a customer
-                  models.Cook.objects.get(user=request.user)
+                  cook = models.Cook.objects.get(user=request.user)
                   is_cook = True
                 except models.Cook.DoesNotExist:
                   is_cook = False
-                if (is_cook):
+                if (is_cook and cook.approved):
                   return redirect('/cook/home')
+                elif(is_cook and not cook.approved):
+                  form = AuthenticationForm()
+                  render(request = request, template_name = "../templates/login.html", context={"form":form})
                 else:
                   return redirect('/customer/home')
             else:
