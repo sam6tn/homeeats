@@ -13,8 +13,7 @@ class CookHomeTest(TestCase):
         response = self.client.get(reverse('cook_manage'))
         cuisines = response.context['cuisines']
         self.assertEquals(cuisines[0]['name'], "Italian")
-        self.assertEquals(cuisines[1]['name'], "Indian")
-        self.assertEquals(cuisines[2]['name'], "Mexican")
+        self.assertEquals(cuisines[1]['name'], "Mexican")
         self.client.logout()
     def test_not_logged_in_causes_redirect_to_login_for_cook_home(self):
         response = self.client.get(reverse('cook_home'))

@@ -64,6 +64,7 @@ class Dish_Review(models.Model):
   class Meta:
     verbose_name = "Dish Review"
     verbose_name_plural = "Dish Reviews"
+  date = models.DateTimeField(auto_now_add=True)
 
 class Address(models.Model):
   street_name = models.CharField(max_length=60, default="")
@@ -87,6 +88,7 @@ class Order(models.Model):
         ('r', 'Rejected')
     ]
   status = models.CharField(max_length=1, choices=status_choices, default='p')
+  date = models.DateTimeField(auto_now_add=True)
 
 class Item(models.Model):
   dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
