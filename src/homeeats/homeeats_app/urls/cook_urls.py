@@ -11,5 +11,7 @@ urlpatterns = [
   path('deletedish/<str:dish_id>/', cook_views.delete_dish, name='delete_dish'),
   path('available/', cook_views.available, name='available'),
   path('acceptorder/<str:order_id>', cook_views.accept_order, name='accept_order'),
-  path('rejectorder/<str:order_id>', cook_views.reject_order, name='reject_order')
+  path('rejectorder/<str:order_id>', cook_views.reject_order, name='reject_order'),
+  path('cookingtodelivery/<str:order_id>', cook_views.cooking_to_delivery, name='cooking_to_delivery'),
+  path('completeddelivery/<str:order_id>', cook_views.completed_delivery, name='completed_delivery')
 ]
