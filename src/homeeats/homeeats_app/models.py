@@ -22,6 +22,7 @@ class Cook(models.Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE)
   def __str__(self):
     return "Cook " + self.user.first_name + " " + self.user.last_name + " (" + str(self.id) + ")"
+  delivery_distance_miles = models.IntegerField(default=30)
 
 class Cuisine(models.Model):
   name = models.CharField(default="", max_length=30)
@@ -52,7 +53,6 @@ class Customer(models.Model):
   def __str__(self):
     return "Customer " + self.user.first_name + " " + self.user.last_name + " (" + str(self.id) + ")"
 
-
 class Dish_Review(models.Model):
   dish_rating = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)])
   description = models.CharField(max_length=200)
@@ -73,6 +73,7 @@ class Address(models.Model):
   zipcode = models.CharField(max_length=20, default="")
   cook = models.ForeignKey(Cook, on_delete=models.CASCADE, blank=True, null=True)
   customer = models.ForeignKey(Customer, on_delete=models.CASCADE, blank=True, null=True)
+  is_cook_address = models.BooleanField(default=False)
 
 class Order(models.Model):
   name = models.CharField(max_length=60, default="") #make it first name <space> last name of customer
