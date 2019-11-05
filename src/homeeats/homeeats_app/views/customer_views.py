@@ -78,23 +78,26 @@ def home(request):
       dishes = Dish.objects.all()
       return render(request, 'customer_templates/customer_home.html', {'dishes': dishes, 'form':form})
 
+#get the distance between origin and destination using google maps api
 def get_distance(origin, destination):
   req = urllib.request.Request('https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=' + origin + '&destinations=' + destination + '&key=AIzaSyCPqdytEpfi1zIU4dj8B3KddX8-b6OPJoM')
   resp_json = urllib.request.urlopen(req, context=ssl.SSLContext()).read().decode('utf-8')
   resp = json.loads(resp_json)
   return resp['rows'][0]['elements'][0]['distance']['text'].strip(' mi')
 
+#find nearby cooks by checking the distance between customer and all cooks, filtering on 
+#delivery distance set by cook
 def find_nearby_cooks(request):
   customer = get_object_or_404(Customer, user_id=request.user.id)
   cooks = Cook.objects.all()
   cook_addresses = Address.objects.filter(is_cook_address=True)
   customer_address = Address.objects.get(customer=customer)
   formatted_cook_addresses = []
-  formatted_customer_address = customer_address.street_name.replace(" ", "+") + "+" + customer_address.city + "+" + customer_address.state
+  formatted_customer_address = customer_address.street_name.replace(" ", "+") + "+" + customer_address.city + "+" + customer_address.state #format the customer address as a url parameter
   distance_cooks = []
   nearby_cooks = []
   for address in cook_addresses:
-    add_str = address.street_name
+    add_str = address.street_name #format the cook_address as a url parameter
     add_str = add_str.replace(" ", "+")
     add_str = add_str + "+" + address.city + "+" + address.state
     tup = (add_str, address.cook_id)
@@ -106,11 +109,10 @@ def find_nearby_cooks(request):
     cook = Cook.objects.get(id=distance[1])
     if float(distance[0]) < cook.delivery_distance_miles:
       nearby_cooks.append(cook)
-  return nearby_cooks
+  return nearby_cooks #returning a queryset of cooks
 
+#use find_nearby_cooks to find all nearby dishes
 def find_nearby_dishes(request):
   cooks = find_nearby_cooks(request)
   dishes = Dish.objects.filter(cook__in=cooks)
-  return dishes
-
-    
+  return dishes #returning a queryset of dishes

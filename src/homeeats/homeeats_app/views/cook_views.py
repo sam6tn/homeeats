@@ -130,6 +130,7 @@ def cook_cuisine_dishes(request, cuisine_id):
   }
   return render(request, 'cook_templates/cook_cuisine_dishes.html', context)
 
+#set online/offline for cook
 @login_required
 @cook_required
 def available(request):
@@ -167,6 +168,7 @@ def completed_delivery(request, order_id):
   change_order_status('o', 'd', request, order_id)
   return HttpResponseRedirect(reverse('cook_home'))
 
+#helper method to change a status from previous to new
 def change_order_status(previous, new, request, order_id):
   cook = get_object_or_404(Cook, user_id=request.user.id)
   order = get_object_or_404(Order, id=order_id)
