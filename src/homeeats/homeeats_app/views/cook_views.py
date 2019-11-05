@@ -146,22 +146,33 @@ def available(request):
 @login_required
 @cook_required
 def accept_order(request, order_id):
-  cook = get_object_or_404(Cook, user_id=request.user.id)
-  order = get_object_or_404(Order, id=order_id)
-  if order.cook == cook and order.status == 'p': #make sure this order belongs to this cook
-    order.status = 'c'
-    order.save()
+  change_order_status('p', 'c', request, order_id)
   return HttpResponseRedirect(reverse('cook_home'))
 
 @login_required
 @cook_required
 def reject_order(request, order_id):
+  change_order_status('p', 'r', request, order_id)
+  return HttpResponseRedirect(reverse('cook_home'))
+
+@login_required
+@cook_required
+def cooking_to_delivery(request, order_id):
+  change_order_status('c', 'o', request, order_id)
+  return HttpResponseRedirect(reverse('cook_home'))
+
+@login_required
+@cook_required
+def completed_delivery(request, order_id):
+  change_order_status('o', 'd', request, order_id)
+  return HttpResponseRedirect(reverse('cook_home'))
+
+def change_order_status(previous, new, request, order_id):
   cook = get_object_or_404(Cook, user_id=request.user.id)
   order = get_object_or_404(Order, id=order_id)
-  if order.cook == cook and order.status == 'p': #make sure this order belongs to this cook
-    order.status = 'r'
+  if order.cook == cook and order.status == previous: #make sure this order belongs to this cook
+    order.status = new
     order.save()
-  return HttpResponseRedirect(reverse('cook_home'))
 
 
 
