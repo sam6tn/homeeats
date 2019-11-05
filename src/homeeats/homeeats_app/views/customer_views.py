@@ -111,6 +111,6 @@ def find_nearby_cooks(request):
 def find_nearby_dishes(request):
   cooks = find_nearby_cooks(request)
   dishes = Dish.objects.filter(cook__in=cooks)
-  return HttpResponse(dishes)
+  return dishes
 
     
