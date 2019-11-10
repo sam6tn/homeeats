@@ -4,7 +4,7 @@ import json
 from django.test import RequestFactory
 from . import views
 from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address, User
-from .forms import DishSearchForm, CustomerCreateForm
+from .forms import DishSearchForm, CustomerCreateForm, DishReviewForm
 
 class CookHomeTest(TestCase):
     fixtures = ['test_data.json']
@@ -39,6 +39,11 @@ class CustomerHomeTest(TestCase):
         self.assertEquals(response.status_code, 302)
     def test_search_form_is_valid(self):
         form = DishSearchForm(data={'search':'', 'sort':'none', 'cuisine':'none'})
+        self.assertTrue(form.is_valid())
+
+class CustomerDishTest(TestCase):
+    def test_review_form_is_valid(self):
+        form = DishReviewForm(data={'dish_rating':5, 'description':'', 'report_flag':False})
         self.assertTrue(form.is_valid())
 
 class AccountCreationTest(TestCase):

@@ -22,6 +22,7 @@ Homepage view before login
 '''
 
 @login_required
+@customer_required
 def dish(request, dish_id):
     dish = Dish.objects.get(id=dish_id) #get Dish object from dish_id
     reviews = dish.dish_review_set.all() #get all reviews for that Dish
@@ -34,11 +35,22 @@ def dish(request, dish_id):
           text = data["description"]
           report = data["report_flag"]
           customer = Customer.objects.get(user_id=request.user.id)
+
+          #save the new review
           dr = Dish_Review(dish_rating=rating,description=text,report_flag=report,customer=customer,dish=dish)
           dr.save()
-          return render(request, 'customer_templates/customer_dish.html', {'dish': dish, 'reviews':reviews, 'form':form})
-        else:
-          return render(request, 'customer_templates/customer_dish.html', {'dish': dish, 'reviews':reviews, 'form':form})
+
+          #calculate new dish rating
+          all_dish_reviews = Dish_Review.objects.all()
+          total_rating = 0
+          for review in all_dish_reviews:
+            total_rating += review.dish_rating
+          new_rating = total_rating/len(all_dish_reviews)
+          dish.rating = new_rating
+          dish.save()
+
+        return render(request, 'customer_templates/customer_dish.html', {'dish': dish, 'reviews':reviews, 'form':form})
+        
 
       elif "add_to_order" in request.POST:
         print("Do add dish to order logic here")
@@ -66,8 +78,17 @@ def home(request):
         sort = data['sort']
         cuisine = data['cuisine']
         dishes = Dish.objects.filter(title__icontains=search)
+
         if (cuisine != 'none'):
           dishes = dishes.filter(cuisine=cuisine)
+
+        if (sort == 'rating'):
+          dishes = dishes.order_by('-rating')
+        elif (sort == 'price'):
+          dishes = dishes.order_by('price')
+        elif (sort == 'reverse_price'):
+          dishes = dishes.orer_by('-price')
+
         return render(request, 'customer_templates/customer_home.html', {'dishes':dishes, 'form': form})
       else:
         dishes = Dish.objects.all()
