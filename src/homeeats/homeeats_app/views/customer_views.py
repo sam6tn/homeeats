@@ -17,10 +17,6 @@ import urllib.parse
 import json
 import ssl
 
-'''
-Homepage view before login
-'''
-
 @login_required
 @customer_required
 def dish(request, dish_id):
@@ -41,12 +37,13 @@ def dish(request, dish_id):
           dr.save()
 
           #calculate new dish rating
-          all_dish_reviews = Dish_Review.objects.all()
+          all_dish_reviews = Dish_Review.objects.filter(dish=dish)
           total_rating = 0
           for review in all_dish_reviews:
             total_rating += review.dish_rating
-          new_rating = total_rating/len(all_dish_reviews)
+          new_rating = int(round(total_rating/len(all_dish_reviews)))
           dish.rating = new_rating
+          print(dish.rating)
           dish.save()
 
         return render(request, 'customer_templates/customer_dish.html', {'dish': dish, 'reviews':reviews, 'form':form})
