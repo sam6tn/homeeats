@@ -84,7 +84,7 @@ def home(request):
         elif (sort == 'price'):
           dishes = dishes.order_by('price')
         elif (sort == 'reverse_price'):
-          dishes = dishes.orer_by('-price')
+          dishes = dishes.order_by('-price')
 
         return render(request, 'customer_templates/customer_home.html', {'dishes':dishes, 'form': form})
       else:
