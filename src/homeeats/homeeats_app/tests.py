@@ -211,3 +211,39 @@ class CustomerCreateFormTest(TestCase):
             'phone_number': "0123456789"
         })      
         self.assertFalse(form.is_valid())
+
+class DishRestrictionsTest(TestCase):
+    def test_vegan_true(self):
+         cook_user = User.objects.create(is_cook=True)
+         cook = Cook.objects.create(user=cook_user)
+         cuisine = Cuisine.objects.create(name='mexican')
+         new_dish = Dish.objects.create(cook_id= cook.id, cuisine_id=cuisine.id, vegan=True)
+         self.assertTrue(new_dish.vegan == True)
+
+    def test_vegan_false(self):
+         cook_user = User.objects.create(is_cook=True)
+         cook = Cook.objects.create(user=cook_user)
+         cuisine = Cuisine.objects.create(name='italian')
+         new_dish = Dish.objects.create(cook_id= cook.id, cuisine_id=cuisine.id, vegan=False)
+         self.assertTrue(new_dish.vegan == False)
+
+    def test_valid_allergies(self):
+         cook_user = User.objects.create(is_cook=True)
+         cook = Cook.objects.create(user=cook_user)
+         cuisine = Cuisine.objects.create(name='italian')
+         new_dish = Dish.objects.create(cook_id= cook.id, cuisine_id=cuisine.id, allergies="Peanuts")
+         self.assertTrue(new_dish.allergies == "Peanuts")
+
+    def test_no_allergies(self):
+         cook_user = User.objects.create(is_cook=True)
+         cook = Cook.objects.create(user=cook_user)
+         cuisine = Cuisine.objects.create(name='italian')
+         new_dish = Dish.objects.create(cook_id= cook.id, cuisine_id=cuisine.id) 
+         self.assertFalse(new_dish.allergies)
+    
+    def test_dish_create_form(self):
+        dishForm = DishCreateForm({'vegan': True, 'allergies': 'Peanuts'});
+        self.assertFalse(dishForm.is_valid())
+
+
+
