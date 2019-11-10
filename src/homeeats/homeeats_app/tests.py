@@ -45,19 +45,17 @@ class CustomerHomeTest(TestCase):
         self.assertFalse(form.is_valid())
 
 class CustomerDishReviewTest(TestCase):
-    customer = Customer.objects.create()
-    dish = Dish.objects.create()
     def test_review_form_is_valid(self):
-        form = DishReviewForm(data={'dish_rating':5, 'description':'', 'report_flag':False, 'customer':self.customer, 'dish':self.dish})
+        form = DishReviewForm(data={'dish_rating':5, 'description':'', 'report_flag':False, 'customer':1, 'dish':1})
         self.assertTrue(form.is_valid())
     def test_review_form_not_valid(self):
         form = DishReviewForm(data={'dish_rating':5, 'description':'', 'report_flag':False})
         self.assertFalse(form.is_valid())
     def test_review_form_rating_too_high(self):
-        form = DishReviewForm(data={'dish_rating':6, 'description':'', 'report_flag':False, 'customer':self.customer, 'dish':self.dish})
+        form = DishReviewForm(data={'dish_rating':6, 'description':'', 'report_flag':False, 'customer':1, 'dish':1})
         self.assertFalse(form.is_valid())
     def test_review_form_rating_too_low(self):
-        form = DishReviewForm(data={'dish_rating':-1, 'description':'', 'report_flag':False, 'customer':self.customer, 'dish':self.dish})
+        form = DishReviewForm(data={'dish_rating':-1, 'description':'', 'report_flag':False, 'customer':1, 'dish':1})
         self.assertFalse(form.is_valid())
 
 class AccountCreationTest(TestCase):
