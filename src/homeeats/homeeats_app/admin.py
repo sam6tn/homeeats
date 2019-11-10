@@ -13,7 +13,7 @@ admin.site.index_title = "HomeEats Administration"
 
 #Customizing the Dish Page
 class DishAdmin(admin.ModelAdmin):
-	search_fields = ['title', 'cuisine', 'cook', 'price']	
+	#search_fields = ['title', 'cuisine', 'cook', 'price']	
 	list_display = ('title', 'cuisine', 'cook', 'cook_time', 'price')	
 	list_filter = ('cuisine', 'cook_time', 'price',)
 
@@ -23,29 +23,29 @@ class CookAdmin(admin.ModelAdmin):
 
 #Customizing the Customer Page
 class CustomerAdmin(admin.ModelAdmin):
-	search_fields = ['phone_number']
+	#search_fields = ['phone_number']
 	list_display = ('user', 'phone_number')
 
 #Customizing the Order Page
 class OrderAdmin(admin.ModelAdmin):
-	search_fields = ['name']
+	#search_fields = ['name']
 	list_display = ('name', 'status', 'cook', 'customer', 'total')
 	list_filter = ('status',)
 
 #Customizing the Item Page
 class ItemAdmin(admin.ModelAdmin):
-	search_fields = ['dish', 'quantity', 'order']
+	#search_fields = ['dish', 'quantity', 'order']
 	list_display = ('dish', 'quantity', 'order')
 	list_filter = ('dish',)
 #Customizing the Address Page
 class AddressAdmin(admin.ModelAdmin):
-	search_fields = ['cook', 'customer', 'zipcode']
+	#search_fields = ['cook', 'customer', 'zipcode']
 	list_display = ('cook', 'customer', 'city', 'state', 'zipcode')
 	list_filter = ('state',)
 
 #Customizing the Dish Reviw Page
 class DishReviewAdmin(admin.ModelAdmin):
-	search_fields = ['dish']
+	#search_fields = ['dish']
 	list_display = ('dish_rating', 'report_flag', 'customer', 'dish')
 	list_filter = ('dish_rating',)
 
