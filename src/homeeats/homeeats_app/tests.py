@@ -40,17 +40,23 @@ class CustomerHomeTest(TestCase):
     def test_search_form_is_valid(self):
         form = DishSearchForm(data={'search':'', 'sort':'none', 'cuisine':'none'})
         self.assertTrue(form.is_valid())
+    def test_search_form_not_valid(self):
+        form = DishSearchForm()
+        self.assertFalse(form.is_valid())
 
-# class CustomerDishTest(TestCase):
-#     def test_review_form_is_valid(self):
-#         form = DishReviewForm(data={'dish_rating':5, 'description':'', 'report_flag':False})
-#         self.assertTrue(form.is_valid())
-#     def test_review_form_rating_too_high(self):
-#         form = DishReviewForm(data={'dish_rating':6, 'description':'', 'report_flag':False})
-#         self.assertFalse(form.is_valid())
-#     def test_review_form_rating_too_low(self):
-#         form = DishReviewForm(data={'dish_rating':-1, 'description':'', 'report_flag':False})
-#         self.assertFalse(form.is_valid())
+class CustomerDishReviewTest(TestCase):
+    def test_review_form_is_valid(self):
+        form = DishReviewForm(data={'dish_rating':5, 'description':'', 'report_flag':False, 'customer':1, 'dish':1})
+        self.assertTrue(form.is_valid())
+    def test_review_form_not_valid(self):
+        form = DishReviewForm(data={'dish_rating':5, 'description':'', 'report_flag':False})
+        self.assertFalse(form.is_valid())
+    def test_review_form_rating_too_high(self):
+        form = DishReviewForm(data={'dish_rating':6, 'description':'', 'report_flag':False, 'customer':1, 'dish':1})
+        self.assertFalse(form.is_valid())
+    def test_review_form_rating_too_low(self):
+        form = DishReviewForm(data={'dish_rating':-1, 'description':'', 'report_flag':False, 'customer':1, 'dish':1})
+        self.assertFalse(form.is_valid())
 
 class AccountCreationTest(TestCase):
     def test_cook_create_with_valid_data(self):
