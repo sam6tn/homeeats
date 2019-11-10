@@ -50,6 +50,10 @@ def dish(request, dish_id):
         return redirect('/')
       form = DishReviewForm()
       return render(request, 'customer_templates/customer_dish.html', {'dish': dish, 'reviews':reviews, 'form':form})
+@login_required
+@customer_required
+def checkout(request):
+  return render(request, 'customer_templates/checkout.html')
 
 @login_required
 @customer_required
