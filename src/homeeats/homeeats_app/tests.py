@@ -34,11 +34,11 @@ class CookManageTest(TestCase):
        self.assertEquals(response.url, "/cook/cuisine/1/dishes")
 
 class CustomerCheckoutTest(TestCase):
-    def test_checkout_access:
+    def test_checkout_access(self):
        self.client.login(username='anki@anki.com', password='ankith')
        response = self.client.get(reverse('checkout', args=[2]))
        self.assertEquals(response.status_code, 302)
-    def test_checkout_redirect:
+    def test_checkout_redirect(self):
        self.client.login(username='anki@anki.com', password='ankith')
        response = self.client.get(reverse('checkout', args=[2]))
        self.assertEquals(response.url, "/customer/checkout")
