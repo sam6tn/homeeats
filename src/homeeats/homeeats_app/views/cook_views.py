@@ -59,6 +59,8 @@ def create_dish(request):
           ingredients=data['ingredients'],  
           price=data['price'], 
           cook_time=data['cook_time'],
+          vegan=data['vegan'],
+          allergies=data['allergies'],
           cook=cook
           )
         dish.save()

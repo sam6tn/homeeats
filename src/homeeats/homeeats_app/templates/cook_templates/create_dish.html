@@ -54,6 +54,18 @@
           {{ form.description }}
         </div>
       </div>
+      <div style="margin:10px;text-align: left;">
+        {{ form.vegan.label_tag }}
+        <div style="float:right;">
+          {{ form.vegan }}
+        </div>
+      </div>
+      <div style="margin:10px;text-align: left;">
+        {{ form.allergies.label_tag }}
+        <div style="float:right;">
+          {{ form.allergies }}
+        </div>
+      </div>
       <input type="submit" value="Create a new dish" class="btn btn-primary">
     </form>
   
