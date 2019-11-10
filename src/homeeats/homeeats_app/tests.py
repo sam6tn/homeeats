@@ -3,7 +3,7 @@ from django.urls import reverse
 import json 
 from django.test import RequestFactory
 from . import views
-from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address, User
+from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address, User, Customer
 from .forms import DishSearchForm, CustomerCreateForm, DishReviewForm
 
 class CookHomeTest(TestCase):
