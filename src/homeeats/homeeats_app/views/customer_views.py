@@ -29,7 +29,7 @@ def dish(request, dish_id):
           data = form.cleaned_data
           rating = data["dish_rating"]
           text = data["description"]
-          report = data["report_flag"]
+          report = False
           customer = Customer.objects.get(user_id=request.user.id)
 
           #save the new review

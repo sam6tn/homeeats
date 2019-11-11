@@ -2,6 +2,10 @@
     font-family: 'Righteous', cursive;
 }
 
+.checked {
+    color: orange;
+}
+
 
 /*POST Detail page*/
 
