@@ -72,11 +72,6 @@ class CustomerCheckoutTest(TestCase):
         self.client.get(reverse('checkout'))
         response = self.client.get(reverse('customer_home'))
         self.assertEquals(response.status_code, 302)
-    def test_checkout_logout_access(self):
-        self.client.login(username='anki@anki.com', password='ankith')
-        self.client.get(reverse('checkout'))
-        response = self.client.get(reverse('logout'))
-        self.assertEquals(response.status_code, 302)
 
 class CustomerHomeTest(TestCase):
     def test_not_logged_in_causes_redirect_to_login_for_cook_home(self):
