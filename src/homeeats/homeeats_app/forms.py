@@ -103,4 +103,4 @@ class DishReviewForm(forms.ModelForm):
 class DishCreateForm(forms.ModelForm):
     class Meta:
         model = Dish
-        fields = ('title', 'cuisine', 'description', 'ingredients', 'cook_time', 'price')
+        fields = ('title', 'cuisine', 'description', 'dish_image', 'ingredients', 'cook_time', 'price', 'vegan', 'allergies')
