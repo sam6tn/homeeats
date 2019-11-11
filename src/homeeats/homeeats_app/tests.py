@@ -97,6 +97,11 @@ class CustomerDishReviewTest(TestCase):
     def test_review_form_rating_too_low(self):
         form = DishReviewForm(data={'dish_rating':-1, 'description':'', 'report_flag':False})
         self.assertFalse(form.is_valid())
+    
+class SearchTest(TestCase):
+    def test_search_empty(self):
+        form = DishSearchForm(data={'search':'', 'sort':'none', 'cuisine':'none'})
+        self.assertTrue(form.is_valid())
 
 class AccountCreationTest(TestCase):
     def test_cook_create_with_valid_data(self):
@@ -121,10 +126,28 @@ class UserGroupTest(TestCase):
         response = self.client.post(reverse('cookcreate'), {'first_name': 'Bob', 'last_name': 'Saget', 'email': 'bob@bob.com', 'password': 'sagetsaget', 'kitchen_license': 'asdfasdfasdf', 'phone_number': '7777777777'})
         user = User.objects.get(username="bob@bob.com")
         self.assertTrue(user.is_cook)
+    def test_redirect_cook(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        response = self.client.get(reverse('customer_home'))
+        self.assertEquals(response.status_code, 302)
+    def test_redirect(self):
+        response = self.client.get(reverse('customer_home'))
+        self.assertEquals(response.status_code, 302)
+    def test_redirect_cook_checkout(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        response = self.client.get(reverse('checkout'))
+        self.assertEquals(response.status_code, 302)
     def test_customer_create(self):
         response = self.client.post(reverse('customercreate'), {'first_name': 'Dave', 'last_name': 'Chapelle', 'street': '221 Baker Street', 'town': 'Fairfax', 'state': 'VA', 'zipcode': '22000', 'email': 'dave@dave.com', 'password': 'chapchap', 'phone_number': '8888888888'})
         user = User.objects.get(username="dave@dave.com")
         self.assertTrue(user.is_customer)
+    def test_redirect_customer(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        response = self.client.get(reverse('cook_home'))
+        self.assertEquals(response.status_code, 302)
+    def test_redirect_customer_home(self):
+        response = self.client.get(reverse('cook_home'))
+        self.assertEquals(response.status_code, 302)
 
 class AddressCreationTest(TestCase):
      def setUp(self):
