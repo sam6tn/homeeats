@@ -53,15 +53,15 @@ class CookManageTest(TestCase):
        self.assertEquals(response.status_code, 302)
        self.assertEquals(response.url, "/cook/cuisine/1/dishes")
 
-#class CustomerCheckoutTest(TestCase):
-    #def test_checkout_access(self):
-    #   self.client.login(username='anki@anki.com', password='ankith')
-    #   response = self.client.get(reverse('checkout', args=[2]))
-    #   self.assertEquals(response.status_code, 302)
-    #def test_checkout_redirect(self):
-    #   self.client.login(username='anki@anki.com', password='ankith')
-    #   response = self.client.get(reverse('checkout', args=[2]))
-    #   self.assertEquals(response.url, "/customer/checkout")
+class CustomerCheckoutTest(TestCase):
+   def test_checkout_access(self):
+     self.client.login(username=‘anki@anki.com’, password=‘ankith’)
+     response = self.client.get(reverse(‘checkout’))
+     self.assertEquals(response.status_code, 302)
+   def test_checkout_redirect(self):
+     self.client.login(username=‘anki@anki.com’, password=‘ankith’)
+     response = self.client.get(reverse(‘checkout’))
+     self.assertEquals(response.url, “/?next=/customer/checkout/“)
 
 class CustomerHomeTest(TestCase):
     def test_not_logged_in_causes_redirect_to_login_for_cook_home(self):
