@@ -40,6 +40,8 @@ class Dish(models.Model):
   price = models.DecimalField(default=0, decimal_places=2, max_digits=6)
   cook = models.ForeignKey(Cook, on_delete=models.CASCADE)
   rating = models.IntegerField(default=0)
+  vegan = models.BooleanField(default=False)
+  allergies = models.CharField(default="", max_length=200)
   # total_rating = models.IntegerField(default=0)
   # num_ratings = models.IntegerField(default=0)
 
@@ -97,4 +99,4 @@ class Item(models.Model):
   dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
   quantity = models.IntegerField(default=0)
   order = models.ForeignKey(Order, on_delete=models.CASCADE)
-  
+
