@@ -62,6 +62,11 @@ def dish(request, dish_id):
 
 @login_required
 @customer_required
+def checkout(request):
+  return render(request, 'customer_templates/checkout.html')
+
+@login_required
+@customer_required
 def home(request):
     try:
       customer = Customer.objects.get(user_id=request.user.id)
