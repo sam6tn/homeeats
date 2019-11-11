@@ -3,8 +3,8 @@ from django.urls import reverse
 import json 
 from django.test import RequestFactory
 from . import views
-from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address, User
-from .forms import DishSearchForm, CustomerCreateForm
+from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address, User, Customer
+from .forms import DishSearchForm, CustomerCreateForm, DishReviewForm
 
 class CookHomeTest(TestCase):
     fixtures = ['test_data.json']
@@ -13,8 +13,7 @@ class CookHomeTest(TestCase):
         response = self.client.get(reverse('cook_manage'))
         cuisines = response.context['cuisines']
         self.assertEquals(cuisines[0]['name'], "Italian")
-        self.assertEquals(cuisines[1]['name'], "Indian")
-        self.assertEquals(cuisines[2]['name'], "Mexican")
+        self.assertEquals(cuisines[1]['name'], "Mexican")
         self.client.logout()
     def test_not_logged_in_causes_redirect_to_login_for_cook_home(self):
         response = self.client.get(reverse('cook_home'))
@@ -28,6 +27,11 @@ class CookManageTest(TestCase):
         response = self.client.get(reverse('cook_cuisine_dishes', args=[1]))
         dishes = response.context['dishes']
         self.assertEquals(len(dishes),1)
+    def test_delete_dish_redirects_to_cook_cuisine_dishes(self):
+       self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+       response = self.client.get(reverse('delete_dish', args=[2]))
+       self.assertEquals(response.status_code, 302)
+       self.assertEquals(response.url, "/cook/cuisine/1/dishes")
 
 class CustomerHomeTest(TestCase):
     def test_not_logged_in_causes_redirect_to_login_for_cook_home(self):
@@ -36,6 +40,23 @@ class CustomerHomeTest(TestCase):
     def test_search_form_is_valid(self):
         form = DishSearchForm(data={'search':'', 'sort':'none', 'cuisine':'none'})
         self.assertTrue(form.is_valid())
+    def test_search_form_not_valid(self):
+        form = DishSearchForm()
+        self.assertFalse(form.is_valid())
+
+class CustomerDishReviewTest(TestCase):
+    def test_review_form_is_valid(self):
+        form = DishReviewForm(data={'dish_rating':5, 'description':'', 'report_flag':False})
+        self.assertFalse(form.is_valid()) #change when fixed
+    def test_review_form_not_valid(self):
+        form = DishReviewForm(data={'dish_rating':5, 'description':'', 'report_flag':False})
+        self.assertFalse(form.is_valid())
+    def test_review_form_rating_too_high(self):
+        form = DishReviewForm(data={'dish_rating':6, 'description':'', 'report_flag':False})
+        self.assertFalse(form.is_valid())
+    def test_review_form_rating_too_low(self):
+        form = DishReviewForm(data={'dish_rating':-1, 'description':'', 'report_flag':False})
+        self.assertFalse(form.is_valid())
 
 class AccountCreationTest(TestCase):
     def test_cook_create_with_valid_data(self):

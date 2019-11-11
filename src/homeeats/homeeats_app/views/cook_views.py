@@ -14,8 +14,10 @@ from ..decorators import cook_required
 @cook_required
 def manage(request): 
   cuisines = get_cuisines_by_cook(request)
+  cook = model_to_dict(get_object_or_404(Cook, user_id=request.user.id))
   context = {  #pass in context
-    'cuisines': cuisines
+    'cuisines': cuisines,
+    'cook': cook
   }
   return render(request, 'cook_templates/cook_manage.html', context)
 
@@ -23,8 +25,10 @@ def manage(request):
 @cook_required
 def home(request):
   orders = get_orders_by_cook(request)
+  cook = model_to_dict(get_object_or_404(Cook, user_id=request.user.id))
   context = {
-    'orders': orders
+    'orders': orders,
+    'cook': cook 
   }
   return render(request, 'cook_templates/cook_home.html', context)
 
@@ -32,9 +36,11 @@ def home(request):
 @cook_required
 def single_order_view(request, order_id):
   items = get_items_by_order(order_id)
+  cook = model_to_dict(get_object_or_404(Cook, user_id=request.user.id))
   context = {
     'order_id': order_id,
-    'items': items
+    'items': items,
+    'cook': cook
   }
   return render(request, 'cook_templates/single_order_view.html', context)
 
@@ -61,10 +67,10 @@ def create_dish(request):
           data['cuisine'].cooks.add(cook)
         return HttpResponseRedirect(reverse('cook_manage'))
       else:
-        return render(request, 'cook_templates/create_dish.html', {'form': form})
+        return render(request, 'cook_templates/create_dish.html', {'form': form, 'cook': model_to_dict(cook)})
   else:
     form = forms.DishCreateForm()
-    return render(request, 'cook_templates/create_dish.html', {'form':form})
+    return render(request, 'cook_templates/create_dish.html', {'form':form, 'cook': model_to_dict(cook)})
 
 @login_required
 @cook_required
@@ -118,9 +124,59 @@ def cook_cuisine_dishes(request, cuisine_id):
   for obj in objs:
     dishes.append(model_to_dict(obj))
   context = {  #pass in context
+    'cook': model_to_dict(cook),
     'dishes': dishes,
     'cuisine': cuisine.name
   }
   return render(request, 'cook_templates/cook_cuisine_dishes.html', context)
+
+#set online/offline for cook
+@login_required
+@cook_required
+def available(request):
+  cook = get_object_or_404(Cook, user_id=request.user.id)
+  if cook.online == True:
+    cook.online = False
+    cook.save()
+  else:
+    cook.online = True
+    cook.save()
+
+  return HttpResponseRedirect(reverse('cook_home'))  
+
+@login_required
+@cook_required
+def accept_order(request, order_id):
+  change_order_status('p', 'c', request, order_id)
+  return HttpResponseRedirect(reverse('cook_home'))
+
+@login_required
+@cook_required
+def reject_order(request, order_id):
+  change_order_status('p', 'r', request, order_id)
+  return HttpResponseRedirect(reverse('cook_home'))
+
+@login_required
+@cook_required
+def cooking_to_delivery(request, order_id):
+  change_order_status('c', 'o', request, order_id)
+  return HttpResponseRedirect(reverse('cook_home'))
+
+@login_required
+@cook_required
+def completed_delivery(request, order_id):
+  change_order_status('o', 'd', request, order_id)
+  return HttpResponseRedirect(reverse('cook_home'))
+
+#helper method to change a status from previous to new
+def change_order_status(previous, new, request, order_id):
+  cook = get_object_or_404(Cook, user_id=request.user.id)
+  order = get_object_or_404(Order, id=order_id)
+  if order.cook == cook and order.status == previous: #make sure this order belongs to this cook
+    order.status = new
+    order.save()
+
+
+
 
 

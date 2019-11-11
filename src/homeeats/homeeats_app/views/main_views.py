@@ -88,14 +88,24 @@ def userLogin(request):
             if user is not None:
                 login(request, user)
                 messages.info(request, "You are now logged in as {username}")
-                try: #check if the user is a cook or a customer
-                  models.Cook.objects.get(user=request.user)
+                try: 
+                  # Gets cook based on use associated with it
+                  cook = models.Cook.objects.get(user=request.user)
+                  # If previous line dose not throw an exception then we know it is a cook
                   is_cook = True
+                # Catching exception
                 except models.Cook.DoesNotExist:
+                  # If exception is caught then we know it is not a cook
                   is_cook = False
-                if (is_cook):
+                # Checks if cook is approved and redirects them to the home page
+                if (is_cook and cook.approved):
                   return redirect('/cook/home')
+                # Checks if cook is not approved and redirects them back to the login page
+                elif(is_cook and not cook.approved):
+                  form = AuthenticationForm()
+                  render(request = request, template_name = "../templates/login.html", context={"form":form})
                 else:
+                  # If it is not a cook then we know its a customer
                   return redirect('/customer/home')
             else:
                 messages.error(request, "Invalid username or password.")

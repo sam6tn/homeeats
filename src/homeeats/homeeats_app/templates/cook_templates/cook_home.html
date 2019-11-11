@@ -4,18 +4,25 @@
 {% block title %}Home{% endblock %}
 {% block pagecontent %}
 
+{% if cook.online == True %}
 <div class="container mt-2">
     <h4>Your Pending Orders 
     </h4>
     <ul class="list-group list-group-horizontal">
             {% for order in orders  %}
             {% if order.status == 'p' %}
-        <div class="card justify-content-between m-2" style="width: 14rem;">
-            <h5 class="card-header"><a href="{% url 'single_order_view' order.id %}">{{order.name}}</a></h5>
-            <div class="card-body ">
+        <div class="card justify-content-between m-2" style="width: 16rem;">
+            <h5 class="card-header">
+                <a href="{% url 'single_order_view' order.id %}">{{order.name}}</a>
+            </h5>
+            <div class="card-body">
                 <h5 class="card-title">Order #{{order.id}}</h5>
                 <p class="card-text">blah<!--{{ post.body }}--></p>
                 <p class="card-text font-weight-bold text-secondary">Total: ${{order.total}}</p>
+            </div>
+            <div class="card-footer text-center">
+                    <a href="{% url 'accept_order' order.id %}"><button type="button" class="btn btn-success btn-sm">Accept</button></a>
+                    <a href="{% url 'reject_order' order.id %}"><button type="button" class="btn btn-danger btn-sm">Reject</button></a>
             </div>
         </div>
         {% endif %}
@@ -27,26 +34,45 @@
     <ul class="list-group list-group-horizontal">
         {% for order in orders  %}
         {% if order.status == 'c' %}
-        <div class="card justify-content-between m-2" style="width: 14rem;">
+        <div class="card justify-content-between m-2" style="width: 16rem;">
         <h5 class="card-header"><a href="{% url 'single_order_view' order.id %}">{{order.name}}</a></h5>
         <div class="card-body ">
             <h5 class="card-title">Order #{{order.id}}</h5>
             <p class="card-text">Cooking</p>
             <p class="card-text font-weight-bold text-secondary">Total: ${{order.total}}</p>
         </div>
+        <div class="card-footer text-center">
+            <a href="{% url 'cooking_to_delivery' order.id %}"><button type="button" class="btn btn-success btn-sm">Ready for Delivery</button></a>
+        </div>
     </div>
     {% endif %}
     {% if order.status == 'o' %}
-    <div class="card justify-content-between m-2" style="width: 14rem;">
-        <h5 class="card-header"><a href="{% url 'single_order_view' order.id %}">{{order.name}}</a></h5>
+    <div class="card justify-content-between m-2" style="width: 16rem;">
+        <h5 class="card-header">
+            <a href="{% url 'single_order_view' order.id %}">{{order.name}}</a>
+        </h5>
         <div class="card-body ">
             <h5 class="card-title">Order #{{order.id}}</h5>
             <p class="card-text">Out For Delivery</p>
             <p class="card-text font-weight-bold text-secondary">Total: ${{order.total}}</p>
+        </div>
+        <div class="card-footer text-center">
+            <a href="{% url 'completed_delivery' order.id %}"><button type="button" class="btn btn-success btn-sm">Delivered</button></a>
         </div>
     </div>
     {% endif %}
     {% endfor %}
 </ul>
 </div>
-        {% endblock %}
+
+{% else %}
+<div class="container mt-2">
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container text-center">
+            <h1 class="display-4 brand-name">HomeEats</h1>
+            <p class="lead">You are currenttly offline...</p>
+            <p class="lead">Go online to start receiving orders!</p>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
