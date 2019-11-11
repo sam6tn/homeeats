@@ -5,9 +5,12 @@ from ..models import User
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.template import loader
+from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from ..forms import CustomerCreateForm
+from django.urls import reverse_lazy
 
 def index(request):
     template = loader.get_template('../templates/index.html')
@@ -33,6 +36,7 @@ def index(request):
 '''
 View of the customer creation form with form validation.
 '''
+
 def customercreate(request):
   if request.method == 'POST':
     form = forms.CustomerCreateForm(request.POST)
@@ -52,7 +56,35 @@ def customercreate(request):
   else:
     form = forms.CustomerCreateForm()
     return render(request, 'customer_create.html', {'form': form})
-
+'''
+class CustomerCreateView(CreateView):
+  model = User
+  fields = ['first_name','last_name','password','email','street','town','state',
+        'zipcode','phone_number']
+  def get(self, request, *args, **kwargs):
+    context = {'form': CustomerCreateForm()}
+    return render(request,'customer_create.html',context)
+  
+  def post(self, request, *args, **kwargs):
+    if request.method == 'POST':
+      form = CustomerCreateForm(request.POST)
+      if form.is_valid():
+        data = form.cleaned_data
+        user = User.objects.create_user(username=data['email'], password=data['password'], first_name=data['first_name'], last_name=data['last_name'])
+        customer = models.Customer.objects.create(phone_number=data['phone_number'], user_id=user.id)
+        user.is_customer = True
+        user.save()
+        customer.save()
+        customer = models.Customer.objects.get(user_id=user.id)
+        address = models.Address.objects.create(customer=customer, street_name=data['street'], city=data['town'], state=data['state'], zipcode=data['zipcode'])
+        address.save()
+        return HttpResponseRedirect(reverse_lazy('customer:customer_home'))
+      else:
+        return render(request, 'customer_create.html', {'form': form})
+    else:
+      form = forms.CustomerCreateForm()
+      return render(request, 'customer_create.html', {'form': form})
+'''
 def cookcreate(request):
   if request.method == 'POST':
     cook_create_form = forms.CookCreateForm(request.POST)

@@ -26,6 +26,22 @@ class CustomerCreateForm(forms.ModelForm):
         fields = ('first_name','last_name','password','email','street','town','state',
         'zipcode','phone_number')
 
+class CustomerEditForm(forms.ModelForm):
+    first_name = forms.CharField(label='First Name',required=True,
+    error_messages={'required':'Please enter your first name.'},)
+    last_name = forms.CharField(label='Last Name', required=True,error_messages={'required':'Please enter your last name.'})
+    password = forms.CharField(widget=forms.PasswordInput())
+    email = forms.EmailField(required=True,)
+    street = forms.CharField(required=True,label='Street Address')
+    town = forms.CharField(required=True,label='City/Town')
+    state = forms.CharField(required=True,)
+    zipcode = forms.CharField(required=True,)
+    phone_number = forms.CharField(label='Phone Number')
+    
+    class Meta:
+        model = Customer 
+        fields = ('first_name','last_name','password','email','street','town','state',
+        'zipcode','phone_number')
 
 class UserForm(forms.ModelForm):
     class Meta:

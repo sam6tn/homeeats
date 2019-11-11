@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
 from django.template import loader
-from ..forms import CustomerCreateForm, DishReviewForm
+from ..forms import CustomerCreateForm, DishReviewForm, CustomerEditForm
 from .. import forms
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
@@ -12,6 +12,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from ..decorators import customer_required
 from django.forms import model_to_dict
+from django.views.generic import UpdateView
+from django.urls import reverse_lazy
 import urllib.request
 import urllib.parse
 import json
@@ -116,3 +118,37 @@ def find_nearby_dishes(request):
   cooks = find_nearby_cooks(request)
   dishes = Dish.objects.filter(cook__in=cooks)
   return dishes #returning a queryset of dishes
+
+def customer_edit_profile(request):
+    if request == 'POST':
+      user=User.objects.get(pk=request.user.id)
+      data = {'first_name':user.first_name,
+        'last_name': user.last_name,
+        'email': user.email,
+        'phone_number': user.phone_number,
+      }
+      prepopulated_form = CustomerEditForm(data, initial=data)
+      return HttpResponseRedirect(reverse('customer:home'))
+    else:
+      prepopulated_form = forms.CustomerEditForm()
+      return render(request, 'customer_templates/customer_edit_profile.html', {'prepopulated_form': prepopulated_form})
+
+'''
+class CustomerUpdateView(UpdateView):
+  #model = User
+  form_class = CustomerCreateForm
+  fields = ['first_name','last_name','password','phone_number']
+  template_name = 'customer_create.html'
+  pk_url_kwarg = 'customer_pk'
+  context_object_name = 'customer'
+
+  def get_object(self):
+    id_ = self.kwargs.get("id")
+    return get_object_or_404(Customer,id=id_)
+  
+  def form_valid(self, form):
+    print(form.cleaned_data)
+    return super().form_valid(form)
+  '''
+
+  
