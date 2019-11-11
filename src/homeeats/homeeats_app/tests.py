@@ -231,8 +231,8 @@ class CustomerCreateFormTest(TestCase):
             'state': "VA",
             'zipcode': "22903",
             'phone_number': "0123456789"
-            self.assertFalse(form.is_valid())
         })
+        self.assertFalse(form.is_valid())
     
 
 class CustomerEditProfileTest(TestCase):
