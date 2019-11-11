@@ -4,30 +4,59 @@
 {% block title %}Dish {{dish_id}} {% endblock %}
 {% block pagecontent %}
 
-<div class="row">
-    <div class="col-6">
-        <h1>{{dish.title}} <button class='btn btn-success' name="add_to_order">Add to Order</button></h1>
-        <h4>{{dish.description}} </h4>
-        <img src="{{ dish.dish_image.url }}" width=400px height=300px>
-        <h3>Cook time: {{dish.cook_time}} </h3>
-        <h3>Cook: {{dish.cook.user.first_name}} {{dish.cook.user.last_name}}</h3>
-        <h3>Rating: {{dish.rating}}</h3>
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            <h1>{{dish.title}} <button class='btn btn-success' name="add_to_order">Add to Order</button></h1>
+            <h4>{{dish.description}} </h4>
+            <img src="{{ dish.dish_image.url }}" width=400px height=300px>
+            <h3>Cook time: {{dish.cook_time}} </h3>
+            <h3>Cook: {{dish.cook.user.first_name}} {{dish.cook.user.last_name}}</h3>
+            <h3>Rating: {{dish.rating}}</h3>
+        </div>
+        <div class="col-6">
+            <h2>Reviews <!-- will change write review to after order in future -->
+                <button class="btn btn-primary" onClick="getElementById('review_form').style.display='block'">Write Review</button>
+            </h2>
+            <form method="POST" id="review_form" style="display:none;cursor:default;">
+                {% csrf_token %}
+                <span id="star1" style="cursor:pointer" class="fa fa-star fa-sm" onclick="colorStars(1)"></span>
+                <span id="star2" style="cursor:pointer" class="fa fa-star fa-sm" onclick="colorStars(2)"></span>
+                <span id="star3" style="cursor:pointer" class="fa fa-star fa-sm" onclick="colorStars(3)"></span>
+                <span id="star4" style="cursor:pointer" class="fa fa-star fa-sm" onclick="colorStars(4)"></span>
+                <span id="star5" style="cursor:pointer" class="fa fa-star fa-sm" onclick="colorStars(5)"></span>
+                {{form.dish_rating}}
+                {{form.description}}
+                <input type="submit" name="review_submit">
+            </form>
+            {% for review in reviews %}
+                <div style="margin:10px 0px;">
+                    <span class="fa fa-star {% if review.dish_rating >= 1 %}checked{% endif %} fa-sm"></span>
+                    <span class="fa fa-star {% if review.dish_rating >= 2 %}checked{% endif %} fa-sm"></span>
+                    <span class="fa fa-star {% if review.dish_rating >= 3 %}checked{% endif %} fa-sm"></span>
+                    <span class="fa fa-star {% if review.dish_rating >= 4 %}checked{% endif %} fa-sm"></span>
+                    <span class="fa fa-star {% if review.dish_rating >= 5 %}checked{% endif %} fa-sm"></span>
+                    <h6>{{review.description}}</h6>
+                </div>
+            {% endfor %}
+        </div>
     </div>
-    <div class="col-6">
-        <h2>Reviews <!-- will change write review to after order in future -->
-            <button class="btn btn-primary" onClick="getElementById('review_form').style.display='block'">Write Review</button>
-        </h2>
-        <form method="POST" id="review_form" style="display:none;">
-            {% csrf_token %}
-            {{form.as_p}}
-            <input type="submit" name="review_submit">
-        </form>
-        {% for review in reviews %}
-            <h3>{{review.dish_rating}}: {{review.description}}</h3>
-        {% endfor %}
-
-    </div>
-
 </div>
 
+<script>
+    document.getElementById("id_dish_rating").style.border = 'none';
+    function colorStars(num){
+        for (var i=1; i<=num; i++){
+            let star = "star"+i;
+            document.getElementById(star).style.color = "orange";
+        }
+        for (var j = num+1; j<=5; j++){
+            let star = "star"+j;
+            document.getElementById(star).style.color = "black";
+        }
+        document.getElementById("id_dish_rating").value = num;
+    }
+</script>
+
 {% endblock %}
+
