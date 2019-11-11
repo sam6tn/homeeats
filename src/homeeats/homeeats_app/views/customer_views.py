@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
 from django.template import loader
-from ..forms import CustomerCreateForm, DishReviewForm, CustomerEditForm
+from ..forms import CustomerCreateForm, DishReviewForm, UserEditForm, AddressEditForm, PhoneEditForm
 from .. import forms
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
@@ -19,11 +19,8 @@ import urllib.parse
 import json
 import ssl
 
-'''
-Homepage view before login
-'''
-
 @login_required
+@customer_required
 def dish(request, dish_id):
     dish = Dish.objects.get(id=dish_id) #get Dish object from dish_id
     reviews = dish.dish_review_set.all() #get all reviews for that Dish
@@ -36,11 +33,23 @@ def dish(request, dish_id):
           text = data["description"]
           report = data["report_flag"]
           customer = Customer.objects.get(user_id=request.user.id)
+
+          #save the new review
           dr = Dish_Review(dish_rating=rating,description=text,report_flag=report,customer=customer,dish=dish)
           dr.save()
-          return render(request, 'customer_templates/customer_dish.html', {'dish': dish, 'reviews':reviews, 'form':form})
-        else:
-          return render(request, 'customer_templates/customer_dish.html', {'dish': dish, 'reviews':reviews, 'form':form})
+
+          #calculate new dish rating
+          all_dish_reviews = Dish_Review.objects.filter(dish=dish)
+          total_rating = 0
+          for review in all_dish_reviews:
+            total_rating += review.dish_rating
+          new_rating = int(round(total_rating/len(all_dish_reviews)))
+          dish.rating = new_rating
+          print(dish.rating)
+          dish.save()
+
+        return render(request, 'customer_templates/customer_dish.html', {'dish': dish, 'reviews':reviews, 'form':form})
+        
 
       elif "add_to_order" in request.POST:
         print("Do add dish to order logic here")
@@ -52,6 +61,11 @@ def dish(request, dish_id):
         return redirect('/')
       form = DishReviewForm()
       return render(request, 'customer_templates/customer_dish.html', {'dish': dish, 'reviews':reviews, 'form':form})
+
+@login_required
+@customer_required
+def checkout(request):
+  return render(request, 'customer_templates/checkout.html')
 
 @login_required
 @customer_required
@@ -68,8 +82,17 @@ def home(request):
         sort = data['sort']
         cuisine = data['cuisine']
         dishes = Dish.objects.filter(title__icontains=search)
+
         if (cuisine != 'none'):
           dishes = dishes.filter(cuisine=cuisine)
+
+        if (sort == 'rating'):
+          dishes = dishes.order_by('-rating')
+        elif (sort == 'price'):
+          dishes = dishes.order_by('price')
+        elif (sort == 'reverse_price'):
+          dishes = dishes.order_by('-price')
+
         return render(request, 'customer_templates/customer_home.html', {'dishes':dishes, 'form': form})
       else:
         dishes = Dish.objects.all()
@@ -120,35 +143,29 @@ def find_nearby_dishes(request):
   return dishes #returning a queryset of dishes
 
 def customer_edit_profile(request):
-    if request == 'POST':
-      user=User.objects.get(pk=request.user.id)
-      data = {'first_name':user.first_name,
-        'last_name': user.last_name,
-        'email': user.email,
-        'phone_number': user.phone_number,
-      }
-      prepopulated_form = CustomerEditForm(data, initial=data)
-      return HttpResponseRedirect(reverse('customer:home'))
-    else:
-      prepopulated_form = forms.CustomerEditForm()
-      return render(request, 'customer_templates/customer_edit_profile.html', {'prepopulated_form': prepopulated_form})
-
-'''
-class CustomerUpdateView(UpdateView):
-  #model = User
-  form_class = CustomerCreateForm
-  fields = ['first_name','last_name','password','phone_number']
-  template_name = 'customer_create.html'
-  pk_url_kwarg = 'customer_pk'
-  context_object_name = 'customer'
-
-  def get_object(self):
-    id_ = self.kwargs.get("id")
-    return get_object_or_404(Customer,id=id_)
-  
-  def form_valid(self, form):
-    print(form.cleaned_data)
-    return super().form_valid(form)
-  '''
+  current_user = models.User.objects.get(id=request.user.id)
+  if request.method == 'POST':
+    form = UserEditForm(request.POST, 
+      request.FILES, 
+      instance=request.user)
+    phone_form = PhoneEditForm(request.POST,
+      request.FILES,
+      instance = request.user.customer)
+    if form.is_valid() and phone_form.is_valid():
+      data = form.cleaned_data
+      phone_data = form.cleaned_data
+      form.save()
+      phone_form.save()
+      return HttpResponseRedirect(reverse('customer_home'))
+  else:
+    current_user.email = request.user.username
+    form = UserEditForm(instance=request.user)
+    phone_form = PhoneEditForm(instance=request.user.customer)
+    context = {
+      'phone_form': phone_form,
+      'form': form,
+    }
+    return render(request,'customer_templates/customer_edit_profile.html', context)
+    
 
   

@@ -18,6 +18,7 @@
             <p class="card-text">{{dish.description}}</p>
             <img src="{{ dish.dish_image.url }}" width=200px>
             <p class="card-text font-weight-bold text-secondary">Price: ${{dish.price}}</p>
+            <p class="card-text font-weight-bold text-secondary">Rating: {{dish.rating}}</p>
         </div>
     </div>
 {% endfor %}
