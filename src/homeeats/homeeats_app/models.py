@@ -99,4 +99,4 @@ class Item(models.Model):
   dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
   quantity = models.IntegerField(default=0)
   order = models.ForeignKey(Order, on_delete=models.CASCADE)
-  
+
