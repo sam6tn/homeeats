@@ -64,17 +64,17 @@ class CustomerCheckoutTest(TestCase):
         self.assertEquals(response.url, "/?next=/customer/checkout/")
     def test_checkout_home_redirect(self):
         self.client.login(username='anki@anki.com', password='ankith')
-        response = self.client.get(reverse('checkout'))
+        self.client.get(reverse('checkout'))
         response = self.client.get(reverse('home'))
         self.assertEquals(response.url, "/?next=/customer/home/")
     def test_checkout_home_access(self):
         self.client.login(username='anki@anki.com', password='ankith')
-        response = self.client.get(reverse('checkout'))
+        self.client.get(reverse('checkout'))
         response = self.client.get(reverse('home'))
         self.assertEquals(response.status_code, 302)
     def test_checkout_logout_access(self):
         self.client.login(username='anki@anki.com', password='ankith')
-        response = self.client.get(reverse('checkout'))
+        self.client.get(reverse('checkout'))
         response = self.client.get(reverse('logout'))
         self.assertEquals(response.status_code, 302)
 
