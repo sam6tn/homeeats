@@ -54,14 +54,29 @@ class CookManageTest(TestCase):
        self.assertEquals(response.url, "/cook/cuisine/1/dishes")
 
 class CustomerCheckoutTest(TestCase):
-   def test_checkout_access(self):
-     self.client.login(username='anki@anki.com', password='ankith')
-     response = self.client.get(reverse('checkout'))
-     self.assertEquals(response.status_code, 302)
-   def test_checkout_redirect(self):
-     self.client.login(username='anki@anki.com', password='ankith')
-     response = self.client.get(reverse('checkout'))
-     self.assertEquals(response.url, "/?next=/customer/checkout/")
+    def test_checkout_access(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        response = self.client.get(reverse('checkout'))
+        self.assertEquals(response.status_code, 302)
+    def test_checkout_redirect(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        response = self.client.get(reverse('checkout'))
+        self.assertEquals(response.url, "/?next=/customer/checkout/")
+    def test_checkout_home_redirect(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        response = self.client.get(reverse('checkout'))
+        response = self.client.get(reverse('home'))
+        self.assertEquals(response.url, "/?next=/customer/home/")
+    def test_checkout_home_access(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        response = self.client.get(reverse('checkout'))
+        response = self.client.get(reverse('home'))
+        self.assertEquals(response.status_code, 302)
+    def test_checkout_logout_access(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        response = self.client.get(reverse('checkout'))
+        response = self.client.get(reverse('logout'))
+        self.assertEquals(response.status_code, 302)
 
 class CustomerHomeTest(TestCase):
     def test_not_logged_in_causes_redirect_to_login_for_cook_home(self):
