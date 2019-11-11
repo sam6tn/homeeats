@@ -8,7 +8,7 @@ from .forms import DishSearchForm, CustomerCreateForm, DishReviewForm
 
 class CookHomeTest(TestCase):
     fixtures = ['test_data.json']
-    def test_cuisines_on_cook_home(self):
+    def test_cuisines_on_cook_manage(self):
         self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
         response = self.client.get(reverse('cook_manage'))
         cuisines = response.context['cuisines']
@@ -18,6 +18,26 @@ class CookHomeTest(TestCase):
     def test_not_logged_in_causes_redirect_to_login_for_cook_home(self):
         response = self.client.get(reverse('cook_home'))
         self.assertEquals(response.status_code, 302)
+    def test_orders_work(self):
+       self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+       response = self.client.get(reverse('cook_home'))
+       orders = response.context['orders']
+       self.assertEquals(len(orders), 2)
+    def test_orders_page_works(self):
+       self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+       response = self.client.get(reverse('cook_home'))
+       self.assertEquals(response.status_code, 200)
+    def test_correct_pending_order_renders(self):
+       self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+       response = self.client.get(reverse('cook_home'))
+       self.assertEquals(response.context['orders'][0]['id'], 2)
+       self.assertEquals(response.context['orders'][0]['status'], 'c')
+    def test_correct_in_progress_order_renders(self):
+       self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+       response = self.client.get(reverse('cook_home'))
+       self.assertEquals(response.context['orders'][1]['id'], 1)
+       self.assertEquals(response.context['orders'][0]['status'], 'c')
+       
 
 class CookManageTest(TestCase):
     fixtures = ['test_data.json']
