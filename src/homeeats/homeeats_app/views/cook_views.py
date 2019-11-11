@@ -49,16 +49,19 @@ def single_order_view(request, order_id):
 def create_dish(request):
   cook = get_object_or_404(Cook, user_id=request.user.id)
   if request.method == 'POST':
-      form = forms.DishCreateForm(request.POST)
+      form = forms.DishCreateForm(request.POST, request.FILES)
       if form.is_valid():
         data = form.cleaned_data
         dish = Dish.objects.create(
           title=data['title'], 
           cuisine=data['cuisine'], 
-          description=data['description'], 
+          description=data['description'],
+          dish_image=data['dish_image'],
           ingredients=data['ingredients'],  
           price=data['price'], 
           cook_time=data['cook_time'],
+          vegan=data['vegan'],
+          allergies=data['allergies'],
           cook=cook
           )
         dish.save()
