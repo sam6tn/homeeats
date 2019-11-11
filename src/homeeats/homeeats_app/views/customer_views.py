@@ -142,6 +142,11 @@ def find_nearby_dishes(request):
   dishes = Dish.objects.filter(cook__in=cooks)
   return dishes #returning a queryset of dishes
 
+
+'''
+Allows the customer to edit their username, password, and phone number.
+The form will show the customer their username, but they will not be allowed to edit it.
+'''
 def customer_edit_profile(request):
   current_user = models.User.objects.get(id=request.user.id)
   if request.method == 'POST':

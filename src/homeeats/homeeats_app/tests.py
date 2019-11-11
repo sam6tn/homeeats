@@ -4,7 +4,7 @@ import json
 from django.test import RequestFactory
 from . import views
 from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address, User, Customer
-from .forms import DishSearchForm, CustomerCreateForm, DishReviewForm
+from .forms import DishSearchForm, CustomerCreateForm, DishReviewForm, UserEditForm, PhoneEditForm
 
 class CookHomeTest(TestCase):
     fixtures = ['test_data.json']
@@ -175,7 +175,11 @@ class CustomerCreateFormTest(TestCase):
             'phone_number': "0123456789"
         })
         self.assertTrue(form.is_valid())
-    def test_invalid_data(self):
+
+    '''
+    Tests that invalid emails are not accepted
+    '''
+    def test_invalid_email(self):
         form = CustomerCreateForm({
             'first_name': "First",
             'last_name': "Last",
@@ -188,3 +192,80 @@ class CustomerCreateFormTest(TestCase):
             'phone_number': "0123456789"
         })      
         self.assertFalse(form.is_valid())
+    
+    
+    '''
+    Tests that data will not saved if required information is missing
+    '''
+    def test_missing_required_firstname(self):
+        form = CustomerCreateForm({
+            'first_name': "",
+            'last_name': "Last",
+            'password': "password",
+            'email': "first",
+            'street': "123 rotunda",
+            'town': "Charlottesville",
+            'state': "VA",
+            'zipcode': "22903",
+            'phone_number': "0123456789"
+            self.assertFalse(form.is_valid())
+        })
+    
+
+class CustomerEditProfileTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username="Test1", password="Test1", first_name="first", last_name="last")
+        self.customer = models.Customer.objects.create(phone_number="0123456789", user_id=self.user.id)
+        user.save()
+        customer.save()
+        before_change = self.user
+        before_customer = self.customer
+        self.client.login(username=self.user.username,password=self.user.password)
+
+        profile_before = Profile.objects.create(first_name="Test", last_name="Case", grad_year=2021, major="CS", number="1234567890", email="test@test.com")
+        profile_before.save()
+
+    '''
+    Changes users first name and tests if it's the same as the copy from setup
+    '''
+    def test_update_firstname(self):
+        form = UserEditForm(instance=self.user, {'first_name':"Changed"})
+        if form.is_valid(){
+            data = form.cleaned_data
+            form.save()
+        }
+        assertFalse(before_change.first_name==self.user.first_name)
+
+    '''
+    Changes user's last name and tests if it's the same as the copy from setup
+    '''
+    def test_update_lastname(self):
+        form = UserEditForm(instance=self.user, {'last_name':"Changed"})
+        if form.is_valid(){
+            data = form.cleaned_data
+            form.save()
+        }
+        assertFalse(before_change.last_name==self.user.last_name)
+
+    '''
+    Attempts to change user's username/email but this shouldn't be allowed so the 
+    form should stop the change from saving
+    '''
+    def test_update_username(self):
+        form = UserEditForm(instance=self.user, {'username':"Changed"})
+        if form.is_valid(){
+            data = form.cleaned_data
+            form.save()
+        }
+        assertTrue(before_change.username==self.user.username) #Shouldn't be able to change username
+    
+    '''
+    Changes customer's phone number and tests if it's the same as the copy from setup
+    '''
+    def test_update_phonenumber(self):
+        form = PhoneEditForm(instance=self.customer,{'phone_number':"0987654321"})
+        if form.is_valid(){
+            data = form.cleaned_data
+            form.save()
+        }
+        assertFalse(before_customer==self.customer)
