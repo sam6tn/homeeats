@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from .. import models
 from ..models import User
 from .. import forms
-from ..models import Cook, Cuisine, Dish, Order, Customer, Item
+from ..models import Cook, Cuisine, Dish, Order, Customer, Item, Dish_Review
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.forms import model_to_dict
@@ -193,7 +193,17 @@ def change_order_status(previous, new, request, order_id):
     order.status = new
     order.save()
 
-
+def reviews_for_dish(request, dish_id):
+  dish = get_object_or_404(Dish, id=dish_id)
+  objs = Dish_Review.objects.filter(dish=dish)
+  reviews = []
+  for obj in objs:
+    reviews.append(model_to_dict(obj))
+  context = {
+    'dish': model_to_dict(dish),
+    'reviews': reviews
+  }
+  return render(request, 'cook_templates/cook_dish_reviews.html', context)
 
 
 
