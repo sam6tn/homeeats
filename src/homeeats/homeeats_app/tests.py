@@ -276,10 +276,9 @@ class CustomerEditProfileTest(TestCase):
     '''
     def test_update_username(self):
         form = UserEditForm(instance=self.user, {'username':"Changed"})
-        if form.is_valid(){
+        if form.is_valid():
             data = form.cleaned_data
             form.save()
-        }
         assertTrue(before_change.username==self.user.username) #Shouldn't be able to change username
     
     '''
