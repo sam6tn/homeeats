@@ -21,8 +21,8 @@ class CookHomeTest(TestCase):
     def test_orders_work(self):
        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
        response = self.client.get(reverse('cook_home'))
-       orders = response.context['orders']
-       self.assertEquals(len(orders), 2)
+       orders = response.context['pending_orders']
+       self.assertEquals(len(orders), 1)
     def test_orders_page_works(self):
        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
        response = self.client.get(reverse('cook_home'))
@@ -30,13 +30,13 @@ class CookHomeTest(TestCase):
     def test_correct_pending_order_renders(self):
        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
        response = self.client.get(reverse('cook_home'))
-       self.assertEquals(response.context['orders'][0]['id'], 2)
-       self.assertEquals(response.context['orders'][0]['status'], 'c')
+       self.assertEquals(response.context['pending_orders'][0]['id'], 1)
+       self.assertEquals(response.context['pending_orders'][0]['status'], 'p')
     def test_correct_in_progress_order_renders(self):
        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
        response = self.client.get(reverse('cook_home'))
-       self.assertEquals(response.context['orders'][1]['id'], 1)
-       self.assertEquals(response.context['orders'][0]['status'], 'c')
+       self.assertEquals(response.context['in_progress_orders'][0]['id'], 2)
+       self.assertEquals(response.context['in_progress_orders'][0]['status'], 'c')
        
 
 class CookManageTest(TestCase):
