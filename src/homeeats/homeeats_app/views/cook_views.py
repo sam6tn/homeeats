@@ -27,8 +27,16 @@ def manage(request):
 def home(request):
   orders = get_orders_by_cook(request)
   cook = model_to_dict(get_object_or_404(Cook, user_id=request.user.id))
+  pending_orders = []
+  in_progress_orders = []
+  for order in orders:
+    if order['status'] == 'p':
+      pending_orders.append(order)
+    elif order['status'] == 'o' or order['status'] == 'c':
+      in_progress_orders.append(order)
   context = {
-    'orders': orders,
+    'pending_orders': pending_orders,
+    'in_progress_orders': in_progress_orders,
     'cook': cook
   }
   return render(request, 'cook_templates/cook_home.html', context)
