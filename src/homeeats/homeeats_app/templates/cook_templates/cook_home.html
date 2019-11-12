@@ -5,6 +5,22 @@
 {% block pagecontent %}
 
 {% if cook.online == True %}
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>You can't go offline yet!</strong> You still have orders pending or in progress...
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endif %}
+    {% endfor %}
+</ul>
+{% endif %}
+
 <div class="container mt-2">
     <h4>Your Pending Orders 
     </h4>
