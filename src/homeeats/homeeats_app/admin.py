@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
-from .models import Cook, Customer, Dish, Dish_Review, Cuisine, Order, Item, Address
+from .models import Cook, Customer, Dish, Dish_Review, Cuisine, Order, Item, Address, User
 from django.dispatch import receiver
 from django.db.models.signals import pre_delete
 
@@ -79,3 +79,4 @@ admin.site.register(Cuisine)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Item, ItemAdmin)
 admin.site.register(Address, AddressAdmin)
+admin.site.register(User)
