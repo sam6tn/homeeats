@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.forms import model_to_dict
 from django.contrib.auth.decorators import login_required
 from ..decorators import cook_required
+from django.contrib import messages
 
 #cook home page after login
 @login_required
@@ -26,9 +27,17 @@ def manage(request):
 def home(request):
   orders = get_orders_by_cook(request)
   cook = model_to_dict(get_object_or_404(Cook, user_id=request.user.id))
+  pending_orders = []
+  in_progress_orders = []
+  for order in orders:
+    if order['status'] == 'p':
+      pending_orders.append(order)
+    elif order['status'] == 'o' or order['status'] == 'c':
+      in_progress_orders.append(order)
   context = {
-    'orders': orders,
-    'cook': cook 
+    'pending_orders': pending_orders,
+    'in_progress_orders': in_progress_orders,
+    'cook': cook
   }
   return render(request, 'cook_templates/cook_home.html', context)
 
@@ -139,6 +148,11 @@ def cook_cuisine_dishes(request, cuisine_id):
 def available(request):
   cook = get_object_or_404(Cook, user_id=request.user.id)
   if cook.online == True:
+    orders = Order.objects.filter(cook=cook)
+    for order in orders:
+      if order.status == 'p' or order.status == 'o' or order.status == 'c':
+        messages.add_message(request, messages.ERROR, 'cook_online_cant_go_offline')
+        return HttpResponseRedirect(reverse('cook_home')) 
     cook.online = False
     cook.save()
   else:

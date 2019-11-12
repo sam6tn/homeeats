@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from .. import forms
 from .. import models
-from ..models import User
+from ..models import User, Cook, Order
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.template import loader
@@ -80,6 +80,16 @@ def cookcreate(request):
     return render(request, 'cook_create.html', {'cook_create_form': cook_create_form})
 
 def logout_view(request):
+  if request.user.is_cook:
+    cook = Cook.objects.get(user_id=request.user.id)
+    if cook.online:
+      orders = Order.objects.filter(cook=cook)
+      for order in orders:
+        if order.status == 'p' or order.status == 'o' or order.status == 'c':
+          messages.add_message(request, messages.ERROR, 'cook_online_cant_logout')
+          return HttpResponseRedirect(reverse('cook_home'))   
+      cook.online = False
+      cook.save()
   logout(request)
   return redirect('/')
 

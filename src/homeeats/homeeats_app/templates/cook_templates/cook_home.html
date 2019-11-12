@@ -5,12 +5,28 @@
 {% block pagecontent %}
 
 {% if cook.online == True %}
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>You can't go offline yet!</strong> You still have orders pending or in progress...
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endif %}
+    {% endfor %}
+</ul>
+{% endif %}
+
 <div class="container mt-2">
-    <h4>Your Pending Orders 
+    <h4>Pending Orders 
     </h4>
+    {% if pending_orders %}
     <ul class="list-group list-group-horizontal">
-            {% for order in orders  %}
-            {% if order.status == 'p' %}
+            {% for order in pending_orders %}
         <div class="card justify-content-between m-2" style="width: 16rem;">
             <h5 class="card-header">
                 <a href="{% url 'single_order_view' order.id %}">{{order.name}}</a>
@@ -25,14 +41,23 @@
                     <a href="{% url 'reject_order' order.id %}"><button type="button" class="btn btn-danger btn-sm">Reject</button></a>
             </div>
         </div>
-        {% endif %}
         {% endfor %}
     </ul>
 
+    {% else %}
+    <div class="container mt-2">
+        <div class="jumbotron jumbotron-fluid">
+            <div class="container text-center">
+                <p class="lead">No Pending Orders</p>
+            </div>
+    </div>
+    {% endif %}
+
     <h4>Orders In Progress 
     </h4>
+    {% if in_progress_orders %}
     <ul class="list-group list-group-horizontal">
-        {% for order in orders  %}
+        {% for order in in_progress_orders  %}
         {% if order.status == 'c' %}
         <div class="card justify-content-between m-2" style="width: 16rem;">
         <h5 class="card-header"><a href="{% url 'single_order_view' order.id %}">{{order.name}}</a></h5>
@@ -63,6 +88,18 @@
     {% endif %}
     {% endfor %}
 </ul>
+
+{% else %}
+<div class="container mt-2">
+        <div class="jumbotron jumbotron-fluid">
+            <div class="container text-center">
+                <p class="lead">No In Progress Orders</p>
+            </div>
+</div>
+{% endif %}
+
+
+
 </div>
 
 {% else %}
