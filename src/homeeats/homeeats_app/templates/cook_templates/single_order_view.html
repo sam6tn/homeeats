@@ -5,19 +5,28 @@
 {% block pagecontent %}
 
 <div class="container mt-2">
-    <h2>Items in Order #{{order_id}}
-    </h2>
+    <h2>Items in Order #{{order_id}}</h2>
     <ul class="list-group list-group-horizontal">
             {% for item in items  %}
         <div class="card justify-content-between m-2" style="width: 14rem;">
-            <h5 class="card-header"><a href="">{{item.dish.title}}</a></h5>
+            <h5 class="card-header">{{item.dish.title}}</h5>
             <div class="card-body ">
                 <h5 class="card-title">Quantity: {{item.quantity}}</h5>
-                <p class="card-text">bla<!--{{ post.body }}--></p>
-                <p class="card-text font-weight-bold text-secondary"><!--Price:--></p>
             </div>
         </div>
         {% endfor %}
     </ul>
+    <h2>Delivery Total: ${{order.total}}</h2>
+    <div class="card justify-content-between m-2" style="width: 18rem;">
+        <h5 class="card-header">{{user.first_name}} {{user.last_name}}</h5>
+        <div class="card-body ">
+            <p class="card-text">{{address.street_name}}</p>
+            <p class="card-text">{{address.city}}, {{address.state}} {{address.zipcode}}</p>
+            <p class="card-text font-weight-bold text-secondary">Phone: {{customer.phone_number}}</p>
+        </div>
+    </div>
 </div>
+
+
+
         {% endblock %}

@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from .. import models
 from ..models import User
 from .. import forms
-from ..models import Cook, Cuisine, Dish, Order, Customer, Item, Dish_Review
+from ..models import Cook, Cuisine, Dish, Order, Customer, Item, Dish_Review, Address
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.forms import model_to_dict
@@ -46,7 +46,14 @@ def home(request):
 def single_order_view(request, order_id):
   items = get_items_by_order(order_id)
   cook = model_to_dict(get_object_or_404(Cook, user_id=request.user.id))
+  order = Order.objects.get(id=order_id)
+  customer = Customer.objects.get(id=order.customer_id)
+  user = customer.user
+  address = Address.objects.get(customer=customer)
   context = {
+    'user': user,
+    'customer': customer,
+    'address': address,
     'order_id': order_id,
     'items': items,
     'cook': cook
