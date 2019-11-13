@@ -30,6 +30,7 @@
                     <p class="card-text">{{dish.description}}</p>
                     <img src="{{ dish.dish_image.url }}" width="100%" style="max-height: 200px;">
                     <p class="card-text font-weight-bold text-secondary">Price: ${{dish.price}}</p>
+                    {% if dish.vegan %}<img style="float:left" src="/media/vegan.png" width=30px>{% endif %}
                 </div>
             </div>
         </div>
