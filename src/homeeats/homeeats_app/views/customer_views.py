@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
 from django.template import loader
-from ..forms import CustomerCreateForm, DishReviewForm
+from ..forms import CustomerCreateForm, DishReviewForm, UserEditForm, AddressEditForm, PhoneEditForm
 from .. import forms
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
@@ -12,6 +12,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from ..decorators import customer_required
 from django.forms import model_to_dict
+from django.views.generic import UpdateView
+from django.urls import reverse_lazy
 import urllib.request
 import urllib.parse
 import json
@@ -139,3 +141,38 @@ def find_nearby_dishes(request):
   cooks = find_nearby_cooks(request)
   dishes = Dish.objects.filter(cook__in=cooks)
   return dishes #returning a queryset of dishes
+
+
+'''
+Allows the customer to edit their username, password, and phone number.
+The form will show the customer their username, but they will not be allowed to edit it.
+'''
+def customer_edit_profile(request):
+  current_user = models.User.objects.get(id=request.user.id)
+  if request.method == 'POST':
+    form = UserEditForm(request.POST, 
+      request.FILES, 
+      instance=request.user)
+    if request.POST['first_name'] == "":
+      request.POST['first_name'] = request.user.first_name
+    phone_form = PhoneEditForm(request.POST,
+      request.FILES,
+      instance = request.user.customer)
+    if form.is_valid() and phone_form.is_valid():
+      data = form.cleaned_data
+      phone_data = form.cleaned_data
+      form.save()
+      phone_form.save()
+      return HttpResponseRedirect(reverse('customer_home'))
+  else:
+    current_user.email = request.user.username
+    form = UserEditForm(instance=request.user)
+    phone_form = PhoneEditForm(instance=request.user.customer)
+    context = {
+      'phone_form': phone_form,
+      'form': form,
+    }
+    return render(request,'customer_templates/customer_edit_profile.html', context)
+    
+
+  
