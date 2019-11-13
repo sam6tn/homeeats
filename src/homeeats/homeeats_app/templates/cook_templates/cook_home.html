@@ -33,7 +33,6 @@
             </h5>
             <div class="card-body">
                 <h5 class="card-title">Order #{{order.id}}</h5>
-                <p class="card-text">blah<!--{{ post.body }}--></p>
                 <p class="card-text font-weight-bold text-secondary">Total: ${{order.total}}</p>
             </div>
             <div class="card-footer text-center">
@@ -63,7 +62,7 @@
         <h5 class="card-header"><a href="{% url 'single_order_view' order.id %}">{{order.name}}</a></h5>
         <div class="card-body ">
             <h5 class="card-title">Order #{{order.id}}</h5>
-            <p class="card-text">Cooking</p>
+            <p class="card-text">Currently Cooking</p>
             <p class="card-text font-weight-bold text-secondary">Total: ${{order.total}}</p>
         </div>
         <div class="card-footer text-center">
