@@ -13,9 +13,6 @@
         <div class="card justify-content-between m-2" style="width: 14rem;">
             <h5 class="card-header"><a href="{% url 'cook_cuisine_dishes' cuisine.id %}">{{cuisine.name}}</a></h5>
             <div class="card-body ">
-                <h5 class="card-title">blah<!--{{ post.info }}--></h5>
-                <p class="card-text">blah<!--{{ post.body }}--></p>
-                <p class="card-text font-weight-bold text-secondary">Price: ${{ cuisine.price }}</p>
             </div> 
         </div>
         {% endfor %}
