@@ -11,29 +11,6 @@
     </form>
 </div>
 
-<!-- <ul class="list-group list-group-horizontal">
-{% for dish in dishes %}
-    <div class="card d-flex w-100 justify-content-between m-2">
-        <h5 class="card-header">
-            <a href="{% url 'customer_dish' dish.id %}">{{dish.title}}</a>
-            <span class="fa fa-star {% if dish.rating >= 1 %}checked{% endif %} fa-sm"></span>
-            <span class="fa fa-star {% if dish.rating >= 2 %}checked{% endif %} fa-sm"></span>
-            <span class="fa fa-star {% if dish.rating >= 3 %}checked{% endif %} fa-sm"></span>
-            <span class="fa fa-star {% if dish.rating >= 4 %}checked{% endif %} fa-sm"></span>
-            <span class="fa fa-star {% if dish.rating >= 5 %}checked{% endif %} fa-sm"></span>
-            <a href="#"><i class="fa fa-plus text-success" style="font-size:2vw;float:right;"></i></a>
-        </h5>
-        <div class="card-body ">
-            <h5 class="card-title">Cook: {{dish.cook.user.first_name}} {{dish.cook.user.last_name}}</h5>
-            <p class="card-text">{{dish.description}}</p>
-            <img src="{{ dish.dish_image.url }}" width="100%">
-            <p class="card-text font-weight-bold text-secondary">Price: ${{dish.price}}</p>
-            <p class="card-text font-weight-bold text-secondary">Rating: {{dish.rating}}</p>
-        </div>
-    </div>
-{% endfor %}
-</ul> -->
-
 <div class="container">
     <div class="row">
     {% for dish in dishes %}
