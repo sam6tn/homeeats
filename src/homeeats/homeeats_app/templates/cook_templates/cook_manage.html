@@ -8,16 +8,21 @@
     <h2>Your Cuisines 
         <a href="{% url 'create_dish' %}"><button type="button" class="btn btn-success">+Add Dish</button></a>
     </h2>
-    <ul class="list-group list-group-horizontal">
-            {% for cuisine in cuisines  %}
-        <div class="card justify-content-between m-2" style="width: 14rem;">
-            <h5 class="card-header"><a href="{% url 'cook_cuisine_dishes' cuisine.id %}">{{cuisine.name}}</a></h5>
-            <div class="card-body ">
-                <h5 class="card-title">Blah</h5>
-                <p class="card-text"># of dishes: ?</p>
-            </div> 
+    <div class="container">
+        <div class="row">
+        {% for cuisine in cuisines %}
+        <div class="col-3" style="margin-bottom:20px;display:flex">
+            <a href="{% url 'cook_cuisine_dishes' cuisine.id %}">
+                <div class="card justify-content-between m-2" style="width: 14rem;">
+                    <h5 class="card-header text-center">{{cuisine.name}}</h5>
+                    <div class="card-body ">
+                        <img src="{{ cuisine.flag.url }}" width=100%>
+                    </div> 
+                </div>
+            </a>
         </div>
         {% endfor %}
-    </ul>
+        </div>
+    </div>
 </div>
-        {% endblock %}
+{% endblock %}
