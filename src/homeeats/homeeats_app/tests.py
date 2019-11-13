@@ -3,13 +3,10 @@ from django.urls import reverse
 import json 
 from django.test import RequestFactory
 from . import views
-<<<<<<< HEAD
 from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address, User, Customer, Order
 from .forms import DishSearchForm, CustomerCreateForm, DishReviewForm
-=======
 from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address, User, Customer
 from .forms import DishSearchForm,  DishCreateForm, CustomerCreateForm, DishReviewForm, UserEditForm, PhoneEditForm
->>>>>>> 1e5a021afdd5a296fb5d8664a4747a036e59fcd3
 
 class CookHomeTest(TestCase):
     fixtures = ['test_data.json']
@@ -252,8 +249,6 @@ class CustomerCreateFormTest(TestCase):
             'phone_number': "0123456789"
         })      
         self.assertFalse(form.is_valid())
-<<<<<<< HEAD
-=======
     
     
     '''
@@ -338,4 +333,3 @@ class DishRestrictionsTest(TestCase):
 
 
 
->>>>>>> 1e5a021afdd5a296fb5d8664a4747a036e59fcd3
