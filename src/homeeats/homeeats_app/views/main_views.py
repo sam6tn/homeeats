@@ -101,10 +101,9 @@ def userLogin(request):
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
             if user is not None:
-                login(request, user)
                 try: 
                   # Gets cook based on use associated with it
-                  cook = models.Cook.objects.get(user=request.user)
+                  cook = models.Cook.objects.get(user=user)
                   # If previous line dose not throw an exception then we know it is a cook
                   is_cook = True
                 # Catching exception
@@ -113,6 +112,7 @@ def userLogin(request):
                   is_cook = False
                 # Checks if cook is approved and redirects them to the home page
                 if (is_cook and cook.approved):
+                  login(request, user)
                   return redirect('/cook/home')
                 # Checks if cook is not approved and redirects them back to the login page
                 elif(is_cook and not cook.approved):
@@ -120,6 +120,7 @@ def userLogin(request):
                   render(request = request, template_name = "../templates/login.html", context={"form":form})
                 else:
                   # If it is not a cook then we know its a customer
+                  login(request, user)
                   return redirect('/customer/home')
 
     form = AuthenticationForm()

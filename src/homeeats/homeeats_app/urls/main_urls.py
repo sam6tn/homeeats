@@ -6,6 +6,5 @@ urlpatterns = [
   path('', main.userLogin, name='login'),
   path('logout/', main.logout_view, name='logout_view'),
   path('customercreate', main.customercreate, name='customercreate'),
-  #path('customercreate', main.CustomerCreateView.as_view(), name='customercreate'),
   path('cookcreate', main.cookcreate, name='cookcreate')
 ]

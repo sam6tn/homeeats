@@ -169,5 +169,3 @@ def customer_edit_profile(request):
     }
     return render(request,'customer_templates/customer_edit_profile.html', context)
     
-
-  

@@ -211,6 +211,3 @@ def reviews_for_dish(request, dish_id):
     'reviews': reviews
   }
   return render(request, 'cook_templates/cook_dish_reviews.html', context)
-
-
-
