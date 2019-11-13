@@ -54,7 +54,7 @@ def single_order_view(request, order_id):
     'user': user,
     'customer': customer,
     'address': address,
-    'order_id': order_id,
+    'order': order,
     'items': items,
     'cook': cook
   }
