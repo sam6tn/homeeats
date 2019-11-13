@@ -4,7 +4,7 @@ import json
 from django.test import RequestFactory
 from . import views
 from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address, User, Customer
-from .forms import DishSearchForm, DishCreateForm, CustomerCreateForm, DishReviewForm
+from .forms import DishSearchForm,  DishCreateForm, CustomerCreateForm, DishReviewForm, UserEditForm, PhoneEditForm
 
 class CookHomeTest(TestCase):
     fixtures = ['test_data.json']
@@ -198,7 +198,11 @@ class CustomerCreateFormTest(TestCase):
             'phone_number': "0123456789"
         })
         self.assertTrue(form.is_valid())
-    def test_invalid_data(self):
+
+    '''
+    Tests that invalid emails are not accepted
+    '''
+    def test_invalid_email(self):
         form = CustomerCreateForm({
             'first_name': "First",
             'last_name': "Last",
@@ -211,6 +215,54 @@ class CustomerCreateFormTest(TestCase):
             'phone_number': "0123456789"
         })      
         self.assertFalse(form.is_valid())
+    
+    
+    '''
+    Tests that data will not saved if required information is missing
+    '''
+    def test_missing_required_firstname(self):
+        form = CustomerCreateForm({
+            'first_name': "",
+            'last_name': "Last",
+            'password': "password",
+            'email': "first",
+            'street': "123 rotunda",
+            'town': "Charlottesville",
+            'state': "VA",
+            'zipcode': "22903",
+            'phone_number': "0123456789"
+        })
+        self.assertFalse(form.is_valid())
+    
+
+class CustomerEditProfileTest(TestCase):
+    '''
+    Cannot submit a form with an empty first name
+    '''
+    def test_no_firstname(self):
+        form = UserEditForm({'first_name': "",'last_name': "Last"})
+        self.assertFalse(form.is_valid())
+    
+    '''
+    Cannot submit an edit form without last name
+    '''
+    def test_no_lastname(self):
+        form = UserEditForm({'first_name': "first",'last_name': ""})
+        self.assertFalse(form.is_valid())
+    
+    '''
+    Cannot change the the user's username
+    '''
+    def test_change_email(self):
+        form = UserEditForm({'first_name': "first",'last_name': "last", 'email': "abc@gmail.com"})
+        self.assertFalse(form.is_valid())
+    
+    '''
+    Can change the firstname, lastname, and phonenumber
+    '''
+    def test_change_phonenumber(self):
+        form = PhoneEditForm({'phone_number':'0123456789'})
+        self.assertTrue(form.is_valid())
 
 class DishRestrictionsTest(TestCase):
     def test_vegan_true(self):

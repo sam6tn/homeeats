@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django import forms
-from .models import User, Cuisine, Customer, Cook, Dish, Dish_Review
+from .models import User, Cuisine, Customer, Cook, Dish, Dish_Review, Address
 
 
 
@@ -23,9 +23,36 @@ class CustomerCreateForm(forms.ModelForm):
     
     class Meta:
         model = Customer 
-        fields = ('first_name','last_name','password','email','street','town','state',
-        'zipcode','phone_number')
+        #fields = ('first_name','last_name','password','email','street','town','state',
+         #   'zipcode','phone_number',)
+        fields = ('first_name','last_name','password','phone_number',)
+    
+class AddressEditForm(forms.ModelForm):
+    street = forms.CharField(required=True,label='Street Address')
+    town = forms.CharField(required=True,label='City/Town')
+    state = forms.CharField(required=True,)
+    zipcode = forms.CharField(required=True,)
 
+    class Meta:
+        model = Address
+        fields = ('street', 'town', 'state', 'zipcode',)
+
+
+class UserEditForm(forms.ModelForm):
+    first_name = forms.CharField(label='First Name',required=True,
+    error_messages={'required':'Please enter your first name.'},)
+    last_name = forms.CharField(label='Last Name', required=True,error_messages={'required':'Please enter your last name.'})
+    username = forms.CharField(label='Email',widget=forms.TextInput(attrs={'readonly':'readonly'}))
+    
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'username')
+
+class PhoneEditForm(forms.ModelForm):
+    phone_number = forms.CharField(label='Phone Number')
+    class Meta:
+        model = Customer
+        fields = ('phone_number',)
 
 class UserForm(forms.ModelForm):
     class Meta:

@@ -5,9 +5,12 @@ from ..models import User, Cook, Order
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.template import loader
+from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from ..forms import CustomerCreateForm
+from django.urls import reverse_lazy
 
 def index(request):
     template = loader.get_template('../templates/index.html')
@@ -33,12 +36,13 @@ def index(request):
 '''
 View of the customer creation form with form validation.
 '''
+
 def customercreate(request):
   if request.method == 'POST':
     form = forms.CustomerCreateForm(request.POST)
     if form.is_valid():
       data = form.cleaned_data
-      user = User.objects.create_user(username=data['email'], password=data['password'], first_name=data['first_name'], last_name=data['last_name'])
+      user = User.objects.create_user(username=data['email'], email=data['email'], password=data['password'], first_name=data['first_name'], last_name=data['last_name'])
       customer = models.Customer.objects.create(phone_number=data['phone_number'], user_id=user.id)
       user.is_customer = True
       user.save()
@@ -52,6 +56,7 @@ def customercreate(request):
   else:
     form = forms.CustomerCreateForm()
     return render(request, 'customer_create.html', {'form': form})
+
 
 def cookcreate(request):
   if request.method == 'POST':
