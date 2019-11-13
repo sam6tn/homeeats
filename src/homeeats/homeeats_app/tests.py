@@ -236,58 +236,30 @@ class CustomerCreateFormTest(TestCase):
     
 
 class CustomerEditProfileTest(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user(username="Test1", password="Test1", first_name="first", last_name="last")
-        self.customer = models.Customer.objects.create(phone_number="0123456789", user_id=self.user.id)
-        user.save()
-        customer.save()
-        before_change = self.user
-        before_customer = self.customer
-        self.client.login(username=self.user.username,password=self.user.password)
-
-        profile_before = Profile.objects.create(first_name="Test", last_name="Case", grad_year=2021, major="CS", number="1234567890", email="test@test.com")
-        profile_before.save()
-
     '''
-    Changes users first name and tests if it's the same as the copy from setup
+    Cannot submit a form with an empty first name
     '''
-    def test_update_firstname(self):
-        form = UserEditForm(instance=self.user, {'first_name':"Changed"})
-        if form.is_valid(){
-            data = form.cleaned_data
-            form.save()
-        }
-        assertFalse(before_change.first_name==self.user.first_name)
-
-    '''
-    Changes user's last name and tests if it's the same as the copy from setup
-    '''
-    def test_update_lastname(self):
-        form = UserEditForm(instance=self.user, {'last_name':"Changed"})
-        if form.is_valid(){
-            data = form.cleaned_data
-            form.save()
-        }
-        assertFalse(before_change.last_name==self.user.last_name)
-
-    '''
-    Attempts to change user's username/email but this shouldn't be allowed so the 
-    form should stop the change from saving
-    '''
-    def test_update_username(self):
-        form = UserEditForm(instance=self.user, {'username':"Changed"})
-        if form.is_valid():
-            data = form.cleaned_data
-            form.save()
-        assertTrue(before_change.username==self.user.username) #Shouldn't be able to change username
+    def test_no_firstname(self):
+        form = UserEditForm({'first_name': "",'last_name': "Last"})
+        self.assertFalse(form.is_valid())
     
     '''
-    Changes customer's phone number and tests if it's the same as the copy from setup
+    Cannot submit an edit form without last name
     '''
-    def test_update_phonenumber(self):
-        form = PhoneEditForm(instance=self.customer,{'phone_number':"0987654321"})
-        if form.is_valid(){
-            data = form.cleaned_data
-            form.save()
-        }
-        assertFalse(before_customer==self.customer)
+    def test_no_lastname(self):
+        form = UserEditForm({'first_name': "first",'last_name': ""})
+        self.assertFalse(form.is_valid())
+    
+    '''
+    Cannot change the the user's username
+    '''
+    def test_change_email(self):
+        form = UserEditForm({'first_name': "first",'last_name': "last", 'email': "abc@gmail.com"})
+        self.assertFalse(form.is_valid())
+    
+    '''
+    Can change the firstname, lastname, and phonenumber
+    '''
+    def test_change_phonenumber(self):
+        form = PhoneEditForm({'phone_number':'0123456789'})
+        self.assertTrue(form.is_valid())

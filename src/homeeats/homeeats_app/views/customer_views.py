@@ -153,6 +153,8 @@ def customer_edit_profile(request):
     form = UserEditForm(request.POST, 
       request.FILES, 
       instance=request.user)
+    if request.POST['first_name'] == "":
+      request.POST['first_name'] = request.user.first_name
     phone_form = PhoneEditForm(request.POST,
       request.FILES,
       instance = request.user.customer)
