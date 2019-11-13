@@ -3,7 +3,7 @@ from django.urls import reverse
 import json 
 from django.test import RequestFactory
 from . import views
-from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address, User, Customer
+from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address, User, Customer, Order
 from .forms import DishSearchForm, CustomerCreateForm, DishReviewForm
 
 class CookHomeTest(TestCase):
@@ -37,7 +37,39 @@ class CookHomeTest(TestCase):
        response = self.client.get(reverse('cook_home'))
        self.assertEquals(response.context['in_progress_orders'][0]['id'], 2)
        self.assertEquals(response.context['in_progress_orders'][0]['status'], 'c')
-       
+    def test_cook_online_has_orders_so_cant_go_offline(self):
+       self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+       response = self.client.get(reverse('cook_home'))
+       response = self.client.get(reverse('available'))
+       self.assertEquals(response.status_code, 302)
+       self.assertEquals(response.url, '/cook/home/')
+    def test_cook_online_no_orders_so_can_logout(self):
+       self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+       response = self.client.get(reverse('cook_home'))
+       self.client.get(reverse('reject_order', args=[1]))
+       self.client.get(reverse('cooking_to_delivery', args=[2]))
+       self.client.get(reverse('completed_delivery', args=[2]))
+       response = self.client.get(reverse('logout_view'))
+       self.assertEquals(response.status_code, 302)
+       self.assertEquals(response.url, '/')
+    def test_reject_order_changes_status(self):
+       self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+       response = self.client.get(reverse('cook_home'))
+       self.client.get(reverse('reject_order', args=[1]))
+       order = Order.objects.get(id=1)
+       self.assertEquals(order.status, 'r')
+    def test_accept_order_changes_status(self):
+       self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+       response = self.client.get(reverse('cook_home'))
+       self.client.get(reverse('accept_order', args=[1]))
+       order = Order.objects.get(id=1)
+       self.assertEquals(order.status, 'c')
+    def test_change_status_from_cooking_to_delivery(self):
+       self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+       response = self.client.get(reverse('cook_home'))
+       self.client.get(reverse('cooking_to_delivery', args=[2]))
+       order = Order.objects.get(id=2)
+       self.assertEquals(order.status, 'o')
 
 class CookManageTest(TestCase):
     fixtures = ['test_data.json']
