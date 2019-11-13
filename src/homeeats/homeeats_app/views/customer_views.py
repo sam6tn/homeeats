@@ -52,13 +52,9 @@ def dish(request, dish_id):
         
 
       elif "add_to_order" in request.POST:
-        print("Do add dish to order logic here")
+        print("Add dish to order logic here")
 
     else:
-      try:
-        customer = Customer.objects.get(user_id=request.user.id)
-      except Exception as e:
-        return redirect('/')
       form = DishReviewForm()
       return render(request, 'customer_templates/customer_dish.html', {'dish': dish, 'reviews':reviews, 'form':form})
 
@@ -70,10 +66,6 @@ def checkout(request):
 @login_required
 @customer_required
 def home(request):
-    try:
-      customer = Customer.objects.get(user_id=request.user.id)
-    except Exception as e:
-      return redirect('/')
     if request.method == 'POST':
       form = forms.DishSearchForm(request.POST)
       if form.is_valid():
@@ -81,7 +73,9 @@ def home(request):
         search = data['search']
         sort = data['sort']
         cuisine = data['cuisine']
-        dishes = Dish.objects.filter(title__icontains=search)
+
+        dishes = find_nearby_dishes(request)
+        dishes = dishes.filter(title__icontains=search)
 
         if (cuisine != 'none'):
           dishes = dishes.filter(cuisine=cuisine)
@@ -100,7 +94,7 @@ def home(request):
 
     else:
       form = forms.DishSearchForm()
-      dishes = Dish.objects.all()
+      dishes = find_nearby_dishes(request)
       return render(request, 'customer_templates/customer_home.html', {'dishes': dishes, 'form':form})
 
 #get the distance between origin and destination using google maps api
@@ -132,16 +126,17 @@ def find_nearby_cooks(request):
     distance_cooks.append(distance_cook)
   for distance in distance_cooks:
     cook = Cook.objects.get(id=distance[1])
-    if float(distance[0]) < cook.delivery_distance_miles:
+    dist = distance[0].replace(",","")
+    if float(dist) < cook.delivery_distance_miles:
       nearby_cooks.append(cook)
   return nearby_cooks #returning a queryset of cooks
 
 #use find_nearby_cooks to find all nearby dishes
 def find_nearby_dishes(request):
   cooks = find_nearby_cooks(request)
+  print(cooks)
   dishes = Dish.objects.filter(cook__in=cooks)
   return dishes #returning a queryset of dishes
-
 
 '''
 Allows the customer to edit their username, password, and phone number.
