@@ -9,7 +9,7 @@
     <ul class="list-group list-group-horizontal">
             {% for dish in dishes  %}
         <div class="card justify-content-between m-2" style="width: 14rem;">
-            <h5 class="card-header text-center"><a href="">{{dish.title}}</a></h5>
+            <h5 class="card-header text-center"><a href="{% url 'reviews_for_dish' dish.id %}">{{dish.title}}</a></h5>
             <div class="card-body ">
                 <h5 class="card-title">blah<!--{{ post.info }}--></h5>
                 <p class="card-text">{{dish.description}}</p>

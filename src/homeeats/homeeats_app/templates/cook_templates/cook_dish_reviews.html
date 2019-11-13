@@ -1,0 +1,34 @@
+{% extends 'cook_base.html' %}
+{% load staticfiles %}
+
+{% block title %}Home{% endblock %}
+{% block pagecontent %}
+
+<div class="container mt-2">
+    <h2>Reviews for {{dish.title}}</h2>
+        {% if reviews %}
+        <ul class="list-group"></ul>
+        {% for review in reviews %}
+            <li class="list-group-item">
+                <div style="margin:10px 0px;">
+                    <span class="fa fa-star {% if review.dish_rating >= 1 %}checked{% endif %} fa-sm"></span>
+                    <span class="fa fa-star {% if review.dish_rating >= 2 %}checked{% endif %} fa-sm"></span>
+                    <span class="fa fa-star {% if review.dish_rating >= 3 %}checked{% endif %} fa-sm"></span>
+                    <span class="fa fa-star {% if review.dish_rating >= 4 %}checked{% endif %} fa-sm"></span>
+                    <span class="fa fa-star {% if review.dish_rating >= 5 %}checked{% endif %} fa-sm"></span>
+                    <h6>{{review.description}}</h6>
+                </div>
+            </li>
+        {% endfor %}
+        </ul>
+        {% else %}
+        <div class="container mt-2">
+                <div class="jumbotron jumbotron-fluid">
+                    <div class="container text-center">
+                        <p class="lead">This dish has not yet been reviewed!</p>
+                    </div>
+            </div>
+        {% endif %}
+</div>
+
+{% endblock %}
