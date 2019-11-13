@@ -4,11 +4,7 @@ import json
 from django.test import RequestFactory
 from . import views
 from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address, User, Customer
-<<<<<<< HEAD
-from .forms import DishSearchForm, CustomerCreateForm, DishReviewForm, UserEditForm, PhoneEditForm
-=======
-from .forms import DishSearchForm, DishCreateForm, CustomerCreateForm, DishReviewForm
->>>>>>> 5be2e5582ec53d2e1d1bc4e7aaad8cede3cbaf71
+from .forms import DishSearchForm,  DishCreateForm, CustomerCreateForm, DishReviewForm, UserEditForm, PhoneEditForm
 
 class CookHomeTest(TestCase):
     fixtures = ['test_data.json']
