@@ -6,41 +6,55 @@
 
 <div class="container mt-2">
     <h2>Your {{cuisine}} Dishes</h2>
-    <ul class="list-group list-group-horizontal">
-            {% for dish in dishes  %}
-        <div class="card justify-content-between m-2" style="width: 14rem;">
-            <h5 class="card-header text-center"><a href="{% url 'reviews_for_dish' dish.id %}">{{dish.title}}</a></h5>
-            <div class="card-body ">
-                <h5 class="card-title">blah<!--{{ post.info }}--></h5>
-                <p class="card-text">{{dish.description}}</p>
-                <p class="card-text">Vegan: {{dish.vegan}}</p>
-                <p class="card-text">Allergies: {{dish.allergies}}</p>
-                <p class="card-text font-weight-bold text-secondary">Price: ${{dish.price}}</p>
-            </div>
-            <div class="card-footer text-right">
-                <small class="text-muted"><button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModalCenter{{dish.id}}">Delete</button></small>
-            </div>
+    <div class="container">
+      <div class="row">
+        {% for dish in dishes  %}
+        <div class="col-4" style="margin-bottom:20px;display:flex">
+          <div class="card">
+              <h5 class="card-header">
+                <a href="{% url 'reviews_for_dish' dish.id %}">{{dish.title}}</a>
+                <span style="float:right;">
+                  <span class="fa fa-star {% if dish.rating >= 1 %}checked{% endif %} fa-sm"></span>
+                  <span class="fa fa-star {% if dish.rating >= 2 %}checked{% endif %} fa-sm"></span>
+                  <span class="fa fa-star {% if dish.rating >= 3 %}checked{% endif %} fa-sm"></span>
+                  <span class="fa fa-star {% if dish.rating >= 4 %}checked{% endif %} fa-sm"></span>
+                  <span class="fa fa-star {% if dish.rating >= 5 %}checked{% endif %} fa-sm"></span>
+                </span>
+              </h5>
+              <div class="card-body ">
+                  <p class="card-text">{{dish.description}}</p>
+                  <img src="{{ dish.dish_image.url }}" width="100%" style="max-height: 200px;">
+                  <p class="card-text">Allergies: {{dish.allergies}}</p>
+                  <p class="card-text font-weight-bold text-secondary">Price: ${{dish.price}}</p>
+              </div>
+              <div class="card-footer text-right">
+                  {% if dish.vegan %}<img style="float:left" src="/media/vegan.png" width=30px>{% endif %}
+                  <small class="text-muted"><button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModalCenter{{dish.id}}">Delete</button></small>
+              </div>
+          </div>
         </div>
+
+
         <div class="modal fade" id="exampleModalCenter{{dish.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Remove {{dish.title}}</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  Are you sure you want to remove this dish?
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                  <a href="{% url 'delete_dish' dish.id %}"><button type="button" class="btn btn-danger">Delete</button></a>
-                </div>
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Remove {{dish.title}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                Are you sure you want to remove this dish?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <a href="{% url 'delete_dish' dish.id %}"><button type="button" class="btn btn-danger">Delete</button></a>
               </div>
             </div>
           </div>
+        </div>
         {% endfor %}
-    </ul>
+      </div>
 </div>
         {% endblock %}
