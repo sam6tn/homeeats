@@ -101,3 +101,12 @@ class Item(models.Model):
   quantity = models.IntegerField(default=0)
   order = models.ForeignKey(Order, on_delete=models.CASCADE)
 
+class ShoppingCart(models.Model):
+  customer = models.OneToOneField(Customer, on_delete=models.CASCADE)
+  cook = models.ForeignKey(Cook, on_delete=models.CASCADE)
+  empty = models.BooleanField(default=True)
+
+class CartItems(models.Model):
+  dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
+  quantity = models.IntegerField(default=0)
+  shopping_cart = models.ForeignKey(ShoppingCart, on_delete=models.CASCADE)
