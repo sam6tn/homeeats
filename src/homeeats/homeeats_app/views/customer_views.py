@@ -105,7 +105,7 @@ def checkout(request):
   order_name = request.user.first_name + " " + request.user.last_name
   order_cook = Cook.objects.get(id=shopping_cart.cook_id)
   cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
-  order = Order.objects.create(
+  order = Order.objects.create( #create new pending order
     name = order_name,
     cook = order_cook,
     customer = customer,
@@ -113,18 +113,18 @@ def checkout(request):
     total = shopping_cart.total
   )
   order.save()
-  for item in cart_items:
+  for item in cart_items: #for each CartItem in shopping cart
     dish = Dish.objects.get(id=item.dish_id)
-    order_item = Item.objects.create(
+    order_item = Item.objects.create( #create an Item for order with stuff from shopping cart
       dish = dish,
       quantity = item.quantity,
       subtotal = item.subtotal,
       order = order
     )
     order_item.save()
-    item.delete()
-  shopping_cart.empty = True
-  shopping_cart.total = 0
+    item.delete() #delete item from CartItem
+  shopping_cart.empty = True #set shopping cart back to empty
+  shopping_cart.total = 0 #clear total for shopping cart
   shopping_cart.save()
   return HttpResponseRedirect(reverse('home'))
 
