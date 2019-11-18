@@ -7,7 +7,12 @@
 <div class="container">
     <div class="row">
         <div class="col-6">
-            <h1>{{dish.title}} <button class='btn btn-success' name="add_to_order">Add to Order</button></h1>
+            <form method="POST" action="{% url 'addtocart' %}">
+                {% csrf_token %}  
+                <input name="dish_id" type="hidden" value="{{dish.id}}">
+                <button class='btn btn-success' type="submit">Add to order</button>
+            </form>
+            <h1>{{dish.title}}</h1>
             <h4>{{dish.description}} </h4>
             <img src="{{ dish.dish_image.url }}" width=400px height=300px>
             <h3>Cook time: {{dish.cook_time}} </h3>

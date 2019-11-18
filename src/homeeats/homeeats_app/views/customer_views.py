@@ -51,8 +51,8 @@ def dish(request, dish_id):
         return render(request, 'customer_templates/customer_dish.html', {'dish': dish, 'reviews':reviews, 'form':form})
         
 
-      elif "add_to_order" in request.POST:
-        print("Add dish to order logic here")
+      # elif "add_to_order" in request.POST:
+      #   print("Add dish to order logic here")
 
     else:
       form = DishReviewForm()
@@ -66,6 +66,7 @@ def dish(request, dish_id):
 @login_required
 @customer_required
 def home(request):
+    customer = Customer.objects.get(user_id=request.user.id)
     if request.method == 'POST':
       form = forms.DishSearchForm(request.POST)
       if form.is_valid():
@@ -77,6 +78,12 @@ def home(request):
         dishes = find_nearby_dishes(request)
         dishes = dishes.filter(title__icontains=search)
 
+        try: #can remove try except statement once all customers must have shopping cart
+          if (not customer.shoppingcart.empty):
+            dishes = dishes.filter(cook=customer.shoppingcart.cook)
+        except Exception as e:
+          print(e)
+
         if (cuisine != 'none'):
           dishes = dishes.filter(cuisine=cuisine)
 
@@ -87,15 +94,58 @@ def home(request):
         elif (sort == 'reverse_price'):
           dishes = dishes.order_by('-price')
 
-        return render(request, 'customer_templates/customer_home.html', {'dishes':dishes, 'form': form})
+        return render(request, 'customer_templates/customer_home.html', {'dishes':dishes, 'form': form, 'customer':customer})
       else:
         dishes = Dish.objects.all()
-        return render(request, 'customer_templates/customer_home.html', {'dishes': dishes, 'form': form})
+        return render(request, 'customer_templates/customer_home.html', {'dishes': dishes, 'form': form, 'customer':customer})
 
     else:
       form = forms.DishSearchForm()
       dishes = find_nearby_dishes(request)
-      return render(request, 'customer_templates/customer_home.html', {'dishes': dishes, 'form':form})
+      try: #can remove try except statement once all customers must have shopping cart
+        if (not customer.shoppingcart.empty):
+          dishes = dishes.filter(cook=customer.shoppingcart.cook)
+      except Exception as e:
+        print(e)
+      return render(request, 'customer_templates/customer_home.html', {'dishes': dishes, 'form':form, 'customer':customer})
+
+@login_required
+@customer_required
+def addtocart(request):
+  if request.method == "POST":
+    dish = Dish.objects.get(id=request.POST["dish_id"])
+    customer = Customer.objects.get(user_id=request.user.id)
+    shopping_cart = customer.shoppingcart
+    shopping_cart.total += dish.price
+    existing_already = False
+    for existing_item in shopping_cart.cartitem_set.all(): 
+      if (existing_item.dish == dish): #dish already in cart so add to existing cart item
+        existing_item.quantity += 1
+        existing_item.subtotal += dish.price
+        existing_item.save()
+        existing_already = True
+        break
+    if (existing_already == False): #dish not yet in cart so create new cart item
+      cart_item = CartItem.objects.create(
+        dish=dish,
+        quantity=1,
+        subtotal=dish.price,
+        shopping_cart=shopping_cart
+      )
+      cart_item.save()
+    shopping_cart.empty = False
+    shopping_cart.save()
+    return HttpResponseRedirect(reverse('cart'))
+  else:
+    return HttpResponseRedirect(reverse('customer_home'))
+
+
+@login_required
+@customer_required
+def cart(request):
+  customer = Customer.objects.get(user_id=request.user.id)
+  cart = customer.shoppingcart
+  return render(request, 'customer_templates/cart.html', {'cart':cart})
 
 @login_required
 @customer_required
@@ -126,7 +176,7 @@ def checkout(request):
   shopping_cart.empty = True #set shopping cart back to empty
   shopping_cart.total = 0 #clear total for shopping cart
   shopping_cart.save()
-  return HttpResponseRedirect(reverse('home'))
+  return HttpResponseRedirect(reverse('customer_home'))
 
 #get the distance between origin and destination using google maps api
 def get_distance(origin, destination):
@@ -165,7 +215,6 @@ def find_nearby_cooks(request):
 #use find_nearby_cooks to find all nearby dishes
 def find_nearby_dishes(request):
   cooks = find_nearby_cooks(request)
-  print(cooks)
   dishes = Dish.objects.filter(cook__in=cooks)
   return dishes #returning a queryset of dishes
 

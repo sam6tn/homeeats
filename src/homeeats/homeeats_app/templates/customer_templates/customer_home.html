@@ -11,6 +11,12 @@
     </form>
 </div>
 
+{% if not customer.shoppingcart.empty%}
+    <div class="container" style="color:red;">
+        <h2>Only showing dishes from {{customer.shoppingcart.cook.user.first_name}}</h2>
+    </div>
+{% endif %}
+
 <div class="container">
     <div class="row">
     {% for dish in dishes %}
@@ -23,7 +29,13 @@
                     <span class="fa fa-star {% if dish.rating >= 3 %}checked{% endif %} fa-sm"></span>
                     <span class="fa fa-star {% if dish.rating >= 4 %}checked{% endif %} fa-sm"></span>
                     <span class="fa fa-star {% if dish.rating >= 5 %}checked{% endif %} fa-sm"></span>
-                    <a href="#"><i class="fa fa-plus text-success" style="font-size:2vw;float:right;"></i></a>
+                    <form method="POST" action="{% url 'addtocart' %}" style="font-size:2vw;float:right;">
+                        {% csrf_token %}  
+                        <input name="dish_id" type="hidden" value="{{dish.id}}">
+                        <button type="submit" style="padding:0;background:inherit;border:none;">
+                        <i class="fa fa-plus text-success"></i>
+                        </button>
+                    </form>
                 </h5>
                 <div class="card-body" style="height:100%">
                     <h5 class="card-title">Cook: {{dish.cook.user.first_name}} {{dish.cook.user.last_name}}</h5>

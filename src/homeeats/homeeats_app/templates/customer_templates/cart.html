@@ -1,0 +1,19 @@
+{% extends 'customer_base.html' %}
+
+{% block pagecontent %}
+
+{% if cart.empty %}
+<h2>Please add items to cart to see them here!</h2>
+{% else %}
+
+<h1>{{user.first_name}}'s Cart</h1>
+<h2>Ordering from {{cart.cook.user.first_name}}</h2>
+<h3>Total: {{cart.total}}</h2>
+{% for item in cart.cartitem_set.all%}
+    <h4>{{item.dish.title}} - {{item.quantity}} - ${{item.subtotal}}</h3>
+{% endfor %}
+<a href="{% url 'checkout' %}">Checkout</a>
+
+{% endif %}
+
+{% endblock %}
