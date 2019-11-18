@@ -105,27 +105,26 @@ def checkout(request):
   order_name = request.user.first_name + " " + request.user.last_name
   order_cook = Cook.objects.get(id=shopping_cart.cook_id)
   cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
-  order_total = 0
   order = Order.objects.create(
     name = order_name,
     cook = order_cook,
     customer = customer,
-    status = 'p'
+    status = 'p',
+    total = shopping_cart.total
   )
   order.save()
   for item in cart_items:
     dish = Dish.objects.get(id=item.dish_id)
-    order_total = order_total + (dish.price * item.quantity)
     order_item = Item.objects.create(
       dish = dish,
       quantity = item.quantity,
+      subtotal = item.subtotal,
       order = order
     )
     order_item.save()
     item.delete()
-  order.total = order_total
-  order.save()
   shopping_cart.empty = True
+  shopping_cart.total = 0
   shopping_cart.save()
   return HttpResponseRedirect(reverse('home'))
 

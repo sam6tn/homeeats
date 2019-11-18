@@ -99,14 +99,17 @@ class Order(models.Model):
 class Item(models.Model):
   dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
   quantity = models.IntegerField(default=0)
+  subtotal = models.DecimalField(default=0, decimal_places=2, max_digits=6)
   order = models.ForeignKey(Order, on_delete=models.CASCADE)
 
 class ShoppingCart(models.Model):
   customer = models.OneToOneField(Customer, on_delete=models.CASCADE)
   cook = models.ForeignKey(Cook, on_delete=models.CASCADE)
+  total = models.DecimalField(default=0, decimal_places=2, max_digits=6)
   empty = models.BooleanField(default=True)
 
 class CartItem(models.Model):
   dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
   quantity = models.IntegerField(default=0)
+  subtotal = models.DecimalField(default=0, decimal_places=2, max_digits=6)
   shopping_cart = models.ForeignKey(ShoppingCart, on_delete=models.CASCADE)
