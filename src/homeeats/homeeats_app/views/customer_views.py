@@ -133,6 +133,7 @@ def addtocart(request):
         shopping_cart=shopping_cart
       )
       cart_item.save()
+      shopping_cart.cook = dish.cook
     shopping_cart.empty = False
     shopping_cart.save()
     return HttpResponseRedirect(reverse('cart'))
