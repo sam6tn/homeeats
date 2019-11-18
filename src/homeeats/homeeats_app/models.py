@@ -104,7 +104,7 @@ class Item(models.Model):
 
 class ShoppingCart(models.Model):
   customer = models.OneToOneField(Customer, on_delete=models.CASCADE)
-  cook = models.ForeignKey(Cook, on_delete=models.CASCADE)
+  cook = models.ForeignKey(Cook, on_delete=models.CASCADE, null=True, blank=True)
   total = models.DecimalField(default=0, decimal_places=2, max_digits=6)
   empty = models.BooleanField(default=True)
 
