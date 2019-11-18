@@ -5,7 +5,7 @@ from ..forms import CustomerCreateForm, DishReviewForm, UserEditForm, AddressEdi
 from .. import forms
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
-from ..models import Dish, Customer, Dish_Review, Cook, Address
+from ..models import Dish, Customer, Dish_Review, Cook, Address, ShoppingCart, CartItems, Order, Item
 from .. import models
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
@@ -58,10 +58,10 @@ def dish(request, dish_id):
       form = DishReviewForm()
       return render(request, 'customer_templates/customer_dish.html', {'dish': dish, 'reviews':reviews, 'form':form})
 
-@login_required
-@customer_required
-def checkout(request):
-  return render(request, 'customer_templates/checkout.html')
+# @login_required
+# @customer_required
+# def checkout(request):
+#   return render(request, 'customer_templates/checkout.html')
 
 @login_required
 @customer_required
@@ -96,6 +96,38 @@ def home(request):
       form = forms.DishSearchForm()
       dishes = find_nearby_dishes(request)
       return render(request, 'customer_templates/customer_home.html', {'dishes': dishes, 'form':form})
+
+@login_required
+@customer_required
+def checkout(request):
+  customer = Customer.objects.get(user_id=request.user.id)
+  shopping_cart = ShoppingCart.objects.get(customer=customer)
+  order_name = request.user.first_name + " " + request.user.last_name
+  order_cook = Cook.objects.get(id=shopping_cart.cook_id)
+  cart_items = CartItems.objects.filter(shopping_cart=shopping_cart)
+  order_total = 0
+  order = Order.objects.create(
+    name = order_name,
+    cook = order_cook,
+    customer = customer,
+    status = 'p'
+  )
+  order.save()
+  for item in cart_items:
+    dish = Dish.objects.get(id=item.dish_id)
+    order_total = order_total + (dish.price * item.quantity)
+    order_item = Item.objects.create(
+      dish = dish,
+      quantity = item.quantity,
+      order = order
+    )
+    order_item.save()
+    item.delete()
+  order.total = order_total
+  order.save()
+  shopping_cart.empty = True
+  shopping_cart.save()
+  return HttpResponseRedirect(reverse('home'))
 
 #get the distance between origin and destination using google maps api
 def get_distance(origin, destination):
