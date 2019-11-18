@@ -5,7 +5,7 @@ from ..forms import CustomerCreateForm, DishReviewForm, UserEditForm, AddressEdi
 from .. import forms
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
-from ..models import Dish, Customer, Dish_Review, Cook, Address, ShoppingCart, CartItems, Order, Item
+from ..models import Dish, Customer, Dish_Review, Cook, Address, ShoppingCart, CartItem, Order, Item
 from .. import models
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
@@ -104,7 +104,7 @@ def checkout(request):
   shopping_cart = ShoppingCart.objects.get(customer=customer)
   order_name = request.user.first_name + " " + request.user.last_name
   order_cook = Cook.objects.get(id=shopping_cart.cook_id)
-  cart_items = CartItems.objects.filter(shopping_cart=shopping_cart)
+  cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
   order_total = 0
   order = Order.objects.create(
     name = order_name,

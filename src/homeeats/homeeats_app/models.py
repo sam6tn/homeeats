@@ -106,7 +106,7 @@ class ShoppingCart(models.Model):
   cook = models.ForeignKey(Cook, on_delete=models.CASCADE)
   empty = models.BooleanField(default=True)
 
-class CartItems(models.Model):
+class CartItem(models.Model):
   dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
   quantity = models.IntegerField(default=0)
   shopping_cart = models.ForeignKey(ShoppingCart, on_delete=models.CASCADE)
