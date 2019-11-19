@@ -62,6 +62,13 @@ class Dish_Review(models.Model):
   dish_rating = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)])
   description = models.CharField(max_length=200)
   report_flag = models.BooleanField(default=False)
+  report_reason_choices = [
+        ('o', 'Offensive'),
+        ('n', 'Not Relevant'),
+        ('t', 'Threatening'),
+        ('s', 'Spam')
+    ]
+  report_reason = models.CharField(max_length=1, choices=report_reason_choices, default="")
   customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
   dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
   def __str__(self):
