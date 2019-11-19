@@ -204,7 +204,7 @@ def change_order_status(previous, new, request, order_id):
 @cook_required
 def reviews_for_dish(request, dish_id):
   dish = get_object_or_404(Dish, id=dish_id)
-  objs = Dish_Review.objects.filter(dish=dish, report_flag=False).order_by('date')
+  objs = Dish_Review.objects.filter(dish=dish, report_flag=False).order_by('-date')
   reviews = []
   for obj in objs:
     rev = model_to_dict(obj)
