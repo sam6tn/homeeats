@@ -1,0 +1,27 @@
+{% extends 'customer_base.html' %}
+{% load staticfiles %}
+
+{% block pagecontent %}
+
+<div class="container">
+{% for item in order.item_set.all %}
+    <div class="card" style="width:25%;">
+        <h5 class="card-header">
+            {{item.quantity}} {{item.dish.title}}
+        </h5>
+        <div class="card-body" style="height:100%">
+            <img src="{{ item.dish.dish_image.url }}" width="100%" style="max-height: 200px;">
+            <p class="card-text font-weight-bold text-secondary">Subtotal: {{item.subtotal}}</p>
+        </div>
+        {% if order.status == 'd' %}
+        <div class="card-footer">
+            <button class="btn btn-primary">Review</button>
+        </div>
+        {% endif %}
+    </div>
+    
+{% endfor %}
+</div>
+
+
+{% endblock %}

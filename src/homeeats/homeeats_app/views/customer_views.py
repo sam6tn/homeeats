@@ -160,6 +160,12 @@ def orders(request):
 
 @login_required
 @customer_required
+def order(request, order_id):
+  order = Order.objects.get(id=order_id)
+  return render(request, 'customer_templates/order.html', {'order':order})
+
+@login_required
+@customer_required
 def checkout(request):
   customer = Customer.objects.get(user_id=request.user.id)
   shopping_cart = ShoppingCart.objects.get(customer=customer)

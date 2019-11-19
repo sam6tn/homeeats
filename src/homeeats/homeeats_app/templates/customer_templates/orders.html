@@ -3,14 +3,16 @@
 
 {% block pagecontent %}
 
-<h2>Current Orders</h2>
+
+{% if current_orders%}
+<h2 style="margin-left:60px">Current Orders</h2>
 <div class="container" style="overflow-x:scroll;">
     <div class="row flex-row flex-nowrap">
         {% for order in current_orders%}
             <div class="col-3" style="margin-bottom:20px;display:inline-block;">
                 <div class="card">
                     <h5 class="card-header">
-                        {{order.name}}
+                        <a href="{% url 'order' order.id %}">{{order.name}}</a>
                     </h5>
                     <div class="card-body">
                         <p>{{order.cook}}</p>
@@ -24,16 +26,19 @@
         {% endfor %}
     </div>
 </div>
+{% else %}
+<h3>No current orders</h3>
+{% endif %}
 
-
-<h2>Past Orders</h2>
+{% if past_orders %}
+<h2 style="margin-left:60px">Past Orders</h2>
 <div class="container" style="overflow-x:scroll;">
     <div class="row flex-row flex-nowrap">
         {% for order in past_orders%}
             <div class="col-3" style="margin-bottom:20px;display:inline-block;">
                 <div class="card">
                     <h5 class="card-header">
-                        {{order.name}}
+                        <a href="{% url 'order' order.id %}">{{order.name}}</a>
                     </h5>
                     <div class="card-body">
                         <p>{{order.cook}}</p>
@@ -47,6 +52,8 @@
         {% endfor %}
     </div>
 </div>
-
+{% else %}
+<h3>No past orders</h3>
+{% endif %}
 
 {% endblock %}
