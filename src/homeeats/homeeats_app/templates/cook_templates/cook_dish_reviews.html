@@ -4,6 +4,21 @@
 {% block title %}Home{% endblock %}
 {% block pagecontent %}
 
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>{{message}}</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endif %}
+    {% endfor %}
+</ul>
+{% endif %}
+
 <div class="container mt-2">
     <h2>Reviews for {{dish.title}}</h2>
         {% if reviews %}
@@ -17,8 +32,35 @@
                     <span class="fa fa-star {% if review.dish_rating >= 4 %}checked{% endif %} fa-sm"></span>
                     <span class="fa fa-star {% if review.dish_rating >= 5 %}checked{% endif %} fa-sm"></span>
                     <h6>{{review.description}}</h6>
+                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter{{review.id}}">Report</button>
                 </div>
+                
             </li>
+
+            <!-- Modal -->
+        <div class="modal fade" id="exampleModalCenter{{review.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalCenterTitle">Why do you want to report this?</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                    <div class="list-group">
+                            <a href="{% url 'report_dish_review' review.id 'o' %}" class="list-group-item list-group-item-action">This review is offensive</a>
+                            <a href="{% url 'report_dish_review' review.id 'n' %}" class="list-group-item list-group-item-action">This review is not relevant</a>
+                            <a href="{% url 'report_dish_review' review.id 't' %}" class="list-group-item list-group-item-action">This review is threatening</a>
+                            <a href="{% url 'report_dish_review' review.id 's' %}" class="list-group-item list-group-item-action">This review is spam</a>
+                    </div>     
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
         {% endfor %}
         </ul>
         {% else %}
