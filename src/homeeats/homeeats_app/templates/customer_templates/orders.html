@@ -1,0 +1,52 @@
+{% extends 'customer_base.html' %}
+{% load staticfiles %}
+
+{% block pagecontent %}
+
+<h2>Current Orders</h2>
+<div class="container" style="overflow-x:scroll;">
+    <div class="row flex-row flex-nowrap">
+        {% for order in current_orders%}
+            <div class="col-3" style="margin-bottom:20px;display:inline-block;">
+                <div class="card">
+                    <h5 class="card-header">
+                        {{order.name}}
+                    </h5>
+                    <div class="card-body">
+                        <p>{{order.cook}}</p>
+                        <p>${{order.total}}</p>
+                        <p>Status: {{order.status}}</p>
+                        <p>{{order.date}}</p>
+                    </div>
+                    
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+<h2>Past Orders</h2>
+<div class="container" style="overflow-x:scroll;">
+    <div class="row flex-row flex-nowrap">
+        {% for order in past_orders%}
+            <div class="col-3" style="margin-bottom:20px;display:inline-block;">
+                <div class="card">
+                    <h5 class="card-header">
+                        {{order.name}}
+                    </h5>
+                    <div class="card-body">
+                        <p>{{order.cook}}</p>
+                        <p>${{order.total}}</p>
+                        <p>Status: {{order.status}}</p>
+                        <p>{{order.date}}</p>
+                    </div>
+                    
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %}

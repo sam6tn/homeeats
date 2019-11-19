@@ -7,6 +7,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from ..models import Dish, Customer, Dish_Review, Cook, Address, ShoppingCart, CartItem, Order, Item
 from .. import models
+from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
@@ -23,7 +24,7 @@ import ssl
 @customer_required
 def dish(request, dish_id):
     dish = Dish.objects.get(id=dish_id) #get Dish object from dish_id
-    reviews = dish.dish_review_set.all() #get all reviews for that Dish
+    reviews = dish.dish_review_set.filter(report_flag=False) #get all reviews for that Dish
     if request.method == "POST":
       if "review_submit" in request.POST:
         form = DishReviewForm(request.POST)
@@ -147,6 +148,15 @@ def cart(request):
   customer = Customer.objects.get(user_id=request.user.id)
   cart = customer.shoppingcart
   return render(request, 'customer_templates/cart.html', {'cart':cart})
+
+@login_required
+@customer_required
+def orders(request):
+  customer = Customer.objects.get(user_id=request.user.id)
+  orders = customer.order_set.all()
+  current_orders = customer.order_set.filter(Q(status='p') | Q(status='c') | Q(status='o'))
+  past_orders = customer.order_set.filter(Q(status='d') | Q(status='r'))
+  return render(request, 'customer_templates/orders.html', {'current_orders':current_orders,'past_orders':past_orders})
 
 @login_required
 @customer_required
