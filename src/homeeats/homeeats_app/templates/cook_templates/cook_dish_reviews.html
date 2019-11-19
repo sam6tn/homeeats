@@ -22,21 +22,21 @@
 <div class="container mt-2">
     <h2>Reviews for {{dish.title}}</h2>
         {% if reviews %}
-        <ul class="list-group"></ul>
+        <ul class="list-group">
         {% for review in reviews %}
-            <li class="list-group-item">
+            <li class="list-group-item" style="width: 700px">
+                <p class="text-muted" style="float: right;">Posted: {{review.date}}</p>
                 <div style="margin:10px 0px;">
-                    <span class="fa fa-star {% if review.dish_rating >= 1 %}checked{% endif %} fa-sm"></span>
-                    <span class="fa fa-star {% if review.dish_rating >= 2 %}checked{% endif %} fa-sm"></span>
-                    <span class="fa fa-star {% if review.dish_rating >= 3 %}checked{% endif %} fa-sm"></span>
-                    <span class="fa fa-star {% if review.dish_rating >= 4 %}checked{% endif %} fa-sm"></span>
-                    <span class="fa fa-star {% if review.dish_rating >= 5 %}checked{% endif %} fa-sm"></span>
-                    <h6>{{review.description}}</h6>
-                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter{{review.id}}">Report</button>
-                </div>
-                
+                        <h6>{{review.user.first_name}} {{review.user.last_name}}</h6> 
+                        <span class="fa fa-star {% if review.dish_rating >= 1 %}checked{% endif %} fa-sm"></span>
+                        <span class="fa fa-star {% if review.dish_rating >= 2 %}checked{% endif %} fa-sm"></span>
+                        <span class="fa fa-star {% if review.dish_rating >= 3 %}checked{% endif %} fa-sm"></span>
+                        <span class="fa fa-star {% if review.dish_rating >= 4 %}checked{% endif %} fa-sm"></span>
+                        <span class="fa fa-star {% if review.dish_rating >= 5 %}checked{% endif %} fa-sm"></span><br/>
+                        <h8>{{review.description}}</h8><br/>
+                        <button style="float:right;" type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModalCenter{{review.id}}">Report</button>
+                </div>   
             </li>
-
             <!-- Modal -->
         <div class="modal fade" id="exampleModalCenter{{review.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">

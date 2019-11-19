@@ -207,7 +207,13 @@ def reviews_for_dish(request, dish_id):
   objs = Dish_Review.objects.filter(dish=dish, report_flag=False)
   reviews = []
   for obj in objs:
-    reviews.append(model_to_dict(obj))
+    rev = model_to_dict(obj)
+    rev['date'] = obj.date.strftime("%m/%d/%y")
+    reviews.append(rev)
+  for review in reviews:
+    customer = Customer.objects.get(id=review['customer'])
+    user = User.objects.get(id=customer.user_id)
+    review['user'] = model_to_dict(user)
   context = {
     'dish': model_to_dict(dish),
     'reviews': reviews
