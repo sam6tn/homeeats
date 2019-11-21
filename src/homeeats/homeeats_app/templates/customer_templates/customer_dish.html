@@ -48,20 +48,5 @@
     </div>
 </div>
 
-<script>
-    document.getElementById("id_dish_rating").style.border = 'none';
-    function colorStars(num){
-        for (var i=1; i<=num; i++){
-            let star = "star"+i;
-            document.getElementById(star).style.color = "orange";
-        }
-        for (var j = num+1; j<=5; j++){
-            let star = "star"+j;
-            document.getElementById(star).style.color = "black";
-        }
-        document.getElementById("id_dish_rating").value = num;
-    }
-</script>
-
 {% endblock %}
 

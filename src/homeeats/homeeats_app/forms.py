@@ -95,11 +95,12 @@ class DishSearchForm(forms.Form):
     cuisine = forms.ChoiceField(choices=cuisines, widget=forms.Select, required=False)
 
 class DishReviewForm(forms.ModelForm):
-    dish_rating = forms.IntegerField(widget=forms.TextInput(attrs={'readonly':'readonly','size':1}))
-    description = forms.CharField(widget=forms.Textarea(attrs={'cols': 80, 'rows': 3, 'placeholder':'Write your review here!'}))
+    #dish_rating = forms.IntegerField(widget=forms.TextInput(attrs={'readonly':'readonly','size':1}))
+    description = forms.CharField(widget=forms.Textarea(attrs={'cols': 50, 'rows': 3, 'placeholder':'Write your review here!'}))
     class Meta:
         model = Dish_Review
-        fields = ('dish_rating', 'description')
+        #fields = ('dish_rating', 'description')
+        fields = ('description',)
 
 class DishCreateForm(forms.ModelForm):
     class Meta:
