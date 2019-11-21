@@ -13,6 +13,11 @@
           <div class="card">
               <h5 class="card-header">
                 <a href="{% url 'reviews_for_dish' dish.id %}">{{dish.title}}</a>
+                {% if dish.cook_disabled %}
+                  <div class="badge badge-danger text-wrap" style="width: 5rem;">
+                        Disabled
+                </div>
+                {% endif %}
                 <span style="float:right;">
                   <span class="fa fa-star {% if dish.rating >= 1 %}checked{% endif %} fa-sm"></span>
                   <span class="fa fa-star {% if dish.rating >= 2 %}checked{% endif %} fa-sm"></span>
@@ -29,6 +34,11 @@
               </div>
               <div class="card-footer text-right">
                   {% if dish.vegan %}<img style="float:left" src="/media/vegan.png" width=30px>{% endif %}
+                {% if dish.cook_disabled %}
+                  <a href="{% url 'cook_enable_dish' dish.id %}"><small class="text-muted"><button type="button" class="btn btn-success btn-sm">Enable</button></small></a>
+                {% else %}
+                  <a href="{% url 'cook_disable_dish' dish.id %}"><small class="text-muted"><button type="button" class="btn btn-warning btn-sm">Disable</button></small></a>
+                {% endif %}
                   <small class="text-muted"><button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModalCenter{{dish.id}}">Delete</button></small>
               </div>
           </div>

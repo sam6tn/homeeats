@@ -229,3 +229,26 @@ def report_dish_review(request, dish_review_id, reason):
   dish_review.save()
   messages.add_message(request, messages.ERROR, 'Dish review has been flagged to be further evaluated')
   return HttpResponseRedirect(reverse('reviews_for_dish', args=[dish_review.dish_id]))
+
+@login_required
+@cook_required
+def cook_disable_dish(request, dish_id):
+  dish = Dish.objects.get(id=dish_id)
+  cook = Cook.objects.get(user_id=request.user.id)
+  if dish.cook == cook:
+    dish.cook_disabled = True
+    dish.save()
+  return HttpResponseRedirect(reverse('cook_cuisine_dishes', args=[dish.cuisine_id]))
+
+@login_required
+@cook_required
+def cook_enable_dish(request, dish_id):
+  dish = Dish.objects.get(id=dish_id)
+  cook = Cook.objects.get(user_id=request.user.id)
+  if dish.cook == cook:
+    dish.cook_disabled = False
+    dish.save()
+  return HttpResponseRedirect(reverse('cook_cuisine_dishes', args=[dish.cuisine_id]))
+
+
+  
