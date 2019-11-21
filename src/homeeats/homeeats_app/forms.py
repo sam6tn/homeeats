@@ -89,8 +89,8 @@ class DishSearchForm(forms.Form):
     cuisines = [('none','Cuisine: none')]
     for cuisine in cuisine_types:
         cuisines.append((cuisine.id,'Cuisine: '+cuisine.name))
-    sort = forms.ChoiceField(choices=SORT_CHOICES, widget=forms.Select(attrs={'onchange':'submitForm()'}), required=False)
-    cuisine = forms.ChoiceField(choices=cuisines, widget=forms.Select(attrs={'onchange':'submitForm()'}), required=False)
+    sort = forms.ChoiceField(choices=SORT_CHOICES, widget=forms.Select(attrs={'onchange':'submitForm()','class':'custom-select','style':'width:200px;'}), required=False)
+    cuisine = forms.ChoiceField(choices=cuisines, widget=forms.Select(attrs={'onchange':'submitForm()','class':'custom-select','style':'width:200px;'}), required=False)
 
 class DishReviewForm(forms.ModelForm):
     #dish_rating = forms.IntegerField(widget=forms.TextInput(attrs={'readonly':'readonly','size':1}))
