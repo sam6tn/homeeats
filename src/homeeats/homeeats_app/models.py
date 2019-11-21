@@ -33,6 +33,7 @@ class Cuisine(models.Model):
 
 class Dish(models.Model):
   title = models.CharField(default="", max_length=30)
+  cook_disabled = models.BooleanField(default=False)
   cuisine = models.ForeignKey(Cuisine, on_delete=models.CASCADE)
   description = models.CharField(default="", max_length=200)
   ingredients = ArrayField(models.CharField(max_length=30, blank=True), default=list)
