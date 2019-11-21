@@ -137,10 +137,10 @@ def order(request, order_id):
       data = form.cleaned_data
       dish_id = request.POST["dish_id"]
       dish = Dish.objects.get(id=dish_id)
+      item = order.item_set.get(dish=dish)
       rating_name = "rating"+dish_id
       #rating = data["dish_rating"]
       rating = request.POST[rating_name]
-      print(rating)
       text = data["description"]
       report = False
       customer = Customer.objects.get(user_id=request.user.id)
@@ -149,6 +149,10 @@ def order(request, order_id):
       dr = Dish_Review(dish_rating=rating,description=text,report_flag=report,customer=customer,dish=dish)
       dr.save()
 
+      #add review to item
+      item.review = dr
+      item.save()
+
       #calculate new dish rating
       all_dish_reviews = Dish_Review.objects.filter(dish=dish)
       total_rating = 0
@@ -156,16 +160,14 @@ def order(request, order_id):
         total_rating += review.dish_rating
       new_rating = int(round(total_rating/len(all_dish_reviews)))
       dish.rating = new_rating
-      print(dish.rating)
       dish.save()
-    else:
-      print("form not valid")
 
-    return render(request, 'customer_templates/order.html', {'order':order, 'form':form})
+    return HttpResponseRedirect(reverse('order', kwargs={'order_id':order_id}))
   else:
     form = DishReviewForm()
-    # reviewed_items = Order.item_set.all().filter()
-    return render(request, 'customer_templates/order.html', {'order':order, 'form':form})
+    reviewed_items = order.item_set.filter(review__isnull = False)
+    print(reviewed_items)
+    return render(request, 'customer_templates/order.html', {'order':order, 'form':form, 'reviewed_items':reviewed_items})
 
 @login_required
 @customer_required
