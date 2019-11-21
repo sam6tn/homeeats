@@ -181,6 +181,38 @@ class UserGroupTest(TestCase):
         response = self.client.get(reverse('cook_home'))
         self.assertEquals(response.status_code, 302)
 
+class CookReportDishReviewTest(TestCase):
+    fixtures = ['test_data.json']
+    def test_cook_report_redirects_right(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        response = self.client.get(reverse('report_dish_review', args=[1, 'o']))
+        self.assertEquals(response.status_code, 302)
+        self.assertEquals(response.url, '/cook/dish/1/reviews')
+    def test_cook_report_offensive(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        self.client.get(reverse('report_dish_review', args=[1, 'o']))
+        review = Dish_Review.objects.get(id=1)
+        self.assertEquals(review.report_flag, True)
+        self.assertEquals(review.report_reason, 'o')
+    def test_cook_report_not_relevant(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        self.client.get(reverse('report_dish_review', args=[1, 'n']))
+        review = Dish_Review.objects.get(id=1)
+        self.assertEquals(review.report_flag, True)
+        self.assertEquals(review.report_reason, 'n')
+    def test_cook_report_threatening(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        self.client.get(reverse('report_dish_review', args=[1, 't']))
+        review = Dish_Review.objects.get(id=1)
+        self.assertEquals(review.report_flag, True)
+        self.assertEquals(review.report_reason, 't')
+    def test_cook_report_spam(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        self.client.get(reverse('report_dish_review', args=[1, 's']))
+        review = Dish_Review.objects.get(id=1)
+        self.assertEquals(review.report_flag, True)
+        self.assertEquals(review.report_reason, 's')
+
 class AddressCreationTest(TestCase):
      def setUp(self):
          Address.objects.create(street_name='2132 someStreet Ln', city="Chantilly", state="VA", zipcode="20151")

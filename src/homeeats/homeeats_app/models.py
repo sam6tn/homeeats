@@ -108,6 +108,7 @@ class Item(models.Model):
   quantity = models.IntegerField(default=0)
   subtotal = models.DecimalField(default=0, decimal_places=2, max_digits=6)
   order = models.ForeignKey(Order, on_delete=models.CASCADE)
+  review = models.OneToOneField(Dish_Review, on_delete=models.CASCADE, null=True, blank=True)
 
 class ShoppingCart(models.Model):
   customer = models.OneToOneField(Customer, on_delete=models.CASCADE)

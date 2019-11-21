@@ -200,14 +200,32 @@ def change_order_status(previous, new, request, order_id):
     order.status = new
     order.save()
 
+@login_required
+@cook_required
 def reviews_for_dish(request, dish_id):
   dish = get_object_or_404(Dish, id=dish_id)
-  objs = Dish_Review.objects.filter(dish=dish)
+  objs = Dish_Review.objects.filter(dish=dish, report_flag=False).order_by('-date')
   reviews = []
   for obj in objs:
-    reviews.append(model_to_dict(obj))
+    rev = model_to_dict(obj)
+    rev['date'] = obj.date.strftime("%m/%d/%y")
+    reviews.append(rev)
+  for review in reviews:
+    customer = Customer.objects.get(id=review['customer'])
+    user = User.objects.get(id=customer.user_id)
+    review['user'] = model_to_dict(user)
   context = {
     'dish': model_to_dict(dish),
     'reviews': reviews
   }
   return render(request, 'cook_templates/cook_dish_reviews.html', context)
+
+@login_required
+@cook_required
+def report_dish_review(request, dish_review_id, reason):
+  dish_review = Dish_Review.objects.get(id=dish_review_id)
+  dish_review.report_flag=True
+  dish_review.report_reason=reason
+  dish_review.save()
+  messages.add_message(request, messages.ERROR, 'Dish review has been flagged to be further evaluated')
+  return HttpResponseRedirect(reverse('reviews_for_dish', args=[dish_review.dish_id]))
