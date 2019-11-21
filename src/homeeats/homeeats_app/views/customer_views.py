@@ -7,6 +7,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from ..models import Dish, Customer, Dish_Review, Cook, Address, ShoppingCart, CartItem, Order, Item
 from .. import models
+from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
@@ -23,40 +24,9 @@ import ssl
 @customer_required
 def dish(request, dish_id):
     dish = Dish.objects.get(id=dish_id) #get Dish object from dish_id
-    reviews = dish.dish_review_set.all() #get all reviews for that Dish
-    if request.method == "POST":
-      if "review_submit" in request.POST:
-        form = DishReviewForm(request.POST)
-        if form.is_valid():
-          data = form.cleaned_data
-          rating = data["dish_rating"]
-          text = data["description"]
-          report = False
-          customer = Customer.objects.get(user_id=request.user.id)
-
-          #save the new review
-          dr = Dish_Review(dish_rating=rating,description=text,report_flag=report,customer=customer,dish=dish)
-          dr.save()
-
-          #calculate new dish rating
-          all_dish_reviews = Dish_Review.objects.filter(dish=dish)
-          total_rating = 0
-          for review in all_dish_reviews:
-            total_rating += review.dish_rating
-          new_rating = int(round(total_rating/len(all_dish_reviews)))
-          dish.rating = new_rating
-          print(dish.rating)
-          dish.save()
-
-        return render(request, 'customer_templates/customer_dish.html', {'dish': dish, 'reviews':reviews, 'form':form})
-        
-
-      # elif "add_to_order" in request.POST:
-      #   print("Add dish to order logic here")
-
-    else:
-      form = DishReviewForm()
-      return render(request, 'customer_templates/customer_dish.html', {'dish': dish, 'reviews':reviews, 'form':form})
+    reviews = dish.dish_review_set.filter(report_flag=False) #get all reviews for that Dish
+    form = DishReviewForm()
+    return render(request, 'customer_templates/customer_dish.html', {'dish': dish, 'reviews':reviews, 'form':form})
 
 # @login_required
 # @customer_required
@@ -147,6 +117,57 @@ def cart(request):
   customer = Customer.objects.get(user_id=request.user.id)
   cart = customer.shoppingcart
   return render(request, 'customer_templates/cart.html', {'cart':cart})
+
+@login_required
+@customer_required
+def orders(request):
+  customer = Customer.objects.get(user_id=request.user.id)
+  orders = customer.order_set.all()
+  current_orders = customer.order_set.filter(Q(status='p') | Q(status='c') | Q(status='o'))
+  past_orders = customer.order_set.filter(Q(status='d') | Q(status='r'))
+  return render(request, 'customer_templates/orders.html', {'current_orders':current_orders,'past_orders':past_orders})
+
+@login_required
+@customer_required
+def order(request, order_id):
+  order = Order.objects.get(id=order_id)
+  if request.method == "POST":
+    form = DishReviewForm(request.POST)
+    if form.is_valid():
+      data = form.cleaned_data
+      dish_id = request.POST["dish_id"]
+      dish = Dish.objects.get(id=dish_id)
+      item = order.item_set.get(dish=dish)
+      rating_name = "rating"+dish_id
+      #rating = data["dish_rating"]
+      rating = request.POST[rating_name]
+      text = data["description"]
+      report = False
+      customer = Customer.objects.get(user_id=request.user.id)
+      
+      #save the new review
+      dr = Dish_Review(dish_rating=rating,description=text,report_flag=report,customer=customer,dish=dish)
+      dr.save()
+
+      #add review to item
+      item.review = dr
+      item.save()
+
+      #calculate new dish rating
+      all_dish_reviews = Dish_Review.objects.filter(dish=dish)
+      total_rating = 0
+      for review in all_dish_reviews:
+        total_rating += review.dish_rating
+      new_rating = int(round(total_rating/len(all_dish_reviews)))
+      dish.rating = new_rating
+      dish.save()
+
+    return HttpResponseRedirect(reverse('order', kwargs={'order_id':order_id}))
+  else:
+    form = DishReviewForm()
+    reviewed_items = order.item_set.filter(review__isnull = False)
+    print(reviewed_items)
+    return render(request, 'customer_templates/order.html', {'order':order, 'form':form, 'reviewed_items':reviewed_items})
 
 @login_required
 @customer_required

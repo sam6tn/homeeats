@@ -6,6 +6,11 @@
     color: orange;
 }
 
+.scrollablerow{
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
 
 /*POST Detail page*/
 

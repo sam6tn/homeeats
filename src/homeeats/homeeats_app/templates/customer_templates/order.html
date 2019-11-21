@@ -1,0 +1,92 @@
+{% extends 'customer_base.html' %}
+{% load staticfiles %}
+
+{% block pagecontent %}
+
+<div class="container">
+    <h1>Order on {{order.date}}</h1>
+</div>
+<div class="container" style="overflow-x:scroll;margin-top:20px;">
+    <div class="row flex-row flex-nowrap">
+    {% for item in order.item_set.all %}
+        <div class="col-3" style="margin-bottom:20px;display:inline-block;display:flex">
+            <div class="card">
+                <h5 class="card-header">
+                    <span style="float:left">{{item.dish.title}}</span>
+                    <span style="float:right">{{item.quantity}}</span>
+                </h5>
+                <div class="card-body">
+                    <img src="{{ item.dish.dish_image.url }}" width="100%" style="max-height: 200px;">
+                    <p class="card-text font-weight-bold text-secondary">Subtotal: ${{item.subtotal}}</p>
+                </div>
+                <div class="card-footer">
+                {% if order.status != 'd' %}
+                    <p>Not yet delivered.</p>
+                {% elif item in reviewed_items %}
+                    <span class="fa fa-star {% if item.review.dish_rating >= 1 %}checked{% endif %} fa-sm"></span>
+                    <span class="fa fa-star {% if item.review.dish_rating >= 2 %}checked{% endif %} fa-sm"></span>
+                    <span class="fa fa-star {% if item.review.dish_rating >= 3 %}checked{% endif %} fa-sm"></span>
+                    <span class="fa fa-star {% if item.review.dish_rating >= 4 %}checked{% endif %} fa-sm"></span>
+                    <span class="fa fa-star {% if item.review.dish_rating >= 5 %}checked{% endif %} fa-sm"></span>
+                {% else %}
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#reviewModal{{item.dish.id}}">Review</button>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" name="modal{{item.dish.id}}" id="reviewModal{{item.dish.id}}" tabindex="-1" role="dialog" aria-labelledby="reviewModal" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Review for {{item.dish.title}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+
+                <form method="POST">
+                {% csrf_token %}
+                <div class="modal-body" style="cursor:default">
+                    <span id="{{item.dish.id}}star1" style="cursor:pointer" class="fa fa-star fa-sm" onclick="colorStars({{item.dish.id}},1)"></span>
+                    <span id="{{item.dish.id}}star2" style="cursor:pointer" class="fa fa-star fa-sm" onclick="colorStars({{item.dish.id}},2)"></span>
+                    <span id="{{item.dish.id}}star3" style="cursor:pointer" class="fa fa-star fa-sm" onclick="colorStars({{item.dish.id}},3)"></span>
+                    <span id="{{item.dish.id}}star4" style="cursor:pointer" class="fa fa-star fa-sm" onclick="colorStars({{item.dish.id}},4)"></span>
+                    <span id="{{item.dish.id}}star5" style="cursor:pointer" class="fa fa-star fa-sm" onclick="colorStars({{item.dish.id}},5)"></span>
+                    {{form.dish_rating}}
+                    {{form.description}}
+                    <input name="rating{{item.dish.id}}" id="rating{{item.dish.id}}" type="hidden" value="0">
+                    <input name="dish_id" id="dish_id" type="hidden" value="{{item.dish.id}}">
+                </div>
+                <div class="modal-footer">
+                    <button name="submit{{item.dish.id}}" type="submit" class="btn btn-success">Submit</button>
+                </div>
+                </form>
+            </div>
+            </div>
+        </div>
+    
+    {% endfor %}
+    </div>
+</div>
+<div class="container">
+    <h2>Total: ${{order.total}}</h2>
+    <h2>Status: {{order.status}}</h2>
+</div>
+
+<script>
+    function colorStars(dish,num){
+        for (var i=1; i<=num; i++){
+            let star = dish+"star"+i;
+            document.getElementById(star).style.color = "orange";
+        }
+        for (var j = num+1; j<=5; j++){
+            let star = dish+"star"+j;
+            document.getElementById(star).style.color = "black";
+        }
+        let rating = "rating"+dish;
+        document.getElementById(rating).value = num;
+    }
+</script>
+
+
+{% endblock %}
