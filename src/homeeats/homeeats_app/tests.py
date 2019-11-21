@@ -110,7 +110,7 @@ class CustomerHomeTest(TestCase):
         response = self.client.get(reverse('customer_home'))
         self.assertEquals(response.status_code, 302)
     def test_search_form_is_valid(self):
-        form = DishSearchForm(data={'search':'', 'sort':'none', 'cuisine':'none'})
+        form = DishSearchForm(data={'search':'', 'sort':'rating', 'cuisine':'none'})
         self.assertTrue(form.is_valid())
     def test_search_form_not_valid(self):
         form = DishSearchForm()
@@ -132,7 +132,7 @@ class CustomerDishReviewTest(TestCase):
     
 class SearchTest(TestCase):
     def test_search_empty(self):
-        form = DishSearchForm(data={'search':'', 'sort':'none', 'cuisine':'none'})
+        form = DishSearchForm(data={'search':'', 'sort':'rating', 'cuisine':'none'})
         self.assertTrue(form.is_valid())
 
 class AccountCreationTest(TestCase):

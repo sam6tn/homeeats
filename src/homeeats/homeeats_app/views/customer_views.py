@@ -72,11 +72,9 @@ def home(request):
     else:
       form = forms.DishSearchForm()
       dishes = find_nearby_dishes(request)
-      try: #can remove try except statement once all customers must have shopping cart
-        if (not customer.shoppingcart.empty):
-          dishes = dishes.filter(cook=customer.shoppingcart.cook)
-      except Exception as e:
-        print(e)
+      if (not customer.shoppingcart.empty):
+        dishes = dishes.filter(cook=customer.shoppingcart.cook)
+      dishes=dishes.order_by('-rating')
       return render(request, 'customer_templates/customer_home.html', {'dishes': dishes, 'form':form, 'customer':customer})
 
 @login_required
