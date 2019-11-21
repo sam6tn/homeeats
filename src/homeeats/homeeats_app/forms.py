@@ -81,17 +81,16 @@ class DishCreateForm(forms.Form):
 class DishSearchForm(forms.Form):
     search = forms.CharField(label="Search",max_length=30, required=False, widget=forms.TextInput(attrs={'placeholder':'Search','class':'form-control mr-sm-2'}))
     SORT_CHOICES = (
-        ('none', '(no selection)'),
-        ('rating', 'Rating'),
+        ('rating', 'Sort: Rating'),
         ('price', 'Price: Low to High'),
         ('reverse_price', 'Price: High to Low'),
     )
     cuisine_types = Cuisine.objects.all()
-    cuisines = [('none','(no selection)')]
+    cuisines = [('none','Cuisine: none')]
     for cuisine in cuisine_types:
-        cuisines.append((cuisine.id,cuisine.name))
-    sort = forms.ChoiceField(choices=SORT_CHOICES, widget=forms.Select, required=False)
-    cuisine = forms.ChoiceField(choices=cuisines, widget=forms.Select, required=False)
+        cuisines.append((cuisine.id,'Cuisine: '+cuisine.name))
+    sort = forms.ChoiceField(choices=SORT_CHOICES, widget=forms.Select(attrs={'onchange':'submitForm()'}), required=False)
+    cuisine = forms.ChoiceField(choices=cuisines, widget=forms.Select(attrs={'onchange':'submitForm()'}), required=False)
 
 class DishReviewForm(forms.ModelForm):
     #dish_rating = forms.IntegerField(widget=forms.TextInput(attrs={'readonly':'readonly','size':1}))
