@@ -86,7 +86,7 @@ class DishSearchForm(forms.Form):
         ('reverse_price', 'Price: High to Low'),
     )
     cuisine_types = Cuisine.objects.all()
-    cuisines = [('none','Cuisine: none')]
+    cuisines = [('none','Cuisine: All')]
     for cuisine in cuisine_types:
         cuisines.append((cuisine.id,'Cuisine: '+cuisine.name))
     sort = forms.ChoiceField(choices=SORT_CHOICES, widget=forms.Select(attrs={'onchange':'submitForm()','class':'custom-select','style':'width:200px;'}), required=False)

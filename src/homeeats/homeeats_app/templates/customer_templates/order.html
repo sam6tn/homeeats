@@ -21,7 +21,11 @@
                 </div>
                 <div class="card-footer">
                 {% if order.status != 'd' %}
-                    <p>Not yet delivered.</p>
+                    {% if order.status == 'r' %}
+                        <p>Order rejected by cook.</p>
+                    {% else %}
+                        <p>Not yet delivered.</p>
+                    {% endif %}
                 {% elif item in reviewed_items %}
                     <span class="fa fa-star {% if item.review.dish_rating >= 1 %}checked{% endif %} fa-sm"></span>
                     <span class="fa fa-star {% if item.review.dish_rating >= 2 %}checked{% endif %} fa-sm"></span>
