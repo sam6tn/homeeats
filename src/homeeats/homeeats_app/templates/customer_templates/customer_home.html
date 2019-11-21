@@ -1,15 +1,71 @@
-{% extends 'customer_base.html' %}
-{% load staticfiles %}
+{% load static %}
+<head>
+    <script crossorigin="anonymous"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script crossorigin="anonymous"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script crossorigin="anonymous"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <title>HomeEats</title>
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <link rel="stylesheet" href="{% static 'style.css' %}"/>
+    <link href="https://fonts.googleapis.com/css?family=Righteous&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+            .brand-name{
+                    font-family: 'Righteous', cursive;
+            }
+    </style>
+</head>
 
-{% block pagecontent %}
+<form method="POST">
+{% csrf_token %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand brand-name" href="/customer/home">HomeEats</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                            <a class="nav-link" href="/customer/home">Home<span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/customer/orders">Orders</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/customer/cart">Cart</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{request.user.first_name}}</a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="#">My Account</a>
+                                    <a class="dropdown-item" href="#">Another action</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="/logout">Logout</a>
+                            </div>
+                    </li>
+                    
+            </ul>
+            <div class="form-inline my-2 my-lg-0">
+                <!-- <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"> -->
+                {{form.search}}
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </div>
+    </div>
+</nav>
 
 <div class="container" style="padding:20px;">
-    <form method="POST">
-        {% csrf_token %}
-        {{form}}
-        <button  type="submit">Search</button>
-    </form>
+        {{form.cuisine}}
+        {{form.sort}}
 </div>
+</form>
 
 {% if not customer.shoppingcart.empty%}
     <div class="container" style="color:red;">
@@ -42,13 +98,13 @@
                     <p class="card-text">{{dish.description}}</p>
                     <img src="{{ dish.dish_image.url }}" width="100%" style="max-height: 200px;">
                     <p class="card-text font-weight-bold text-secondary">Price: ${{dish.price}}</p>
+                </div>
+                <div class="card-footer">
                     {% if dish.vegan %}<img style="float:left" src="/media/vegan.png" width=30px>{% endif %}
+                    {% if dish in customer.favorites.all %}<i class="fa fa-heart" style="color:red"></i>{%endif%}
                 </div>
             </div>
         </div>
     {% endfor %}
     </div>
 </div>
-
-
-{% endblock %}

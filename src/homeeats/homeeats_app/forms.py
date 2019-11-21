@@ -79,13 +79,12 @@ class DishCreateForm(forms.Form):
     cook_time = forms.IntegerField(required=True,)
     #cook = forms.ModelChoiceField(queryset=Cook.objects.all())
 class DishSearchForm(forms.Form):
-    search = forms.CharField(label="Search",max_length=30, required=False)
+    search = forms.CharField(label="Search",max_length=30, required=False, widget=forms.TextInput(attrs={'placeholder':'Search','class':'form-control mr-sm-2'}))
     SORT_CHOICES = (
         ('none', '(no selection)'),
         ('rating', 'Rating'),
         ('price', 'Price: Low to High'),
         ('reverse_price', 'Price: High to Low'),
-        ('distance', 'Distance'),
     )
     cuisine_types = Cuisine.objects.all()
     cuisines = [('none','(no selection)')]
