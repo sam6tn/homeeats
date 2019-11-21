@@ -15,7 +15,7 @@
                         <a href="{% url 'order' order.id %}">{{order.name}}</a>
                     </h5>
                     <div class="card-body">
-                        <p>{{order.cook}}</p>
+                        <p>Cook: {{order.cook.user.first_name}} {{order.cook.user.last_name}}</p>
                         <p>${{order.total}}</p>
                         <p>Status: {{order.status}}</p>
                         <p>{{order.date}}</p>
@@ -41,7 +41,7 @@
                         <a href="{% url 'order' order.id %}">{{order.name}}</a>
                     </h5>
                     <div class="card-body">
-                        <p>{{order.cook}}</p>
+                        <p>Cook: {{order.cook.user.first_name}} {{order.cook.user.last_name}}</p>
                         <p>${{order.total}}</p>
                         <p>Status: {{order.status}}</p>
                         <p>{{order.date}}</p>

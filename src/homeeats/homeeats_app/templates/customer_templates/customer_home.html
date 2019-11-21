@@ -13,7 +13,7 @@
 
 {% if not customer.shoppingcart.empty%}
     <div class="container" style="color:red;">
-        <h2>Only showing dishes from {{customer.shoppingcart.cook.user.first_name}}</h2>
+        <h2>Only showing dishes from {{customer.shoppingcart.cook.user.first_name}} {{customer.shoppingcart.cook.user.last_name}}</h2>
     </div>
 {% endif %}
 
