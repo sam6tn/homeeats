@@ -50,6 +50,8 @@ def customercreate(request):
       customer = models.Customer.objects.get(user_id=user.id)
       address = models.Address.objects.create(customer=customer, street_name=data['street'], city=data['town'], state=data['state'], zipcode=data['zipcode'])
       address.save()
+      shopping_cart = models.ShoppingCart.objects.create(customer=customer)
+      shopping_cart.save()
       return HttpResponseRedirect(reverse('login'))
     else:
       return render(request, 'customer_create.html', {'form': form})
