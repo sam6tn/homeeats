@@ -47,12 +47,10 @@ def home(request):
 
         dishes = find_nearby_dishes(request)
         dishes = dishes.filter(title__icontains=search)
+        dishes = dishes.filter(cook_disabled = False)
 
-        try: #can remove try except statement once all customers must have shopping cart
-          if (not customer.shoppingcart.empty):
-            dishes = dishes.filter(cook=customer.shoppingcart.cook)
-        except Exception as e:
-          print(e)
+        if (not customer.shoppingcart.empty):
+          dishes = dishes.filter(cook=customer.shoppingcart.cook)
 
         if (cuisine != 'none'):
           dishes = dishes.filter(cuisine=cuisine)
@@ -72,6 +70,7 @@ def home(request):
     else:
       form = forms.DishSearchForm()
       dishes = find_nearby_dishes(request)
+      dishes = dishes.filter(cook_disabled = False)
       if (not customer.shoppingcart.empty):
         dishes = dishes.filter(cook=customer.shoppingcart.cook)
       dishes=dishes.order_by('-rating')
