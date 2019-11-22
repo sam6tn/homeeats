@@ -1,0 +1,31 @@
+{% extends "admin/base_site.html" %}
+
+{% load i18n static %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">Home</a>
+&rsaquo; Cooks
+</div>
+{% endblock %}
+
+{% block content %}
+
+<div id="content-main">
+    <div class="app-homeeats_app module">
+    <table>
+        <caption>
+            <p class="section">Cook History</p>
+        </caption>
+        {% for cook in cooks %}
+        <tr>
+            <th scope="row" style="width:100%"><a href="{% url 'admin_cook' cook.id %}">{{cook.user.first_name}} {{cook.user.last_name}}</a></th>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+</div>
+
+{% endblock %}

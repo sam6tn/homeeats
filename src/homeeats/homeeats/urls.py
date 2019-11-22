@@ -17,8 +17,14 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from homeeats_app.views import admin_views
 
 urlpatterns = [
+    path('admin/cook/applications/', admin_views.cookApplications),
+    path('admin/cooks/', admin_views.cooks, name='admin_cooks'),
+    path('admin/cooks/<int:cook_id>/', admin_views.cook, name='admin_cook'),
+    path('admin/customers/', admin_views.customers, name='admin_customers'),
+    path('admin/customers/<int:customer_id>', admin_views.customer, name='admin_customer'),
     path('admin/', admin.site.urls),
     path('', include('homeeats_app.urls.main_urls')),
     path('cook/', include('homeeats_app.urls.cook_urls')),

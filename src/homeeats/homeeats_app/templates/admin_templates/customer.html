@@ -1,0 +1,41 @@
+{% extends "admin/base_site.html" %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">Home</a>
+&rsaquo; <a href="{% url 'admin_customers' %}">Customers</a>
+&rsaquo; {{customer.user.first_name}} {{customer.user.last_name}}
+</div>
+{% endblock %}
+
+{% block content %}
+
+<div id="content-main">
+        
+        <div class="app-homeeats_app module" style="display:inline-block;margin:20px;">
+            <table>
+            <caption>
+                <p class="section">Past Orders for {{customer.user.first_name}} {{customer.user.last_name}}</p>
+            </caption>
+            <tr>
+                <th>Order Name</th>
+                <th>Total</th>
+                <!-- <th>Split</th> -->
+                <th>Date</th>
+            </tr>
+            {% for order in customer.order_set.all %}  
+                {% with var=forloop.counter0 %}
+                <tr>
+                    <td>{{order.name}}</td>
+                    <td>{{order.total}}</td>
+                    <!-- <td>{{cook_totals.var}}</td> -->
+                    <td>{{order.date}}</td>
+                </tr>
+                {% endwith %}
+            {% endfor %}
+            </table>
+        </div>
+        
+    </div>
+    
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends "admin/base_site.html" %}
+
+{% load i18n static %}
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/dashboard.css" %}" />{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">Home</a>
+&rsaquo; <a href="{% url 'admin_cooks' %}">Cooks</a>
+&rsaquo; {{cook.user.first_name}} {{cook.user.last_name}}
+</div>
+{% endblock %}
+
+{% block content %}
+
+
+<div id="content-main">
+    <div class="app-homeeats_app module" style="display:inline-block;margin:20px;">
+        <table>
+        <caption>
+            <p class="section">Past Orders for {{cook.user.first_name}} {{cook.user.last_name}}</p>
+        </caption>
+        <tr>
+            <th>Order Name</th>
+            <th>Total</th>
+            <th>Split</th>
+            <th>Date</th>
+        </tr>
+        {% for order in cook.order_set.all %}
+            {% if order.status == 'd' %}
+            <tr>
+                <td>{{order.name}}</td>
+                <td>{{order.total}}</td>
+                <td>20%</td>
+                <td>{{order.date}}</td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+        </table>
+    </div>
+    
+    <div class="app-homeeats_app module" style="display:inline-block;margin:20px;">
+        <table>
+        <caption>
+            <p class="section">Rejected Orders for {{cook.user.first_name}} {{cook.user.last_name}}</p>
+        </caption>
+        <tr>
+            <th>Order Name</th>
+            <th>Customer</th>
+            <th>Date</th>
+        </tr>
+        {% for order in cook.order_set.all %}
+            {% if order.status == 'r' %}
+            <tr>
+                <td>{{order.name}}</td>
+                <td>{{order.customer.user.first_name}} {{order.customer.user.last_name}}</td>
+                <td>{{order.date}}</td>
+            </tr>
+            {% endif %}
+            
+        {% endfor %}
+        </table>
+    </div>
+</div>
+
+
+{% endblock %}
