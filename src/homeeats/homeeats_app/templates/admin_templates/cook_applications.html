@@ -1,0 +1,35 @@
+{% extends "admin/base_site.html" %}
+
+
+{% block content %}
+
+<link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet">
+{% if cooks %}
+<div class="container" style="overflow-x:scroll;">
+    <div class="row flex-row flex-nowrap">
+        {% for cook in cooks %}
+        <div class="col-3" style="margin-bottom:20px;display:inline-block;">
+            <div class="card">
+                <div class="card-header">
+                    {{cook.user.first_name}} {{cook.user.last_name}}
+                </div>
+                <div class="card-body">
+                    <p>Phone: {{cook.phone_number}}</p>
+                    <p>License: {{cook.kitchen_license}}</p>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input name="id" type="hidden" value="{{cook.id}}">
+                        <button class="btn btn-success">Approve</button>
+                    </form>
+                    <!-- <button class="btn btn-danger">Decline</button> -->
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<h1>No Cooks Pending Approval</h1>
+{% endif %}
+{% endblock %}

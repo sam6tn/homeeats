@@ -72,12 +72,13 @@ class Dish_Review(models.Model):
   report_reason = models.CharField(max_length=1, choices=report_reason_choices, default="")
   customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
   dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
+  date = models.DateTimeField(auto_now_add=True)
   def __str__(self):
     return self.dish.title + " Review (" + str(self.id) + ")"
   class Meta:
     verbose_name = "Dish Review"
     verbose_name_plural = "Dish Reviews"
-  date = models.DateTimeField(auto_now_add=True)
+  
 
 class Address(models.Model):
   street_name = models.CharField(max_length=60, default="")
@@ -87,6 +88,8 @@ class Address(models.Model):
   cook = models.ForeignKey(Cook, on_delete=models.CASCADE, blank=True, null=True)
   customer = models.ForeignKey(Customer, on_delete=models.CASCADE, blank=True, null=True)
   is_cook_address = models.BooleanField(default=False)
+  class Meta:
+    verbose_name_plural = "Addresses"
 
 class Order(models.Model):
   name = models.CharField(max_length=60, default="") #make it first name <space> last name of customer
