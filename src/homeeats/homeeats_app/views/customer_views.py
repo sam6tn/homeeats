@@ -19,11 +19,14 @@ import urllib.request
 import urllib.parse
 import json
 import ssl
+from django.http import Http404
 
 @login_required
 @customer_required
 def dish(request, dish_id):
     dish = Dish.objects.get(id=dish_id) #get Dish object from dish_id
+    if(dish.cook_disabled or dish.cook.online == False):
+      raise Http404()
     reviews = dish.dish_review_set.filter(report_flag=False) #get all reviews for that Dish
     form = DishReviewForm()
     return render(request, 'customer_templates/customer_dish.html', {'dish': dish, 'reviews':reviews, 'form':form})
@@ -71,6 +74,7 @@ def home(request):
       form = forms.DishSearchForm()
       dishes = find_nearby_dishes(request)
       dishes = dishes.filter(cook_disabled = False)
+      dishes = dishes.filter(cook__online = True)
       if (not customer.shoppingcart.empty):
         dishes = dishes.filter(cook=customer.shoppingcart.cook)
       dishes=dishes.order_by('-rating')
@@ -81,6 +85,8 @@ def home(request):
 def addtocart(request):
   if request.method == "POST":
     dish = Dish.objects.get(id=request.POST["dish_id"])
+    if(dish.cook_disabled or dish.cook.online == False):
+      raise Http404()
     customer = Customer.objects.get(user_id=request.user.id)
     shopping_cart = customer.shoppingcart
     shopping_cart.total += dish.price
