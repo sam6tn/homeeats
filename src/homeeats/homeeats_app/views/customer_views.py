@@ -273,4 +273,15 @@ def customer_edit_profile(request):
       'form': form,
     }
     return render(request,'customer_templates/customer_edit_profile.html', context)
+
+@login_required
+@customer_required
+def favorites(request):
+  customer = Customer.objects.get(user_id=request.user.id)
+  favorite_dishes = customer.favorites.values_list()
+  context = {
+    'dishes': favorite_dishes
+  }
+  return render(request, 'customer_templates/favorites.html', context)
+
     

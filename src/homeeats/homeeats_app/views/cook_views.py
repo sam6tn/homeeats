@@ -248,7 +248,4 @@ def cook_enable_dish(request, dish_id):
   if dish.cook == cook:
     dish.cook_disabled = False
     dish.save()
-  return HttpResponseRedirect(reverse('cook_cuisine_dishes', args=[dish.cuisine_id]))
-
-
-  
+  return HttpResponseRedirect(reverse('cook_cuisine_dishes', args=[dish.cuisine_id]))  
