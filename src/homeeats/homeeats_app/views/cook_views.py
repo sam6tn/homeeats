@@ -243,6 +243,7 @@ def cook_disable_dish(request, dish_id):
 @login_required
 @cook_required
 def cook_enable_dish(request, dish_id):
+  x = 0
   dish = Dish.objects.get(id=dish_id)
   cook = Cook.objects.get(user_id=request.user.id)
   if dish.cook == cook:
