@@ -110,21 +110,10 @@
                 </div>
                 <div class="card-footer">
                     {% if dish.vegan %}<img style="float:left" src="/media/vegan.png" width=30px>{% endif %}
-                    <!-- <form method="POST" action="{% url 'togglefav' %}" style="font-size:2vw;float:right;margin-bottom:0px;">
-                        {% csrf_token %}  
-                        <input name="dish_id" type="hidden" value="{{dish.id}}">
-                        <button type="submit" style="padding:0;background:inherit;border:none;">
-                            {% if dish in customer.favorites.all %}
-                            <i class="fa fa-heart" id="heart{{dish.id}}" style="color:red" onclick="toggleHeart('{{dish.id}}')"></i>
-                            {% else %}
-                            <i class="fa fa-heart-o" id="heart{{dish.id}}" style="color:red" onclick="toggleHeart('{{dish.id}}')"></i>
-                            {%endif%}
-                        </button>
-                    </form> -->
                     {% if dish in customer.favorites.all %}
-                    <i class="fa fa-heart" id="heart{{dish.id}}" style="color:red;font-size:20pt;cursor:pointer;" onclick="toggleHeart('{{dish.id}}')"></i>
+                    <i class="fa fa-heart" id="heart{{dish.id}}" style="color:red;font-size:20pt;cursor:pointer;float:right;" onclick="toggleHeart('{{dish.id}}')"></i>
                     {% else %}
-                    <i class="fa fa-heart-o" id="heart{{dish.id}}" style="color:red;font-size:20pt;cursor:pointer;" onclick="toggleHeart('{{dish.id}}')"></i>
+                    <i class="fa fa-heart-o" id="heart{{dish.id}}" style="color:red;font-size:20pt;cursor:pointer;float:right;" onclick="toggleHeart('{{dish.id}}')"></i>
                     {%endif%}
                 </div>
             </div>
@@ -148,16 +137,16 @@
             document.getElementById(heartid).classList.remove("fa-heart-o");
         }
         $.ajax({
-                type: "POST",
-                url: "{% url 'togglefav' %}",
-                data: {
-                'dish_id': id,
-                'csrfmiddlewaretoken': '{{ csrf_token }}'
-                },
-                dataType: 'json',
-                success: function (data) {
-                    console.log(data.status);
-                }
+            type: "POST",
+            url: "{% url 'togglefav' %}",
+            data: {
+            'dish_id': id,
+            'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            dataType: 'json',
+            success: function (data) {
+                console.log(data.status);
+            }
         });
     }
 
