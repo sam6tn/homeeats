@@ -280,8 +280,9 @@ def customer_edit_profile(request):
 @customer_required
 def favorites(request):
   customer = Customer.objects.get(user_id=request.user.id)
-  favorite_dishes = customer.favorites.values_list()
+  favorite_dishes = customer.favorites.all()
   context = {
+    'customer': customer,
     'dishes': favorite_dishes
   }
   return render(request, 'customer_templates/favorites.html', context)
