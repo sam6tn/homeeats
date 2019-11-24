@@ -263,8 +263,7 @@ def cook_edit_dish(request, dish_id):
       dish = form.save(commit=False)
       dish.cook = cook
       dish.save()
-      return HttpResponseRedirect(reverse('cook_manage'))
+      return HttpResponseRedirect(reverse('cook_cuisine_dishes', args=[dish.cuisine_id]))
   else:
     form = forms.DishEditForm(instance=dish)
-  return render(request, 'cook_templates/cook_edit_dish.html', {'form': form})
-
+  return render(request, 'cook_templates/cook_edit_dish.html', {'form': form, 'cuisine_id': dish.cuisine_id})
