@@ -90,20 +90,25 @@
             <div class="card">
                 <h5 class="card-header">
                     <a href="{% url 'customer_dish' dish.id %}">{{dish.title}}</a>
+                    
+                    <button onclick="addtocart('{{dish.id}}')" style="padding:0;background:none;border:none;outline:none;float:right;margin-top:3px;">
+                        <i class="fa fa-plus text-success"></i>
+                    </button>
+                    <span id="quantity{{dish.id}}" style="float:right;margin-right:10px;">
+                    <!-- There is probs a better way to do this -->
+                    {% for item in customer.shoppingcart.cartitem_set.all %}
+                        {% if item.dish == dish %}
+                            {{item.quantity}}
+                        {% endif %}
+                    {% endfor %}
+                    </span>
+                </h5>
+                <div class="card-body" style="height:100%">
                     <span class="fa fa-star {% if dish.rating >= 1 %}checked{% endif %} fa-sm"></span>
                     <span class="fa fa-star {% if dish.rating >= 2 %}checked{% endif %} fa-sm"></span>
                     <span class="fa fa-star {% if dish.rating >= 3 %}checked{% endif %} fa-sm"></span>
                     <span class="fa fa-star {% if dish.rating >= 4 %}checked{% endif %} fa-sm"></span>
                     <span class="fa fa-star {% if dish.rating >= 5 %}checked{% endif %} fa-sm"></span>
-                    <form method="POST" action="{% url 'addtocart' %}" style="font-size:2vw;float:right;">
-                        {% csrf_token %}  
-                        <input name="dish_id" type="hidden" value="{{dish.id}}">
-                        <button type="submit" style="padding:0;background:inherit;border:none;">
-                        <i class="fa fa-plus text-success"></i>
-                        </button>
-                    </form>
-                </h5>
-                <div class="card-body" style="height:100%">
                     <h5 class="card-title">Cook: {{dish.cook.user.first_name}} {{dish.cook.user.last_name}}</h5>
                     <p class="card-text">{{dish.description}}</p>
                     <img src="{{ dish.dish_image.url }}" width="100%" style="max-height: 200px;">
@@ -111,21 +116,10 @@
                 </div>
                 <div class="card-footer">
                     {% if dish.vegan %}<img style="float:left" src="/media/vegan.png" width=30px>{% endif %}
-                    <!-- <form method="POST" action="{% url 'togglefav' %}" style="font-size:2vw;float:right;margin-bottom:0px;">
-                        {% csrf_token %}  
-                        <input name="dish_id" type="hidden" value="{{dish.id}}">
-                        <button type="submit" style="padding:0;background:inherit;border:none;">
-                            {% if dish in customer.favorites.all %}
-                            <i class="fa fa-heart" id="heart{{dish.id}}" style="color:red" onclick="toggleHeart('{{dish.id}}')"></i>
-                            {% else %}
-                            <i class="fa fa-heart-o" id="heart{{dish.id}}" style="color:red" onclick="toggleHeart('{{dish.id}}')"></i>
-                            {%endif%}
-                        </button>
-                    </form> -->
                     {% if dish in customer.favorites.all %}
-                    <i class="fa fa-heart" id="heart{{dish.id}}" style="color:red;font-size:20pt;cursor:pointer;" onclick="toggleHeart('{{dish.id}}')"></i>
+                    <i class="fa fa-heart" id="heart{{dish.id}}" style="color:red;font-size:20pt;cursor:pointer;float:right;" onclick="toggleHeart('{{dish.id}}')"></i>
                     {% else %}
-                    <i class="fa fa-heart-o" id="heart{{dish.id}}" style="color:red;font-size:20pt;cursor:pointer;" onclick="toggleHeart('{{dish.id}}')"></i>
+                    <i class="fa fa-heart-o" id="heart{{dish.id}}" style="color:red;font-size:20pt;cursor:pointer;float:right;" onclick="toggleHeart('{{dish.id}}')"></i>
                     {%endif%}
                 </div>
             </div>
@@ -133,8 +127,44 @@
     {% endfor %}
     </div>
 </div>
+<style>
+    .overlay {
+                background-color: rgba(1, 1, 1, 0.7);
+                bottom: 0;
+                left: 0;
+                position: fixed;
+                right: 0;
+                top: 0;
+            }
+</style>
+
+<!-- covers screen with div to prevent clicking -->
+<div id="overlay" class="overlay" style="display:none">
+        
+</div>
 
 <script>
+    function addtocart(id){
+        // temp solution (covers screen and then reloads page to prevent adding dishes from different cooks)
+        {% if customer.shoppingcart.empty %}
+            document.getElementById("overlay").style.display = 'block';
+            location.reload();
+        {% endif %}
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'addtocart' %}",
+            data: {
+            'dish_id': id,
+            'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            dataType: 'json',
+            success: function (data) {
+                let textname = "quantity"+data.dish_id
+                document.getElementById(textname).innerHTML = data.quantity;
+            }
+        });
+    }
     function submitForm(){
         document.getElementById("searchForm").submit();
     }
@@ -149,16 +179,16 @@
             document.getElementById(heartid).classList.remove("fa-heart-o");
         }
         $.ajax({
-                type: "POST",
-                url: "{% url 'togglefav' %}",
-                data: {
-                'dish_id': id,
-                'csrfmiddlewaretoken': '{{ csrf_token }}'
-                },
-                dataType: 'json',
-                success: function (data) {
-                    console.log(data.status);
-                }
+            type: "POST",
+            url: "{% url 'togglefav' %}",
+            data: {
+            'dish_id': id,
+            'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            dataType: 'json',
+            success: function (data) {
+                console.log(data.status);
+            }
         });
     }
 
