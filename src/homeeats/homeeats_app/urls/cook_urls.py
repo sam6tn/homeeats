@@ -17,5 +17,6 @@ urlpatterns = [
   path('dish/<str:dish_id>/reviews', cook_views.reviews_for_dish, name='reviews_for_dish'),
   path('dish_review/<str:dish_review_id>/report/<str:reason>', cook_views.report_dish_review, name='report_dish_review'),
   path('disabledish/<str:dish_id>', cook_views.cook_disable_dish, name='cook_disable_dish'),
-  path('enabledish/<str:dish_id>', cook_views.cook_enable_dish, name='cook_enable_dish')
+  path('enabledish/<str:dish_id>', cook_views.cook_enable_dish, name='cook_enable_dish'),
+  path('editdish/<str:dish_id>', cook_views.cook_edit_dish, name='cook_edit_dish')
 ]

@@ -1,0 +1,75 @@
+
+{% extends 'cook_base.html' %}
+{% load staticfiles %}
+
+{% block title %}Home{% endblock %}
+{% block pagecontent %}
+
+{% csrf_token %}
+
+  <div style="text-align: center;width:25%;margin: 20px auto;">
+    <h2>Edit Dish</h2>
+    <form enctype="multipart/form-data" method="post">
+      {% csrf_token %}
+  
+      <div style="margin:10px;text-align: left;">
+        {{ form.title.label_tag }}
+        <div style="float:right;">
+          {{ form.title }}
+        </div>
+      </div>
+      <div style="margin:10px;text-align: left;">
+        {{ form.cuisine.label_tag }}
+        <div style="float:right;">
+          {{ form.cuisine }}
+        </div>
+      </div>
+      <div style="margin:10px;text-align: left;">
+        {{ form.dish_image.label_tag }}
+        <div style="float:right;">
+          {{ form.dish_image }}
+        </div>
+      </div>
+      <div style="margin:10px;text-align: left;">
+        {{ form.cook_time.label_tag }}
+        <div style="float:right;">
+          {{ form.cook_time }}
+        </div>
+      </div>
+      <div style="margin:10px;text-align: left;">
+        {{ form.price.label_tag }}
+        <div style="float:right;">
+          {{ form.price }}
+        </div>
+      </div>
+      <div style="margin:10px;text-align: left;">
+        {{ form.ingredients.label_tag }}
+        <div style="float:right;">
+          {{ form.ingredients }}
+        </div>
+      </div>
+      <div style="margin:10px;text-align: left;">
+        {{ form.description.label_tag }}
+        <div style="float:right;">
+          {{ form.description }}
+        </div>
+      </div>
+      <div style="margin:10px;text-align: left;">
+        {{ form.vegan.label_tag }}
+        <div style="float:right;">
+          {{ form.vegan }}
+        </div>
+      </div>
+      <div style="margin:10px;text-align: left;">
+        {{ form.allergies.label_tag }}
+        <div style="float:right;">
+          {{ form.allergies }}
+        </div>
+      </div>
+      
+      <input type="submit" value="Edit a dish" class="btn btn-primary">
+    </form>
+  
+  </div>
+  {% endblock %}
+  

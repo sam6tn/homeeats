@@ -248,4 +248,19 @@ def cook_enable_dish(request, dish_id):
   if dish.cook == cook:
     dish.cook_disabled = False
     dish.save()
-  return HttpResponseRedirect(reverse('cook_cuisine_dishes', args=[dish.cuisine_id]))  
+  return HttpResponseRedirect(reverse('cook_cuisine_dishes', args=[dish.cuisine_id]))
+
+def cook_edit_dish(request, dish_id):
+  dish = Dish.objects.get(id=dish_id)
+  cook = Cook.objects.get(user_id=request.user.id)
+  if request.method == 'POST':
+    form = forms.DishEditForm(request.POST, request.FILES, instance=dish)
+    if form.is_valid():
+      dish = form.save(commit=False)
+      dish.cook = cook
+      dish.save()
+      return HttpResponseRedirect(reverse('cook_manage'))
+  else:
+    form = forms.DishEditForm(instance=dish)
+  return render(request, 'cook_templates/cook_edit_dish.html', {'form': form})
+

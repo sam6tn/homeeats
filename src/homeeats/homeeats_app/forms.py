@@ -78,6 +78,11 @@ class DishCreateForm(forms.Form):
     dish_image = forms.ImageField()
     cook_time = forms.IntegerField(required=True,)
     #cook = forms.ModelChoiceField(queryset=Cook.objects.all())
+class DishEditForm(forms.ModelForm):
+    class Meta:
+        model = Dish
+        fields = ('title', 'description','ingredients', 'dish_image', 'cook_time')
+
 class DishSearchForm(forms.Form):
     search = forms.CharField(label="Search",max_length=30, required=False, widget=forms.TextInput(attrs={'placeholder':'Search','class':'form-control mr-sm-2'}))
     SORT_CHOICES = (

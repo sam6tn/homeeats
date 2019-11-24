@@ -34,6 +34,7 @@
               </div>
               <div class="card-footer text-right">
                   {% if dish.vegan %}<img style="float:left" src="/media/vegan.png" width=30px>{% endif %}
+                  <a href="{% url 'cook_edit_dish' dish.id %}"><small class="text-muted"><button type="button" class="btn btn-success btn-sm">Edit</button></small></a>
                 {% if dish.cook_disabled %}
                   <a href="{% url 'cook_enable_dish' dish.id %}"><small class="text-muted"><button type="button" class="btn btn-success btn-sm">Enable</button></small></a>
                 {% else %}
