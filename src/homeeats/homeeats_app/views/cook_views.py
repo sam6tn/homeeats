@@ -250,9 +250,13 @@ def cook_enable_dish(request, dish_id):
     dish.save()
   return HttpResponseRedirect(reverse('cook_cuisine_dishes', args=[dish.cuisine_id]))
 
+@login_required
+@cook_required
 def cook_edit_dish(request, dish_id):
   dish = Dish.objects.get(id=dish_id)
   cook = Cook.objects.get(user_id=request.user.id)
+  if dish.cook != cook:
+    return HttpResponseRedirect(reverse('cook_manage'))
   if request.method == 'POST':
     form = forms.DishEditForm(request.POST, request.FILES, instance=dish)
     if form.is_valid():
