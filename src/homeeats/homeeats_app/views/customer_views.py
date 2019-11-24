@@ -125,10 +125,17 @@ def toggle_favorite(request):
     if dish in customer.favorites.all():
       customer.favorites.remove(dish)
       customer.save()
+      data = {
+        'status':dish.title + ' favorite removed'
+      }
     else:
       customer.favorites.add(dish)
       customer.save()
-  return HttpResponseRedirect(reverse('customer_home'))
+      data = {
+        'status':dish.title + ' favorite added'
+      }
+  
+  return JsonResponse(data)
 
 
 @login_required

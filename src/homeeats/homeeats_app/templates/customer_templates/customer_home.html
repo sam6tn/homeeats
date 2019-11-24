@@ -9,6 +9,12 @@
     <script crossorigin="anonymous"
             integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
             src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script
+        src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+        crossorigin="anonymous">
+    </script>
+
     <title>HomeEats</title>
     <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
             integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet">
@@ -104,7 +110,7 @@
                 </div>
                 <div class="card-footer">
                     {% if dish.vegan %}<img style="float:left" src="/media/vegan.png" width=30px>{% endif %}
-                    <form method="POST" action="{% url 'togglefav' %}" style="font-size:2vw;float:right;margin-bottom:0px;">
+                    <!-- <form method="POST" action="{% url 'togglefav' %}" style="font-size:2vw;float:right;margin-bottom:0px;">
                         {% csrf_token %}  
                         <input name="dish_id" type="hidden" value="{{dish.id}}">
                         <button type="submit" style="padding:0;background:inherit;border:none;">
@@ -114,8 +120,12 @@
                             <i class="fa fa-heart-o" id="heart{{dish.id}}" style="color:red" onclick="toggleHeart('{{dish.id}}')"></i>
                             {%endif%}
                         </button>
-                    </form>
-                
+                    </form> -->
+                    {% if dish in customer.favorites.all %}
+                    <i class="fa fa-heart" id="heart{{dish.id}}" style="color:red;font-size:20pt;cursor:pointer;" onclick="toggleHeart('{{dish.id}}')"></i>
+                    {% else %}
+                    <i class="fa fa-heart-o" id="heart{{dish.id}}" style="color:red;font-size:20pt;cursor:pointer;" onclick="toggleHeart('{{dish.id}}')"></i>
+                    {%endif%}
                 </div>
             </div>
         </div>
@@ -137,6 +147,18 @@
             document.getElementById(heartid).classList.add("fa-heart");
             document.getElementById(heartid).classList.remove("fa-heart-o");
         }
+        $.ajax({
+                type: "POST",
+                url: "{% url 'togglefav' %}",
+                data: {
+                'dish_id': id,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data.status);
+                }
+        });
     }
 
 </script>
