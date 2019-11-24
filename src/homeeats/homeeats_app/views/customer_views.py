@@ -43,19 +43,21 @@ def home(request):
     if request.method == 'POST':
       form = forms.DishSearchForm(request.POST)
       if form.is_valid():
+        dishes = find_nearby_dishes(request)
         data = form.cleaned_data
         search = data['search']
         sort = data['sort']
         cuisine = data['cuisine']
+        if search=="" and sort=="" and cuisine=="":
+          search = request.POST["search"]
 
-        dishes = find_nearby_dishes(request)
         dishes = dishes.filter(title__icontains=search)
         dishes = dishes.filter(cook_disabled = False)
 
         if (not customer.shoppingcart.empty):
           dishes = dishes.filter(cook=customer.shoppingcart.cook)
 
-        if (cuisine != 'none'):
+        if (cuisine != 'none' and cuisine !=''):
           dishes = dishes.filter(cuisine=cuisine)
 
         if (sort == 'rating'):
@@ -67,7 +69,7 @@ def home(request):
 
         return render(request, 'customer_templates/customer_home.html', {'dishes':dishes, 'form': form, 'customer':customer})
       else:
-        dishes = Dish.objects.all()
+        dishes = find_nearby_dishes(request)
         return render(request, 'customer_templates/customer_home.html', {'dishes': dishes, 'form': form, 'customer':customer})
 
     else:
