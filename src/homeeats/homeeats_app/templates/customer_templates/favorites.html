@@ -77,7 +77,7 @@
                     <form method="POST" action="{% url 'addtocart' %}" style="font-size:2vw;float:right;">
                         {% csrf_token %}  
                         <input name="dish_id" type="hidden" value="{{dish.id}}">
-                        <button type="submit" style="padding:0;background:inherit;border:none;">
+                        <button type="submit" {% if not customer.shoppingcart.empty and customer.shoppingcart.cook != dish.cook %}disabled title="Current order has different cook"{% endif %} style="padding:0;background:inherit;border:none;">
                         <i class="fa fa-plus text-success"></i>
                         </button>
                     </form>

@@ -115,6 +115,20 @@ def addtocart(request):
   else:
     return HttpResponseRedirect(reverse('customer_home'))
 
+@login_required
+@customer_required
+def toggle_favorite(request):
+  if request.method == "POST":
+    dish = Dish.objects.get(id=request.POST["dish_id"])
+    customer = Customer.objects.get(user_id=request.user.id)
+    if dish in customer.favorites.all():
+      customer.favorites.remove(dish)
+      customer.save()
+    else:
+      customer.favorites.add(dish)
+      customer.save()
+  return HttpResponseRedirect(reverse('customer_home'))
+
 
 @login_required
 @customer_required
