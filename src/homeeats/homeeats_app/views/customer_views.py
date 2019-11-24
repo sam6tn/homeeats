@@ -25,7 +25,8 @@ from django.http import Http404
 @customer_required
 def dish(request, dish_id):
     dish = Dish.objects.get(id=dish_id) #get Dish object from dish_id
-    if(dish.cook_disabled or dish.cook.online == False):
+    customer = Customer.objects.get(user_id=request.user.id)
+    if(dish.cook_disabled or dish.cook.online == False or (not customer.shoppingcart.empty and customer.shoppingcart.cook != dish.cook)):
       raise Http404()
     reviews = dish.dish_review_set.filter(report_flag=False) #get all reviews for that Dish
     form = DishReviewForm()
