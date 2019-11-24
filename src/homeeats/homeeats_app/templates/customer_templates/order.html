@@ -2,6 +2,11 @@
 {% load staticfiles %}
 
 {% block pagecontent %}
+<script
+    src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+    crossorigin="anonymous">
+</script>
 
 <div class="container">
     <h1>Order on {{order.date}}</h1>
@@ -20,34 +25,27 @@
                     <p class="card-text font-weight-bold text-secondary">Subtotal: ${{item.subtotal}}</p>
                 </div>
                 <div class="card-footer">
-                {% if order.status != 'd' %}
-                    {% if order.status == 'r' %}
-                        <span>Order rejected by cook.</span>
-                    {% else %}
-                        <span>Not yet delivered.</span>
-                    {% endif %}
-                {% elif item in reviewed_items %}
-                    <span class="fa fa-star {% if item.review.dish_rating >= 1 %}checked{% endif %} fa-sm"></span>
-                    <span class="fa fa-star {% if item.review.dish_rating >= 2 %}checked{% endif %} fa-sm"></span>
-                    <span class="fa fa-star {% if item.review.dish_rating >= 3 %}checked{% endif %} fa-sm"></span>
-                    <span class="fa fa-star {% if item.review.dish_rating >= 4 %}checked{% endif %} fa-sm"></span>
-                    <span class="fa fa-star {% if item.review.dish_rating >= 5 %}checked{% endif %} fa-sm"></span>
-                {% else %}
-                    <button class="btn btn-primary" data-toggle="modal" data-target="#reviewModal{{item.dish.id}}">Review</button>
-                {% endif %}
-                
-                <form method="POST" action="{% url 'togglefav' %}" style="font-size:2vw;float:right;margin-bottom:0px;">
-                    {% csrf_token %}  
-                    <input name="dish_id" type="hidden" value="{{item.dish.id}}">
-                    <button type="submit" style="padding:0;background:inherit;border:none;">
-                        {% if item.dish in customer.favorites.all %}
-                        <i class="fa fa-heart" id="heart{{item.dish.id}}" style="color:red" onclick="toggleHeart('{{item.dish.id}}')"></i>
+                    {% if order.status != 'd' %}
+                        {% if order.status == 'r' %}
+                            <span>Order rejected by cook.</span>
                         {% else %}
-                        <i class="fa fa-heart-o" id="heart{{item.dish.id}}" style="color:red" onclick="toggleHeart('{{item.dish.id}}')"></i>
-                        {%endif%}
-                    </button>
-                </form>
-
+                            <span>Not yet delivered.</span>
+                        {% endif %}
+                    {% elif item in reviewed_items %}
+                        <span class="fa fa-star {% if item.review.dish_rating >= 1 %}checked{% endif %} fa-sm"></span>
+                        <span class="fa fa-star {% if item.review.dish_rating >= 2 %}checked{% endif %} fa-sm"></span>
+                        <span class="fa fa-star {% if item.review.dish_rating >= 3 %}checked{% endif %} fa-sm"></span>
+                        <span class="fa fa-star {% if item.review.dish_rating >= 4 %}checked{% endif %} fa-sm"></span>
+                        <span class="fa fa-star {% if item.review.dish_rating >= 5 %}checked{% endif %} fa-sm"></span>
+                    {% else %}
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#reviewModal{{item.dish.id}}">Review</button>
+                    {% endif %}
+                    
+                    {% if item.dish in customer.favorites.all %}
+                    <i class="fa fa-heart" id="heart{{item.dish.id}}" style="color:red;font-size:20pt;cursor:pointer;" onclick="toggleHeart('{{item.dish.id}}')"></i>
+                    {% else %}
+                    <i class="fa fa-heart-o" id="heart{{item.dish.id}}" style="color:red;font-size:20pt;cursor:pointer;" onclick="toggleHeart('{{item.dish.id}}')"></i>
+                    {%endif%}
                 </div>
             </div>
         </div>
@@ -113,6 +111,18 @@
             document.getElementById(heartid).classList.add("fa-heart");
             document.getElementById(heartid).classList.remove("fa-heart-o");
         }
+        $.ajax({
+            type: "POST",
+            url: "{% url 'togglefav' %}",
+            data: {
+            'dish_id': id,
+            'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            dataType: 'json',
+            success: function (data) {
+                console.log(data.status);
+            }
+        });
     }
 </script>
 
