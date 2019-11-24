@@ -81,13 +81,15 @@ def home(request):
       if (not customer.shoppingcart.empty):
         dishes = dishes.filter(cook=customer.shoppingcart.cook)
       dishes=dishes.order_by('-rating')
+      
       return render(request, 'customer_templates/customer_home.html', {'dishes': dishes, 'form':form, 'customer':customer})
 
 @login_required
 @customer_required
 def addtocart(request):
+  dish = Dish.objects.get(id=request.POST["dish_id"])
+  return_quantity = -1
   if request.method == "POST":
-    dish = Dish.objects.get(id=request.POST["dish_id"])
     if(dish.cook_disabled or dish.cook.online == False):
       raise Http404()
     customer = Customer.objects.get(user_id=request.user.id)
@@ -100,6 +102,7 @@ def addtocart(request):
         existing_item.subtotal += dish.price
         existing_item.save()
         existing_already = True
+        return_quantity = existing_item.quantity
         break
     if (existing_already == False): #dish not yet in cart so create new cart item
       cart_item = CartItem.objects.create(
@@ -108,13 +111,17 @@ def addtocart(request):
         subtotal=dish.price,
         shopping_cart=shopping_cart
       )
+      return_quantity = 1
       cart_item.save()
       shopping_cart.cook = dish.cook
     shopping_cart.empty = False
     shopping_cart.save()
-    return HttpResponseRedirect(reverse('cart'))
-  else:
-    return HttpResponseRedirect(reverse('customer_home'))
+  data = {
+    'quantity': return_quantity,
+    'dish_id': request.POST["dish_id"]
+  }
+  return JsonResponse(data)
+
 
 @login_required
 @customer_required
