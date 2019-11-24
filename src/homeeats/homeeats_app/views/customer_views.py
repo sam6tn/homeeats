@@ -25,7 +25,8 @@ from django.http import Http404
 @customer_required
 def dish(request, dish_id):
     dish = Dish.objects.get(id=dish_id) #get Dish object from dish_id
-    if(dish.cook_disabled or dish.cook.online == False):
+    customer = Customer.objects.get(user_id=request.user.id)
+    if(dish.cook_disabled or dish.cook.online == False or (not customer.shoppingcart.empty and customer.shoppingcart.cook != dish.cook)):
       raise Http404()
     reviews = dish.dish_review_set.filter(report_flag=False) #get all reviews for that Dish
     form = DishReviewForm()
@@ -115,6 +116,20 @@ def addtocart(request):
   else:
     return HttpResponseRedirect(reverse('customer_home'))
 
+@login_required
+@customer_required
+def toggle_favorite(request):
+  if request.method == "POST":
+    dish = Dish.objects.get(id=request.POST["dish_id"])
+    customer = Customer.objects.get(user_id=request.user.id)
+    if dish in customer.favorites.all():
+      customer.favorites.remove(dish)
+      customer.save()
+    else:
+      customer.favorites.add(dish)
+      customer.save()
+  return HttpResponseRedirect(reverse('customer_home'))
+
 
 @login_required
 @customer_required
@@ -171,8 +186,8 @@ def order(request, order_id):
   else:
     form = DishReviewForm()
     reviewed_items = order.item_set.filter(review__isnull = False)
-    print(reviewed_items)
-    return render(request, 'customer_templates/order.html', {'order':order, 'form':form, 'reviewed_items':reviewed_items})
+    customer = Customer.objects.get(user_id=request.user.id)
+    return render(request, 'customer_templates/order.html', {'order':order, 'form':form, 'reviewed_items':reviewed_items, 'customer':customer})
 
 @login_required
 @customer_required

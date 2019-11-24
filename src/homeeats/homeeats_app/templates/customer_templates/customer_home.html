@@ -104,7 +104,18 @@
                 </div>
                 <div class="card-footer">
                     {% if dish.vegan %}<img style="float:left" src="/media/vegan.png" width=30px>{% endif %}
-                    {% if dish in customer.favorites.all %}<i class="fa fa-heart" style="color:red"></i>{%endif%}
+                    <form method="POST" action="{% url 'togglefav' %}" style="font-size:2vw;float:right;margin-bottom:0px;">
+                        {% csrf_token %}  
+                        <input name="dish_id" type="hidden" value="{{dish.id}}">
+                        <button type="submit" style="padding:0;background:inherit;border:none;">
+                            {% if dish in customer.favorites.all %}
+                            <i class="fa fa-heart" id="heart{{dish.id}}" style="color:red" onclick="toggleHeart('{{dish.id}}')"></i>
+                            {% else %}
+                            <i class="fa fa-heart-o" id="heart{{dish.id}}" style="color:red" onclick="toggleHeart('{{dish.id}}')"></i>
+                            {%endif%}
+                        </button>
+                    </form>
+                
                 </div>
             </div>
         </div>
@@ -116,4 +127,16 @@
     function submitForm(){
         document.getElementById("searchForm").submit();
     }
+    function toggleHeart(id){
+        let heartid = "heart"+id;
+        if (document.getElementById(heartid).classList.contains('fa-heart')){
+            document.getElementById(heartid).classList.add("fa-heart-o");
+            document.getElementById(heartid).classList.remove("fa-heart");
+        }
+        else if (document.getElementById(heartid).classList.contains('fa-heart-o')){
+            document.getElementById(heartid).classList.add("fa-heart");
+            document.getElementById(heartid).classList.remove("fa-heart-o");
+        }
+    }
+
 </script>
