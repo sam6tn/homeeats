@@ -22,9 +22,9 @@
                 <div class="card-footer">
                 {% if order.status != 'd' %}
                     {% if order.status == 'r' %}
-                        <p>Order rejected by cook.</p>
+                        <span>Order rejected by cook.</span>
                     {% else %}
-                        <p>Not yet delivered.</p>
+                        <span>Not yet delivered.</span>
                     {% endif %}
                 {% elif item in reviewed_items %}
                     <span class="fa fa-star {% if item.review.dish_rating >= 1 %}checked{% endif %} fa-sm"></span>
@@ -35,6 +35,19 @@
                 {% else %}
                     <button class="btn btn-primary" data-toggle="modal" data-target="#reviewModal{{item.dish.id}}">Review</button>
                 {% endif %}
+                
+                <form method="POST" action="{% url 'togglefav' %}" style="font-size:2vw;float:right;margin-bottom:0px;">
+                    {% csrf_token %}  
+                    <input name="dish_id" type="hidden" value="{{item.dish.id}}">
+                    <button type="submit" style="padding:0;background:inherit;border:none;">
+                        {% if item.dish in customer.favorites.all %}
+                        <i class="fa fa-heart" id="heart{{item.dish.id}}" style="color:red" onclick="toggleHeart('{{item.dish.id}}')"></i>
+                        {% else %}
+                        <i class="fa fa-heart-o" id="heart{{item.dish.id}}" style="color:red" onclick="toggleHeart('{{item.dish.id}}')"></i>
+                        {%endif%}
+                    </button>
+                </form>
+
                 </div>
             </div>
         </div>
@@ -89,6 +102,17 @@
         }
         let rating = "rating"+dish;
         document.getElementById(rating).value = num;
+    }
+    function toggleHeart(id){
+        let heartid = "heart"+id;
+        if (document.getElementById(heartid).classList.contains('fa-heart')){
+            document.getElementById(heartid).classList.add("fa-heart-o");
+            document.getElementById(heartid).classList.remove("fa-heart");
+        }
+        else if (document.getElementById(heartid).classList.contains('fa-heart-o')){
+            document.getElementById(heartid).classList.add("fa-heart");
+            document.getElementById(heartid).classList.remove("fa-heart-o");
+        }
     }
 </script>
 

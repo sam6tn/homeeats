@@ -186,8 +186,8 @@ def order(request, order_id):
   else:
     form = DishReviewForm()
     reviewed_items = order.item_set.filter(review__isnull = False)
-    print(reviewed_items)
-    return render(request, 'customer_templates/order.html', {'order':order, 'form':form, 'reviewed_items':reviewed_items})
+    customer = Customer.objects.get(user_id=request.user.id)
+    return render(request, 'customer_templates/order.html', {'order':order, 'form':form, 'reviewed_items':reviewed_items, 'customer':customer})
 
 @login_required
 @customer_required
