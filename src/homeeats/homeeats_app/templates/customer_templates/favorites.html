@@ -63,6 +63,9 @@
 </nav>
 
 <div class="container" style="margin-top:25px">
+
+    {% if dishes %}
+
     <div class="row">
     {% for dish in dishes %}
         <div class="col-4" style="margin-bottom:20px;display:flex">
@@ -96,4 +99,12 @@
         </div>
     {% endfor %}
     </div>
+    {% else %}
+
+    <h1>You have no favorites</h1>
+    <p class="font-italic">Use the heart button on dishes to favorite them!</p>
+
+
+    {% endif %}
+
 </div>
