@@ -267,3 +267,14 @@ def cook_edit_dish(request, dish_id):
   else:
     form = forms.DishEditForm(instance=dish)
   return render(request, 'cook_templates/cook_edit_dish.html', {'form': form, 'cuisine_id': dish.cuisine_id})
+
+@login_required
+@cook_required
+def myaccount(request):
+  if request.method == 'POST':
+    first_name = request.GET.get('first_name')
+    last_name = request.GET.get('last_name')
+    username = request.GET.get('username')
+    print('first_name: ' , first_name)
+    #return HttpResponseRedirect(reverse('customer_edit_profile'))
+  return render(request, 'cook_templates/cook_profile.html')
