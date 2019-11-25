@@ -119,6 +119,13 @@ class CustomerCartTest(TestCase):
         self.client.get(reverse('cart'))
         response = self.client.get(reverse('customer_home'))
         self.assertEquals(response.url, "/?next=/customer/home/")
+    def cart_order(self):
+        ShoppingCart.objects.create(total = 12.99, empty=False)
+        self.assertTrue(empty = False)
+    def cart_items(self):
+        CartItems.objects.create(quantity = 3)
+        self.assertTrue(quantity > 0)
+
 
 
 class CustomerHomeTest(TestCase):
