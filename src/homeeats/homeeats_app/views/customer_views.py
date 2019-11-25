@@ -316,4 +316,15 @@ def favorites(request):
   }
   return render(request, 'customer_templates/favorites.html', context)
 
+@login_required
+@customer_required
+def myaccount(request):
+  if request.method == 'POST':
+    first_name = request.GET.get('first_name')
+    last_name = request.GET.get('last_name')
+    username = request.GET.get('username')
+    print('first_name: ' , first_name)
+    return HttpResponseRedirect(reverse('customer_edit_profile'))
+  return render(request, 'customer_templates/customer_profile.html')
+
     

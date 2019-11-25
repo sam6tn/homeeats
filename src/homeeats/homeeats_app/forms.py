@@ -27,6 +27,16 @@ class CustomerCreateForm(forms.ModelForm):
          #   'zipcode','phone_number',)
         fields = ('first_name','last_name','password','phone_number',)
     
+class AddressCreateForm(forms.ModelForm):
+    street = forms.CharField(required=True,label='Street Address')
+    town = forms.CharField(required=True,label='City/Town')
+    state = forms.CharField(required=True,)
+    zipcode = forms.CharField(required=True,)
+
+    class Meta:
+        model = Address
+        fields = ('street', 'town', 'state', 'zipcode',)
+
 class AddressEditForm(forms.ModelForm):
     street = forms.CharField(required=True,label='Street Address')
     town = forms.CharField(required=True,label='City/Town')

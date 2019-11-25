@@ -1,0 +1,42 @@
+{% extends '../customer_base.html' %}
+{% block pagecontent %}
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+  
+    </style>
+  </head>
+  <div style="text-align: center;width:27%;margin: 20px auto;">
+    <h2>My Account</h2>
+    <form method="post">
+      {% csrf_token %}
+  
+      <div style="margin:10px;text-align: left;">
+       First Name
+        <div style="float:right;">
+          {{ user.first_name }}
+        </div>
+      </div>
+      <div style="margin:10px;text-align: left;">
+        Last Name
+        <div style="float:right;">
+          {{ user.last_name }}
+        </div>
+      </div>
+      <div style="margin:10px;text-align: left;">
+        Email
+        <div style="float:right;">
+          {{ user.username }}
+        </div>
+      </div>
+      <div style="margin:10px;text-align: left;">
+        Phone Number
+        <div style="float:right;">
+          {{ user.customer.phone_number }}
+        </div>
+      </div>
+      <input type="submit" value="Edit Profile" class="btn btn-primary">
+    </form>
+  </div>
+
+  {% endblock %}

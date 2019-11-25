@@ -11,5 +11,6 @@ urlpatterns = [
   path('orders/', customer_views.orders, name='orders'), #all current and past orders
   path('order/<int:order_id>/', customer_views.order, name='order'), #page for individual order
   path('favorites/', customer_views.favorites, name='favorites'),
-  path('togglefav/', customer_views.toggle_favorite, name='togglefav')
+  path('togglefav/', customer_views.toggle_favorite, name='togglefav'),
+  path('myaccount/',customer_views.myaccount, name = 'myaccount'), #customer profile page
 ]

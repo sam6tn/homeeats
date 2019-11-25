@@ -387,5 +387,7 @@ class DishRestrictionsTest(TestCase):
         dishForm = DishCreateForm({'vegan': True, 'allergies': 'Peanuts'})
         self.assertFalse(dishForm.is_valid())
 
+    
+
 
 
