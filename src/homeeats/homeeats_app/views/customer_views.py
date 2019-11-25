@@ -154,6 +154,20 @@ def cart(request):
 
 @login_required
 @customer_required
+def removeItem(request):
+  item = CartItem.objects.get(id=request.POST["item_id"])
+  customer = Customer.objects.get(user_id=request.user.id)
+  cart = customer.shoppingcart
+  cart.total = cart.total - item.subtotal
+  if cart.total == 0:
+    cart.cook_id = None
+    cart.empty = True
+  item.delete()
+  cart.save()
+  return HttpResponse(202, 'ok')
+
+@login_required
+@customer_required
 def orders(request):
   customer = Customer.objects.get(user_id=request.user.id)
   orders = customer.order_set.all()
