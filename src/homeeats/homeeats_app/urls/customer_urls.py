@@ -8,6 +8,7 @@ urlpatterns = [
   path('cart/', customer_views.cart, name='cart'), #customer shopping cart
   path('addtocart/', customer_views.addtocart, name='addtocart'), #controller for adding dish to cart
   path('removeItem/', customer_views.removeItem, name='removeItem'), #controller for adding dish to cart
+  path('payment/', customer_views.payment, name='payment'), #controller for adding dish to cart
   path('checkout/', customer_views.checkout, name='checkout'), #customer checkout page
   path('orders/', customer_views.orders, name='orders'), #all current and past orders
   path('order/<int:order_id>/', customer_views.order, name='order'), #page for individual order
