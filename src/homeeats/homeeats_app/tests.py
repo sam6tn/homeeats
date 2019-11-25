@@ -3,7 +3,7 @@ from django.urls import reverse
 import json 
 from django.test import RequestFactory
 from . import views
-from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address, User, Customer, Order
+from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address, User, Customer, Order, ShoppingCart, CartItem
 from .forms import DishSearchForm, DishCreateForm, CustomerCreateForm, DishReviewForm, UserEditForm, PhoneEditForm
 
 class CookHomeTest(TestCase):
@@ -125,8 +125,38 @@ class CustomerCartTest(TestCase):
     def cart_items(self):
         CartItems.objects.create(quantity = 3)
         self.assertTrue(quantity > 0)
-
-
+    def test_remove(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        self.client.post(reverse('addtocart'), {'quantity': 1, 'dish_id': 1})
+        response = self.client.post(reverse('removeItem'), {'cart_id': 3, 'item_id': 1})
+        self.assertEquals(response.status_code, 302)
+    def test_remove_multiple(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        self.client.post(reverse('addtocart'), {'quantity': 1, 'dish_id': 1})
+        self.client.post(reverse('addtocart'), {'quantity': 1, 'dish_id': 2})
+        response = self.client.post(reverse('removeItem'), {'cart_id': 3, 'item_id': 1})
+        response = self.client.post(reverse('removeItem'), {'cart_id': 3, 'item_id': 2})
+        self.assertEquals(response.status_code, 302)
+    def test_remove_multiple_none(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        self.client.post(reverse('addtocart'), {'quantity': 1, 'dish_id': 1})
+        response = self.client.post(reverse('removeItem'), {'cart_id': 3, 'item_id': 1})
+        response = self.client.post(reverse('removeItem'), {'cart_id': 3, 'item_id': 1})
+        self.assertEquals(response.status_code, 302)
+    def test_remove_none(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        response = self.client.post(reverse('removeItem'), {'cart_id': 3, 'item_id': 1})
+        self.assertEquals(response.status_code, 302)
+    def test_payment(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        self.client.post(reverse('addtocart'), {'quantity': 1, 'dish_id': 1})
+        response = self.client.get(reverse('payment'))
+        self.assertEquals(response.status_code, 202)
+    def test_payment(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        self.client.post(reverse('addtocart'), {'quantity': 1, 'dish_id': 1})
+        response = self.client.get(reverse('payment'))
+        self.assertEquals(response.status_code, 302)
 
 class CustomerHomeTest(TestCase):
     def test_not_logged_in_causes_redirect_to_login_for_cook_home(self):
