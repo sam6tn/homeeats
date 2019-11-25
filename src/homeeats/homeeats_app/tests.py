@@ -116,6 +116,32 @@ class CustomerHomeTest(TestCase):
         form = DishSearchForm()
         self.assertFalse(form.is_valid())
 
+class CustomerAddToCartTest(TestCase):
+    def test_addtocart_redirects(self):
+        response = self.client.post(reverse('addtocart'), {})
+        self.assertEquals(response.status_code, 302)
+    def test_addtocart_returns(self):
+        response = self.client.post(reverse('addtocart'), {'dish_id':1})
+        self.assertEqual(str(response.content, encoding='utf8'),'')
+    
+        
+class CustomerAddToFavoritesTest(TestCase):
+    def test_addtofavorites_redirects(self):
+        response = self.client.post(reverse('togglefav'), {})
+        self.assertEquals(response.status_code, 302)
+    def test_addtofavorites_returns(self):
+        response = self.client.post(reverse('togglefav'), {})
+        self.assertEqual(str(response.content, encoding='utf8'),'')
+
+class CustomerRemoveFromFavoritesTest(TestCase):
+    def test_removefromfavorites_redirects(self):
+        response = self.client.post(reverse('togglefav'), {})
+        self.assertEquals(response.status_code, 302)
+    def test_removefromfavorites_returns(self):
+        response = self.client.post(reverse('togglefav'), {})
+        self.assertEqual(str(response.content, encoding='utf8'),'')
+        
+
 class CustomerDishReviewTest(TestCase):
     def test_review_form_is_valid(self):
         form = DishReviewForm(data={'dish_rating':5, 'description':'', 'report_flag':False})
