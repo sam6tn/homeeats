@@ -9,7 +9,7 @@ from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from ..forms import CustomerCreateForm
+from ..forms import CustomerCreateForm, AddressCreateForm
 from django.urls import reverse_lazy
 
 def index(request):
@@ -44,6 +44,7 @@ def customercreate(request):
       data = form.cleaned_data
       user = User.objects.create_user(username=data['email'], email=data['email'], password=data['password'], first_name=data['first_name'], last_name=data['last_name'])
       customer = models.Customer.objects.create(phone_number=data['phone_number'], user_id=user.id)
+      
       user.is_customer = True
       user.save()
       customer.save()

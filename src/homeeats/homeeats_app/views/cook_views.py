@@ -270,6 +270,15 @@ def cook_edit_dish(request, dish_id):
 
 @login_required
 @cook_required
+def myaccount(request):
+  if request.method == 'POST':
+    first_name = request.GET.get('first_name')
+    last_name = request.GET.get('last_name')
+    username = request.GET.get('username')
+    print('first_name: ' , first_name)
+    #return HttpResponseRedirect(reverse('customer_edit_profile'))
+  return render(request, 'cook_templates/cook_profile.html')
+
 def order_history(request):
   cook = Cook.objects.get(user_id=request.user.id)
   objs = Order.objects.filter(cook=cook, status='r').order_by('-date')
