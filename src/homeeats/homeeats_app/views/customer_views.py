@@ -154,6 +154,13 @@ def cart(request):
 
 @login_required
 @customer_required
+def payment(request):
+  customer = Customer.objects.get(user_id=request.user.id)
+  cart = customer.shoppingcart
+  return render(request, 'customer_templates/payment.html', {'cart':cart})
+
+@login_required
+@customer_required
 def removeItem(request):
   item = CartItem.objects.get(id=request.POST["item_id"])
   customer = Customer.objects.get(user_id=request.user.id)
