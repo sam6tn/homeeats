@@ -74,6 +74,25 @@
 {% if cart.empty %}
 <h2>Please add items to cart to see them here!</h2>
 {% else %}
+
+<script>
+  function removeItem(item_id, cart_id) {
+    $.ajax({
+        type: "POST",
+        url: "{% url 'removeItem' %}",
+        data: {
+        'item_id': item_id,
+        'cart_id': cart_id,
+        'csrfmiddlewaretoken': '{{ csrf_token }}'
+        },
+        dataType: 'json',
+        success: function (data) {
+          location.reload();
+        }
+    });
+  }
+</script>
+
 <!--
 <h1>{{user.first_name}}'s Cart</h1>
 <h2>Ordering from {{cart.cook.user.first_name}}</h2>
@@ -115,7 +134,7 @@
                   <td class="border-0 align-middle"><strong>{{item.dish.title}}</strong></td>
                   <td class="border-0 align-middle"><strong>${{item.subtotal}}</strong></td>
                   <td class="border-0 align-middle"><strong>{{item.quantity}}</strong></td>
-                  <td class="border-0 align-middle"><a href="#" class="text-dark"><i class="fa fa-trash"></i></a></td>
+                  <td onclick="removeItem('{{item.id}}', '{{cart.id}}')" class="border-0 align-middle"><a href="#" class="text-dark"><i class="fa fa-trash"></i></a></td>
                   {% endfor %}
                 </tr>
               </tbody>
@@ -142,7 +161,3 @@
       </div>
   </div>
 </div>
-
-
-
-{% endif %}
