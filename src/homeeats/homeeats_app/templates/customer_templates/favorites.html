@@ -54,15 +54,13 @@
                     </li>
                     
             </ul>
-            <form class="form-inline my-2 my-lg-0" method="post" action="{% url 'customer_home' %}">
-                {% csrf_token %}
-                <input name="search" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button id="searchBtn" class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
     </div>
 </nav>
 
 <div class="container" style="margin-top:25px">
+
+    {% if dishes %}
+
     <div class="row">
     {% for dish in dishes %}
         <div class="col-4" style="margin-bottom:20px;display:flex">
@@ -96,4 +94,12 @@
         </div>
     {% endfor %}
     </div>
+    {% else %}
+
+    <h1>You have no favorites</h1>
+    <p class="font-italic">Use the heart button on dishes to favorite them!</p>
+
+
+    {% endif %}
+
 </div>

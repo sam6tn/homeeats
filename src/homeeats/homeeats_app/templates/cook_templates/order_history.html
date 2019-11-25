@@ -1,0 +1,48 @@
+{% extends 'cook_base.html' %}
+{% load staticfiles %}
+
+{% block pagecontent %}
+
+<div class="container mt-2">
+
+<h1>Fulfilled Orders</h1>
+
+<ul class="list-group">
+
+    {% for order in completed_orders %}
+    <a href="{% url 'single_order_view' order.id%}" class="list-group-item list-group-item-action">
+            <!-- <h4>Order #{{order.id}}</h4>
+            <p class="font-weight-normal" style="float: right">{{order.name}}</p>
+            <p class="card-text font-weight-bold text-secondary">Total: ${{order.total}}</p>
+            <p class="text-muted" style="float: middle;">Posted: {{order.date}}</p> -->
+
+            <table style="width:100%">
+                <tr>
+                    <td><h4>Order #{{order.id}}</h4></td>
+                    <td><p class="font-weight-normal" style="float: right">{{order.name}}</p></td>
+                </tr>
+                <tr>
+                        <td><p class="card-text font-weight-bold text-secondary">Total: ${{order.total}}</p></td>
+                        <td><p class="text-muted" style="float: right;">{{order.date}}</p></td>
+                </tr>
+
+            </table>
+    </a>
+    {% endfor %}
+</ul>
+
+<h1>Rejected Orders</h1>
+
+<ul class="list-group">
+
+        {% for order in rejected_orders %}
+        <li class="list-group-item" style="" aria-disabled="true">
+                <a href="{% url 'single_order_view' order.id %}" class="text-decoration-none">Order #{{order.id}}</a></br>
+                <p class="font-weight-normal">{{order.name}}</p>
+                <p class="card-text font-weight-bold text-secondary">Total: ${{order.total}}</p>
+        </li>
+        {% endfor %}
+    </ul>
+
+</div>
+{% endblock %}
