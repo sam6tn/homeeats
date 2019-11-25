@@ -40,17 +40,16 @@ View of the customer creation form with form validation.
 def customercreate(request):
   if request.method == 'POST':
     form = forms.CustomerCreateForm(request.POST)
-    address_form = forms.AddressCreateForm(request.POST)
-    if form.is_valid() and addres_form.is_valid():
+    if form.is_valid():
       data = form.cleaned_data
       user = User.objects.create_user(username=data['email'], email=data['email'], password=data['password'], first_name=data['first_name'], last_name=data['last_name'])
       customer = models.Customer.objects.create(phone_number=data['phone_number'], user_id=user.id)
-      address = models.Address.objects.create(customer=customer, street_name=data['street'], city=data['town'], state=data['state'], zipcode=data['zipcode'],user_id=user.id)
+      
       user.is_customer = True
       user.save()
       customer.save()
       customer = models.Customer.objects.get(user_id=user.id)
-      
+      address = models.Address.objects.create(customer=customer, street_name=data['street'], city=data['town'], state=data['state'], zipcode=data['zipcode'])
       address.save()
       shopping_cart = models.ShoppingCart.objects.create(customer=customer)
       shopping_cart.save()

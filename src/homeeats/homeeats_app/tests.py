@@ -1,6 +1,7 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 import json 
+from django.shortcuts import render, get_object_or_404
 from django.test import RequestFactory
 from . import views
 from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address, User, Customer, Order
@@ -387,7 +388,31 @@ class DishRestrictionsTest(TestCase):
         dishForm = DishCreateForm({'vegan': True, 'allergies': 'Peanuts'})
         self.assertFalse(dishForm.is_valid())
 
+class CustomerProfileRedirectTest(TestCase):
+    def test_customer_profile_navigation(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        response = self.client.get(reverse('myaccount'))
+        self.assertEquals(response.status_code, 302)
+
+class CookProfileRedirectTest(TestCase):
+    def test_cook_profile_navigation(self):
+        self.client.login(username='test@cook.com', password='capstone')
+        response = self.client.get(reverse('myaccount'))
+        print(response.status_code)
+        self.assertEquals(response.status_code, 302)
+        
+class AddressCreateFormTest(TestCase):
+    def test_missing_street(self):
+        form = UserEditForm({'street': "",'town': "Charlottesville", 'state':'VA', 'zipcode':22903})
+        self.assertFalse(form.is_valid())
     
+    def test_missing_town(self):
+        form = UserEditForm({'street': "street",'town': "", 'state':'VA', 'zipcode':22903})
+        self.assertFalse(form.is_valid())
+    
+    def test_missing_state(self):
+        form = UserEditForm({'street': "street",'town': "cville", 'state':'', 'zipcode':22903})
+        self.assertFalse(form.is_valid())
 
 
 
