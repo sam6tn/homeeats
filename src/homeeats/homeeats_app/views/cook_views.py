@@ -268,3 +268,26 @@ def cook_edit_dish(request, dish_id):
     form = forms.DishEditForm(instance=dish)
   return render(request, 'cook_templates/cook_edit_dish.html', {'form': form, 'cuisine_id': dish.cuisine_id})
 
+@login_required
+@cook_required
+def order_history(request):
+  cook = Cook.objects.get(user_id=request.user.id)
+  objs = Order.objects.filter(cook=cook, status='r').order_by('-date')
+  objs2 = Order.objects.filter(cook=cook, status='d').order_by('-date')
+  rejected_orders = []
+  completed_orders = []
+  for obj in objs:
+    ord = model_to_dict(obj)
+    ord['date'] = obj.date.strftime("%m/%d/%y")
+    rejected_orders.append(ord)
+  for obj in objs2:
+    ord = model_to_dict(obj)
+    ord['date'] = obj.date.strftime("%m/%d/%y")
+    completed_orders.append(ord)
+  context = {
+    'rejected_orders': rejected_orders,
+    'completed_orders': completed_orders
+  }
+
+  return render(request, 'cook_templates/order_history.html', context)
+  
