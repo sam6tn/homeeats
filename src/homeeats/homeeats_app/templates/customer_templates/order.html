@@ -8,8 +8,9 @@
     crossorigin="anonymous">
 </script>
 
-<div class="container">
-    <h1>Order on {{order.date}}</h1>
+<div class="container" style="margin-top:2em;margin-bottom:3em;">
+    <h1>Order #{{order.id}}</h1>
+    <h4 style="font-weight:normal;font-size:1.3em;">{{order.date}}</h4>
 </div>
 <div class="container" style="overflow-x:scroll;margin-top:20px;">
     <div class="row flex-row flex-nowrap">
@@ -83,9 +84,18 @@
     {% endfor %}
     </div>
 </div>
-<div class="container">
-    <h2>Total: ${{order.total}}</h2>
-    <h2>Status: {{order.status}}</h2>
+<div class="container" style="margin-top:2.5em;">
+    <p><span class="order-field">Cook: </span>{{ order.cook.user.first_name }} {{ order.cook.user.last_name }}</p>
+    <p><span class="order-field">Total: </span>${{ order.total }}</p>
+    <p><span class="order-field">Status: </span>{{ order.get_status_display }}</p>
+    <p>
+      <span class="order-field">Special requests: </span>
+      {% if order.special_requests %}
+        {{ order.special_requests }}
+      {% else %}
+        None
+      {% endif %}
+    </p>
 </div>
 
 <script>
