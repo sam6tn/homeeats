@@ -23,6 +23,7 @@ class Cook(models.Model):
   def __str__(self):
     return "Cook " + self.user.first_name + " " + self.user.last_name + " (" + str(self.id) + ")"
   delivery_distance_miles = models.IntegerField(default=30)
+  delivery_fee = models.DecimalField(default=0, decimal_places=2, max_digits=6)
 
 class Cuisine(models.Model):
   name = models.CharField(default="", max_length=30)
@@ -78,7 +79,6 @@ class Dish_Review(models.Model):
   class Meta:
     verbose_name = "Dish Review"
     verbose_name_plural = "Dish Reviews"
-  
 
 class Address(models.Model):
   street_name = models.CharField(max_length=60, default="")
@@ -106,6 +106,7 @@ class Order(models.Model):
     ]
   status = models.CharField(max_length=1, choices=status_choices, default='p')
   date = models.DateTimeField(auto_now_add=True)
+  delivery_fee = models.DecimalField(default=0, decimal_places=2, max_digits=6) 
 
 class Item(models.Model):
   dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
