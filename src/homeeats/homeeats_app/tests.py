@@ -217,7 +217,7 @@ class SearchTest(TestCase):
 
 class AccountCreationTest(TestCase):
     def test_cook_create_with_valid_data(self):
-        response = self.client.post(reverse('cookcreate'), {'first_name': 'Bob', 'last_name': 'Saget', 'email': 'bob@bob.com', 'password': 'sagetsaget', 'kitchen_license': 'asdfasdfasdf', 'phone_number': '7777777777'})
+        response = self.client.post(reverse('cookcreate'), {'first_name': 'Bob', 'last_name': 'Saget', 'email': 'bob@bob.com', 'password': 'sagetsaget', 'kitchen_license': 'asdfasdfasdf', 'phone_number': '7777777777', 'delivery_distance_miles': '30', 'delivery_fee': '3.44'})
         self.assertEquals(response.status_code, 302)
         self.assertEquals(response.url, "/")
     def test_customer_create_with_valid_data(self):
@@ -235,7 +235,7 @@ class AddressCreationTest(TestCase):
 
 class UserGroupTest(TestCase):
     def test_cook_create(self):
-        response = self.client.post(reverse('cookcreate'), {'first_name': 'Bob', 'last_name': 'Saget', 'email': 'bob@bob.com', 'password': 'sagetsaget', 'kitchen_license': 'asdfasdfasdf', 'phone_number': '7777777777'})
+        response = self.client.post(reverse('cookcreate'), {'first_name': 'Bob', 'last_name': 'Saget', 'email': 'bob@bob.com', 'password': 'sagetsaget', 'kitchen_license': 'asdfasdfasdf', 'phone_number': '7777777777', 'delivery_distance_miles': '30', 'delivery_fee': '3.44'})
         user = User.objects.get(username="bob@bob.com")
         self.assertTrue(user.is_cook)
     def test_redirect_cook(self):
@@ -451,7 +451,6 @@ class CookProfileRedirectTest(TestCase):
     def test_cook_profile_navigation(self):
         self.client.login(username='test@cook.com', password='capstone')
         response = self.client.get(reverse('myaccount'))
-        print(response.status_code)
         self.assertEquals(response.status_code, 302)
 
 
