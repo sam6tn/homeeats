@@ -72,6 +72,8 @@ class UserForm(forms.ModelForm):
 class CookCreateForm(forms.ModelForm):
     kitchen_license = forms.CharField(label='Kitchen License')
     phone_number = forms.CharField(label='Phone Number')
+    delivery_distance_miles = forms.IntegerField(label='Maximum Delivery Distance (miles)')
+    delivery_fee = forms.DecimalField(label='Delivery Fee', decimal_places=2, max_digits=6)
     
     class Meta:
       model = User

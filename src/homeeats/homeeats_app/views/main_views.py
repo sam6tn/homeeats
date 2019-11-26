@@ -70,6 +70,8 @@ def cookcreate(request):
       cook = models.Cook.objects.create(
         kitchen_license=data['kitchen_license'],
         phone_number=data['phone_number'],
+        delivery_distance_miles=data['delivery_distance_miles'],
+        delivery_fee=data['delivery_fee'],
         user_id=user.id
       )
       user.is_cook = True

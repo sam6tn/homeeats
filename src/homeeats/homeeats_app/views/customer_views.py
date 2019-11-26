@@ -95,6 +95,7 @@ def addtocart(request):
     customer = Customer.objects.get(user_id=request.user.id)
     shopping_cart = customer.shoppingcart
     shopping_cart.total += dish.price
+    shopping_cart.item_subtotal += dish.price
     existing_already = False
     for existing_item in shopping_cart.cartitem_set.all(): 
       if (existing_item.dish == dish): #dish already in cart so add to existing cart item
@@ -114,7 +115,9 @@ def addtocart(request):
       return_quantity = 1
       cart_item.save()
       shopping_cart.cook = dish.cook
-    shopping_cart.empty = False
+    if shopping_cart.empty == True:
+      shopping_cart.empty = False
+      shopping_cart.total += dish.cook.delivery_fee
     shopping_cart.save()
   data = {
     'quantity': return_quantity,
@@ -166,9 +169,11 @@ def removeItem(request):
   customer = Customer.objects.get(user_id=request.user.id)
   cart = customer.shoppingcart
   cart.total = cart.total - item.subtotal
-  if cart.total == 0:
+  cart.item_subtotal = cart.item_subtotal - item.subtotal
+  if cart.total == cart.cook.delivery_fee:
     cart.cook_id = None
     cart.empty = True
+    cart.total = 0
   item.delete()
   cart.save()
   return HttpResponse(202, 'ok')
