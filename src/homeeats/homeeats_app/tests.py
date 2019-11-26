@@ -453,7 +453,60 @@ class CookProfileRedirectTest(TestCase):
         response = self.client.get(reverse('myaccount'))
         print(response.status_code)
         self.assertEquals(response.status_code, 302)
-        
+
+
+class DishReviewModelTest(TestCase):
+
+    def test_dish_review_dish_relationship(self):
+         customer_user = User.objects.create(username="customer_user", is_customer=True)
+         cook_user= User.objects.create(username="cook_user", is_cook=True)
+         customer = Customer.objects.create(user=customer_user)
+         cook = Cook.objects.create(user=cook_user)
+         cuisine = Cuisine.objects.create()
+         dish = Dish.objects.create(cuisine=cuisine, cook=cook)
+         dish_review = Dish_Review.objects.create(dish=dish, customer=customer)
+         self.assertEquals(dish_review.dish.id, dish.id)
+
+    def test_dish_review_customer_relationship(self):
+         customer_user = User.objects.create(username="customer_user", is_customer=True)
+         cook_user= User.objects.create(username="cook_user", is_cook=True)
+         customer = Customer.objects.create(user=customer_user)
+         cook = Cook.objects.create(user=cook_user)
+         cuisine = Cuisine.objects.create()
+         dish = Dish.objects.create(cuisine=cuisine, cook=cook)
+         dish_review = Dish_Review.objects.create(dish=dish, customer=customer)
+         self.assertEquals(dish_review.customer.id, customer.id)
+  
+    def test_dish_description(self):
+        cook_user= User.objects.create(username="cook_user", is_cook=True)
+        customer_user = User.objects.create(username="customer_user", is_customer=True)
+        customer = Customer.objects.create(user=customer_user)
+        cook = Cook.objects.create(user=cook_user)
+        cuisine = Cuisine.objects.create()
+        dish = Dish.objects.create(cuisine=cuisine, cook=cook)
+        dish_review = Dish_Review.objects.create(description="This was a nice dish", dish=dish, customer=customer)
+        self.assertEquals(dish_review.description, "This was a nice dish")
+
+    def test_dish_rating(self):
+        cook_user= User.objects.create(username="cook_user", is_cook=True)
+        customer_user = User.objects.create(username="customer_user", is_customer=True)
+        customer = Customer.objects.create(user=customer_user)
+        cook = Cook.objects.create(user=cook_user)
+        cuisine = Cuisine.objects.create()
+        dish = Dish.objects.create(cuisine=cuisine, cook=cook)
+        dish_review = Dish_Review.objects.create(dish_rating=3, dish=dish, customer=customer)
+        self.assertEquals(dish_review.dish_rating, 3) 
+
+    def test_dish_report_flag(self):
+        cook_user= User.objects.create(username="cook_user", is_cook=True)
+        customer_user = User.objects.create(username="customer_user", is_customer=True)
+        customer = Customer.objects.create(user=customer_user)
+        cook = Cook.objects.create(user=cook_user)
+        cuisine = Cuisine.objects.create()
+        dish = Dish.objects.create(cuisine=cuisine, cook=cook)
+        dish_review = Dish_Review.objects.create(report_flag=True, dish=dish, customer=customer)
+        self.assertEquals(dish_review.report_flag, True) 
+      
 class AddressCreateFormTest(TestCase):
     def test_missing_street(self):
         form = UserEditForm({'street': "",'town': "Charlottesville", 'state':'VA', 'zipcode':22903})
