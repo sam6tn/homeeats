@@ -32,3 +32,16 @@
   font-weight: 500;
   font-size: 1.3em;
 }
+
+/* customer_templates/customer_home.html */
+
+.dish-image-container {
+  background: #cccccc45;
+  display: flex;
+  justify-content: center;
+}
+
+.dish-image {
+  max-width: 100%;
+  height: 10em;
+}
