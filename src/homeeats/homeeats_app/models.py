@@ -106,7 +106,6 @@ class Order(models.Model):
     ]
   status = models.CharField(max_length=1, choices=status_choices, default='p')
   date = models.DateTimeField(auto_now_add=True)
-  delivery_fee = models.DecimalField(default=0, decimal_places=2, max_digits=6) 
 
 class Item(models.Model):
   dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
