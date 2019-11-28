@@ -123,7 +123,7 @@ def addtocart(request):
     'quantity': return_quantity,
     'dish_id': request.POST["dish_id"]
   }
-  return HttpResponseRedirect(reverse('customer_home'))
+  return JsonResponse(data)
 
 
 @login_required
