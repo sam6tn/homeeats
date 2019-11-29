@@ -125,7 +125,6 @@ def addtocart(request):
   }
   return JsonResponse(data)
 
-
 @login_required
 @customer_required
 def toggle_favorite(request):

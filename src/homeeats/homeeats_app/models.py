@@ -88,6 +88,7 @@ class Address(models.Model):
   cook = models.ForeignKey(Cook, on_delete=models.CASCADE, blank=True, null=True)
   customer = models.ForeignKey(Customer, on_delete=models.CASCADE, blank=True, null=True)
   is_cook_address = models.BooleanField(default=False)
+  current_customer_address = models.BooleanField(default=False)
   class Meta:
     verbose_name_plural = "Addresses"
 
