@@ -23,6 +23,62 @@ from django.http import Http404
 
 @login_required
 @customer_required
+def addresses(request):
+  customer = Customer.objects.get(user_id=request.user.id)
+  current_address = Address.objects.get(customer=customer, current_customer_address=True)
+  other_addresses = Address.objects.filter(customer=customer, current_customer_address=False)
+  context = {
+    'current_address': current_address,
+    'other_addresses': other_addresses
+  }
+  return render(request, 'customer_templates/addresses.html', context)
+
+@login_required
+@customer_required
+def change_current_address(request, address_id):
+  customer = Customer.objects.get(user_id=request.user.id)
+  current_address = Address.objects.get(customer=customer, current_customer_address=True)
+  current_address.current_customer_address=False
+  current_address.save()
+  change_address = Address.objects.get(id=address_id)
+  change_address.current_customer_address=True
+  change_address.save()
+  return HttpResponseRedirect(reverse('addresses'))
+
+@login_required
+@customer_required
+def delete_address(request, address_id):
+  customer = Customer.objects.get(user_id=request.user.id) 
+  address = Address.objects.get(id=address_id)
+  if address.customer == customer:
+    address.delete()
+  return HttpResponseRedirect(reverse('addresses'))
+
+@login_required
+@customer_required
+def add_address(request):
+  customer = Customer.objects.get(user_id=request.user.id)
+  if request.method == 'POST':
+      form = forms.AddressCreateForm(request.POST)
+      if form.is_valid():
+        data = form.cleaned_data
+        address = Address.objects.create(
+          street_name=data['street'], 
+          city=data['town'],
+          state=data['state'],
+          zipcode=data['zipcode'],
+          customer=customer
+          )
+        address.save()
+        return HttpResponseRedirect(reverse('addresses'))
+      else:
+        return render(request, 'customer_templates/add_address.html', {'form': form})
+  else:
+    form = forms.AddressCreateForm()
+    return render(request, 'customer_templates/add_address.html', {'form':form})
+
+@login_required
+@customer_required
 def dish(request, dish_id):
     dish = Dish.objects.get(id=dish_id) #get Dish object from dish_id
     customer = Customer.objects.get(user_id=request.user.id)
@@ -272,7 +328,7 @@ def find_nearby_cooks(request):
   customer = get_object_or_404(Customer, user_id=request.user.id)
   cooks = Cook.objects.all()
   cook_addresses = Address.objects.filter(is_cook_address=True)
-  customer_address = Address.objects.get(customer=customer)
+  customer_address = Address.objects.get(customer=customer, current_customer_address=True)
   formatted_cook_addresses = []
   formatted_customer_address = customer_address.street_name.replace(" ", "+") + "+" + customer_address.city + "+" + customer_address.state #format the customer address as a url parameter
   distance_cooks = []

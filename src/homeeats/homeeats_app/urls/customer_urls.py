@@ -15,4 +15,8 @@ urlpatterns = [
   path('favorites/', customer_views.favorites, name='favorites'),
   path('togglefav/', customer_views.toggle_favorite, name='togglefav'),
   path('myaccount/',customer_views.myaccount, name = 'myaccount'), #customer profile page
+  path('addresses', customer_views.addresses, name='addresses'),
+  path('add_address/', customer_views.add_address, name='add_address'),
+  path('change_current_address/<str:address_id>', customer_views.change_current_address, name='change_current_address'),
+  path('delete_address/<str:address_id>', customer_views.delete_address, name='delete_address')
 ]
