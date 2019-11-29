@@ -1,0 +1,43 @@
+{% extends "admin/base_site.html" %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">Home</a>
+&rsaquo; Reported Reviews
+</div>
+{% endblock %}
+
+{% block content %}
+
+<link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet">
+{% if reviews %}
+<div class="container" style="overflow-x:scroll;">
+    <div class="row flex-row flex-nowrap">
+        {% for review in reviews %}
+        <div class="col-3" style="margin-bottom:20px;display:inline-block;">
+            <div class="card">
+                <div class="card-header">{{review.date}}</div>
+                <div class="card-body">
+                    <p>Text: {{review.description}}</p>
+                    <p>Reason: {{review.get_report_reason_display}}</p>
+                    <p>Customer: {{review.customer.user.first_name}} {{review.customer.user.last_name}}</p>
+                    <p>Cook: {{review.dish.cook}}</p>
+
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input name="id" type="hidden" value="{{review.id}}">
+                        <button name="delete" type="submit" class="btn btn-danger">Delete</button>
+                        <button name="allow" type="submit" class="btn btn-success">Allow</button>
+                    </form>
+                    
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<h1>No Reported Reviews</h1>
+{% endif %}
+{% endblock %}
