@@ -15,6 +15,7 @@ from ..decorators import customer_required
 from django.forms import model_to_dict
 from django.views.generic import UpdateView
 from django.urls import reverse_lazy
+from decimal import Decimal
 import urllib.request
 import urllib.parse
 import json
@@ -152,6 +153,9 @@ def addtocart(request):
     shopping_cart = customer.shoppingcart
     shopping_cart.total += dish.price
     shopping_cart.item_subtotal += dish.price
+    shopping_cart.total -= shopping_cart.tax
+    shopping_cart.tax = Decimal(round((.06 * float(shopping_cart.item_subtotal)), 2))
+    shopping_cart.total += shopping_cart.tax
     existing_already = False
     for existing_item in shopping_cart.cartitem_set.all(): 
       if (existing_item.dish == dish): #dish already in cart so add to existing cart item
@@ -225,10 +229,14 @@ def removeItem(request):
   cart = customer.shoppingcart
   cart.total = cart.total - item.subtotal
   cart.item_subtotal = cart.item_subtotal - item.subtotal
+  cart.total -= cart.tax
+  cart.tax = Decimal(round((.06 * float(cart.item_subtotal)), 2))
+  cart.total += cart.tax
   if cart.total == cart.cook.delivery_fee:
     cart.cook_id = None
     cart.empty = True
     cart.total = 0
+    cart.tax = 0
   item.delete()
   cart.save()
   return HttpResponse(202, 'ok')

@@ -119,6 +119,7 @@ class ShoppingCart(models.Model):
   customer = models.OneToOneField(Customer, on_delete=models.CASCADE)
   cook = models.ForeignKey(Cook, on_delete=models.CASCADE, null=True, blank=True)
   item_subtotal = models.DecimalField(default=0, decimal_places=2, max_digits=6)
+  tax = models.DecimalField(default=0, decimal_places=2, max_digits=6)
   total = models.DecimalField(default=0, decimal_places=2, max_digits=6)
   empty = models.BooleanField(default=True)
 
