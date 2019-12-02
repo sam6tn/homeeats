@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from .. import forms
 from .. import models
 from ..models import User, Cook, Order
@@ -130,3 +130,12 @@ def userLogin(request):
 
     form = AuthenticationForm()
     return render(request = request, template_name = "../templates/login.html", context={"form":form})
+
+def reject_order(request):
+  order = Order.objects.get(id=request.POST["order_id"])
+  order.status = 'r'
+  order.save()
+  data={
+    'success':True
+  }
+  return JsonResponse(data)
