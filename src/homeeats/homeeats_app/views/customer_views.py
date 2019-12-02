@@ -266,6 +266,13 @@ def orders(request):
 
 @login_required
 @customer_required
+def cancel_order(request):
+  order = Order.objects.get(id=request.POST["order_id"])
+  order.delete()
+  return HttpResponseRedirect(reverse('orders'))
+
+@login_required
+@customer_required
 def order(request, order_id):
   order = Order.objects.get(id=order_id)
   if request.method == "POST":
