@@ -6,16 +6,19 @@
 {% block breadcrumbs %}
 <div class="breadcrumbs">
 <a href="{% url 'admin:index' %}">Home</a>
-&rsaquo; <a href="{% url 'admin_cooks' %}">Cooks</a>
 &rsaquo; {{cook.user.first_name}} {{cook.user.last_name}}
 </div>
 {% endblock %}
 
 {% block content %}
 
+<script>
+    var splits = {{splits}};
+</script>
+
 
 <div id="content-main">
-    <div class="app-homeeats_app module" style="display:inline-block;margin:20px;">
+    <div class="app-homeeats_app module" style="display:inline-block;margin:10px;vertical-align:top;">
         <table>
         <caption>
             <p class="section">Past Orders for {{cook.user.first_name}} {{cook.user.last_name}}</p>
@@ -23,23 +26,32 @@
         <tr>
             <th>Order Name</th>
             <th>Total</th>
-            <th>Split</th>
+            <th>Our Split</th>
             <th>Date</th>
         </tr>
         {% for order in cook.order_set.all %}
-            {% if order.status == 'd' %}
+            {% if order.status == 'd'%}
             <tr>
                 <td>{{order.name}}</td>
                 <td>{{order.total}}</td>
-                <td>20%</td>
+                <td id="split{{order.id}}"></td>
                 <td>{{order.date}}</td>
             </tr>
+            <script>
+                document.getElementById("split"+'{{order.id}}').innerHTML = splits[{{order.id}}];
+            </script>
             {% endif %}
         {% endfor %}
+        <tr>
+            <th></th>
+            <th>{{total}}</th>
+            <th>{{total_split}}</th>
+            <th></th>
+        </tr>
         </table>
     </div>
     
-    <div class="app-homeeats_app module" style="display:inline-block;margin:20px;">
+    <div class="app-homeeats_app module" style="display:inline-block;margin:10px;vertical-align:top;">
         <table>
         <caption>
             <p class="section">Rejected Orders for {{cook.user.first_name}} {{cook.user.last_name}}</p>

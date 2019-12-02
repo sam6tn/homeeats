@@ -24,6 +24,7 @@
 {% endif %}
 
 {% block content %}<div id="content-main">
+<a href="{% url 'admin_cook' original.id %}">View Order History</a>
 {% block object-tools %}
 {% if change %}{% if not is_popup %}
   <ul class="object-tools">
@@ -76,21 +77,6 @@
             {% endif %}>
     </script>
 {% endblock %}
-
-<table>
-    <tr>
-        <th>Order Name</th>
-        <th>Customer</th>
-        <th>Total</th>
-    </tr>
-    {% for order in original.order_set.all %}
-    <tr>
-        <td>{{order.name}}</td>
-        <td>{{order.customer.first_name}} {{order.customer.first_name}}</td>
-        <td>${{order.total}}</td>
-    </tr>
-    {% endfor %}
-</table>
 
 {# JavaScript for prepopulated fields #}
 {% prepopulated_fields_js %}

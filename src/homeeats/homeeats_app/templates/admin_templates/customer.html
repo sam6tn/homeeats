@@ -3,7 +3,6 @@
 {% block breadcrumbs %}
 <div class="breadcrumbs">
 <a href="{% url 'admin:index' %}">Home</a>
-&rsaquo; <a href="{% url 'admin_customers' %}">Customers</a>
 &rsaquo; {{customer.user.first_name}} {{customer.user.last_name}}
 </div>
 {% endblock %}

@@ -9,17 +9,24 @@ def cookApplications(request):
     pending_cooks = Cook.objects.filter(approved=False)
     return render(request,'admin_templates/cook_applications.html', {'cooks':pending_cooks})
 
-def cooks(request):
-    cooks = Cook.objects.all()
-    return render(request,'admin_templates/cooks.html', {'cooks':cooks})
+# def cooks(request):
+#     cooks = Cook.objects.all()
+#     return render(request,'admin_templates/cooks.html', {'cooks':cooks})
 
 def cook(request,cook_id):
     cook = Cook.objects.get(id=cook_id)
-    return render(request, 'admin_templates/cook.html', {'cook':cook})
+    splits = {}
+    for order in cook.order_set.all():
+        splits[order.id] = float("{0:.2f}".format(float(order.total) * 0.2))
+    total = 0
+    for order in cook.order_set.filter(status="d"):
+        total += order.total
+    total_split = float("{0:.2f}".format(float(total) * 0.2))
+    return render(request, 'admin_templates/cook.html', {'cook':cook,'splits':splits,'total':total,'total_split':total_split})
 
-def customers(request):
-    customers = Customer.objects.all()
-    return render(request, 'admin_templates/customers.html', {'customers':customers})
+# def customers(request):
+#     customers = Customer.objects.all()
+#     return render(request, 'admin_templates/customers.html', {'customers':customers})
 
 def customer(request,customer_id):
     customer = Customer.objects.get(id=customer_id)
