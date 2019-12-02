@@ -323,6 +323,9 @@ def checkout(request):
     item.delete() #delete item from CartItem
   shopping_cart.empty = True #set shopping cart back to empty
   shopping_cart.total = 0 #clear total for shopping cart
+  shopping_cart.item_subtotal = 0
+  shopping_cart.tax = 0
+  
   shopping_cart.save()
   return HttpResponseRedirect(reverse('customer_home'))
 
