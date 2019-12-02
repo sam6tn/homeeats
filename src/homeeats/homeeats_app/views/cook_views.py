@@ -30,12 +30,12 @@ def home(request):
   cook = model_to_dict(get_object_or_404(Cook, user_id=request.user.id))
   pending_orders = []
   in_progress_orders = []
-  pending_deadline = datetime.datetime.now()
+  deadline = datetime.datetime.now()
   for order in orders:
     if order['status'] == 'p':
+      print(order)
       pending_orders.append(order)
-      pending_deadline = order.pending_deadline
-      print("pending!")
+      deadline = order['pending_deadline']
     elif order['status'] == 'o' or order['status'] == 'c':
       in_progress_orders.append(order)
 
@@ -46,7 +46,7 @@ def home(request):
     'pending_orders': pending_orders,
     'in_progress_orders': in_progress_orders,
     'cook': cook,
-    'deadline': pending_deadline
+    'deadline': deadline
   }
   return render(request, 'cook_templates/cook_home.html', context)
 
