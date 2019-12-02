@@ -9,7 +9,6 @@ from django.forms import model_to_dict
 from django.contrib.auth.decorators import login_required
 from ..decorators import cook_required
 from django.contrib import messages
-from datetime import datetime
 import datetime
 from django.template.defaulttags import register
 
@@ -208,7 +207,8 @@ def completed_delivery(request, order_id):
   change_order_status('o', 'd', request, order_id)
   order = Order.objects.get(id=order_id)
   if (order.status == 'd'):
-    order.actual_arrival_time = datetime.now()
+    order.actual_arrival_time = datetime.datetime.now()
+    order.save()
   return HttpResponseRedirect(reverse('cook_home'))
 
 #helper method to change a status from previous to new
