@@ -187,7 +187,11 @@
                                 <p class="card-text">Placed {{order.date}}</p>
                             </div>
                             <div class="card-footer">
-                                <p class= "card-text font-weight-bold text-success">  Delivered: {{order.actual_arrival_time.time}}  </p>
+                                {% if order.status == "d" %}
+                                <p class= "card-text font-weight-bold text-success">  Delivered: {{order.actual_arrival_time.time}} </p>
+                                {% else %}
+                                <p class= "card-text font-weight-bold text-danger">Rejected</p>
+                                {% endif %}
                             </div>
                         </div>
             </div>
