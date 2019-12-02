@@ -330,11 +330,28 @@ def checkout(request):
   shopping_cart.item_subtotal = 0
   shopping_cart.tax = 0
   shopping_cart.save()
-  time = 5 + max_cook_time
+  cook_address = Address.objects.get(cook=shopping_cart.cook)
+  customer_address = Address.objects.get(customer=customer, current_customer_address=True)
+  time = 5 + max_cook_time + round(int(get_delivery_time(cook_address, customer_address)) / 60)
   order.estimated_arrival_time = order.date + timedelta(minutes=time)
   order.save()
 
   return HttpResponseRedirect(reverse('customer_home'))
+
+#get the time to travel from cook_address to customer_address
+def get_delivery_time(cook_address, customer_address):
+  origin = cook_address.street_name #format the cook_address as a url parameter
+  origin = origin.replace(" ", "+")
+  origin = origin + "+" + cook_address.city + "+" + cook_address.state
+  destination = customer_address.street_name #format the cook_address as a url parameter
+  destination = destination.replace(" ", "+")
+  destination = destination + "+" + customer_address.city + "+" + customer_address.state
+
+  req = urllib.request.Request('https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=' + origin + '&destinations=' + destination + '&key=AIzaSyCPqdytEpfi1zIU4dj8B3KddX8-b6OPJoM')
+  resp_json = urllib.request.urlopen(req, context=ssl.SSLContext()).read().decode('utf-8')
+  resp = json.loads(resp_json)
+
+  return resp['rows'][0]['elements'][0]['duration']['value']
 
 #get the distance between origin and destination using google maps api
 def get_distance(origin, destination):
