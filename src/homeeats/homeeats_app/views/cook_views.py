@@ -9,7 +9,7 @@ from django.forms import model_to_dict
 from django.contrib.auth.decorators import login_required
 from ..decorators import cook_required
 from django.contrib import messages
-import datetime
+from datetime import datetime
 
 #cook home page after login
 @login_required
@@ -30,7 +30,7 @@ def home(request):
   cook = model_to_dict(get_object_or_404(Cook, user_id=request.user.id))
   pending_orders = []
   in_progress_orders = []
-  deadline = datetime.datetime.now()
+  deadline = datetime.now()
   for order in orders:
     if order['status'] == 'p':
       print(order)
@@ -199,6 +199,9 @@ def cooking_to_delivery(request, order_id):
 @cook_required
 def completed_delivery(request, order_id):
   change_order_status('o', 'd', request, order_id)
+  order = Order.objects.get(id=order_id)
+  if (order.status == 'd'):
+    order.actual_arrival_time = datetime.now()
   return HttpResponseRedirect(reverse('cook_home'))
 
 #helper method to change a status from previous to new

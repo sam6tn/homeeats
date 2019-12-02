@@ -16,6 +16,7 @@ from django.forms import model_to_dict
 from django.views.generic import UpdateView
 from django.urls import reverse_lazy
 from decimal import Decimal
+from datetime import timedelta
 import urllib.request
 import urllib.parse
 import json
@@ -311,8 +312,11 @@ def checkout(request):
     total = shopping_cart.total
   )
   order.save()
+  max_cook_time = 0
   for item in cart_items: #for each CartItem in shopping cart
     dish = Dish.objects.get(id=item.dish_id)
+    if dish.cook_time > max_cook_time:
+      max_cook_time = dish.cook_time
     order_item = Item.objects.create( #create an Item for order with stuff from shopping cart
       dish = dish,
       quantity = item.quantity,
@@ -325,8 +329,11 @@ def checkout(request):
   shopping_cart.total = 0 #clear total for shopping cart
   shopping_cart.item_subtotal = 0
   shopping_cart.tax = 0
-  
   shopping_cart.save()
+  time = 5 + max_cook_time
+  order.estimated_arrival_time = order.date + timedelta(minutes=time)
+  order.save()
+
   return HttpResponseRedirect(reverse('customer_home'))
 
 #get the distance between origin and destination using google maps api

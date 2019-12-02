@@ -111,6 +111,8 @@ class Order(models.Model):
     ]
   status = models.CharField(max_length=1, choices=status_choices, default='p')
   date = models.DateTimeField(auto_now_add=True)
+  estimated_arrival_time = models.DateTimeField(null=True, blank=True)
+  actual_arrival_time = models.DateTimeField(null=True, blank=True)
   pending_deadline = models.DateTimeField(default=calculateTime)
 
 class Item(models.Model):

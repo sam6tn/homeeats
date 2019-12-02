@@ -80,13 +80,22 @@
             <div class="col-3" style="margin-bottom:20px;display:inline-block;">
                 <div class="card">
                     <h5 class="card-header">
-                        <a href="{% url 'order' order.id %}">{{order.name}}</a>
+                        <a href="{% url 'order' order.id %}">Order #{{order.id}}</a>
                     </h5>
                     <div class="card-body">
-                        <p>Cook: {{order.cook.user.first_name}} {{order.cook.user.last_name}}</p>
-                        <p>${{order.total}}</p>
-                        <p>Status: {{order.status}}</p>
-                        <p>{{order.date}}</p>
+                        <p class="card-title">Cook: {{order.cook.user.first_name}} {{order.cook.user.last_name}}</p>
+                        <p class="card-text">Total: ${{order.total}}</p>
+                        {% if order.status == 'p' %}
+                        <p class="card-text">Order Pending</p>
+                        {% elif order.status == 'c' %}
+                        <p class="card-text">Order Cooking</p>
+                        {% elif order.status == 'o' %}
+                        <p class="card-text">Out for Delivery</p>
+                        {% endif %}
+                        <p class="card-text">Placed {{order.date}}</p>
+                    </div>
+                    <div class="card-footer">
+                        <p class= "card-text font-weight-bold text-success">  ETA: {{order.estimated_arrival_time}}  </p>
                     </div>
                 </div>
             </div>
@@ -103,18 +112,19 @@
     <div class="row flex-row flex-nowrap">
         {% for order in past_orders%}
             <div class="col-3" style="margin-bottom:20px;display:inline-block;">
-                <div class="card">
-                    <h5 class="card-header">
-                        <a href="{% url 'order' order.id %}">{{order.name}}</a>
-                    </h5>
-                    <div class="card-body">
-                        <p>Cook: {{order.cook.user.first_name}} {{order.cook.user.last_name}}</p>
-                        <p>${{order.total}}</p>
-                        <p>Status: {{order.status}}</p>
-                        <p>{{order.date}}</p>
-                    </div>
-                    
-                </div>
+                    <div class="card">
+                            <h5 class="card-header">
+                                <a href="{% url 'order' order.id %}">Order #{{order.id}}</a>
+                            </h5>
+                            <div class="card-body">
+                                <p class="card-title">Cook: {{order.cook.user.first_name}} {{order.cook.user.last_name}}</p>
+                                <p class="card-text">Total: ${{order.total}}</p>
+                                <p class="card-text">Placed {{order.date}}</p>
+                            </div>
+                            <div class="card-footer">
+                                <p class= "card-text font-weight-bold text-success">  Delivered: {{order.actual_arrival_time}}  </p>
+                            </div>
+                        </div>
             </div>
         {% endfor %}
     </div>
