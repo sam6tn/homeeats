@@ -13,7 +13,7 @@
                 <form method="POST" action="{% url 'addtocart' %}" style="display:inline">
                     {% csrf_token %}  
                     <input name="dish_id" type="hidden" value="{{dish.id}}">
-                    <button class='btn btn-success' type="submit">Add to order</button>
+                    <button name="dishbtn" class='btn btn-success' type="submit">Add to order</button>
                 </form>
             </h1>
             <h4>{{dish.description}} </h4>
