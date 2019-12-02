@@ -9,6 +9,7 @@ from django.forms import model_to_dict
 from django.contrib.auth.decorators import login_required
 from ..decorators import cook_required
 from django.contrib import messages
+import datetime
 
 #cook home page after login
 @login_required
@@ -29,15 +30,23 @@ def home(request):
   cook = model_to_dict(get_object_or_404(Cook, user_id=request.user.id))
   pending_orders = []
   in_progress_orders = []
+  deadline = datetime.datetime.now()
   for order in orders:
     if order['status'] == 'p':
+      print(order)
       pending_orders.append(order)
+      deadline = order['pending_deadline']
     elif order['status'] == 'o' or order['status'] == 'c':
       in_progress_orders.append(order)
+
+  #test timer crap
+  # deadline = datetime.datetime.now() + datetime.timedelta(minutes=5)
+
   context = {
     'pending_orders': pending_orders,
     'in_progress_orders': in_progress_orders,
-    'cook': cook
+    'cook': cook,
+    'deadline': deadline
   }
   return render(request, 'cook_templates/cook_home.html', context)
 
