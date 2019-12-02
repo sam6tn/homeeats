@@ -25,7 +25,29 @@
             <p class="card-text font-weight-bold text-secondary">Phone: {{customer.phone_number}}</p>
         </div>
     </div>
+    <span id="timer"><span id="minutes"></span>:<span id="seconds"></span></span>
 </div>
+
+<script>
+    let timezonefix = new Date("{{order.pending_deadline.isoformat}}");
+    let deadline = new Date(timezonefix.getTime() + 5*3600000);
+    console.log("Deadline:",deadline);
+    var interval = setInterval(function() { 
+        let now = new Date(Date.now());
+        let timeLeft = deadline-now;
+        let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60)); 
+        let seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+        if (seconds < 10){
+            seconds = '0'+seconds;
+        }
+        document.getElementById("minutes").innerHTML = minutes;
+        document.getElementById("seconds").innerHTML = seconds;
+        if (timeLeft < 0) { 
+            clearInterval(interval); 
+            document.getElementById("timer").innerHTML = "EXPIRED"; 
+        } 
+    }, 1000);
+</script>
 
 
 
