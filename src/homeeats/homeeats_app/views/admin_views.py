@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from ..models import Cook, Customer
+from ..models import Cook, Customer, Dish_Review
 
 def cookApplications(request):
     if request.method == 'POST':
@@ -27,3 +27,15 @@ def customer(request,customer_id):
     for order in customer.order_set.all():
         cook_totals.append(str(order.total*4/5))
     return render(request, 'admin_templates/customer.html', {'customer':customer,'cook_totals':cook_totals})
+
+def reportedreviews(request):
+    reviews = Dish_Review.objects.filter(report_flag=True)
+    if request.method == "POST":
+        review = Dish_Review.objects.get(id=request.POST["id"])
+        print(request.POST)
+        if 'delete' in request.POST:
+            review.delete()
+        elif 'allow' in request.POST:
+            review.report_flag = False
+            review.save()
+    return render(request, 'admin_templates/reportedreviews.html', {'reviews':reviews})

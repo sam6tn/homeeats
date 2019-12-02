@@ -25,6 +25,7 @@ urlpatterns = [
     path('admin/cooks/<int:cook_id>/', admin_views.cook, name='admin_cook'),
     path('admin/customers/', admin_views.customers, name='admin_customers'),
     path('admin/customers/<int:customer_id>', admin_views.customer, name='admin_customer'),
+    path('admin/reviews/reported/', admin_views.reportedreviews, name='admin_reportedreviews'),
     path('admin/', admin.site.urls),
     path('', include('homeeats_app.urls.main_urls')),
     path('cook/', include('homeeats_app.urls.cook_urls')),
