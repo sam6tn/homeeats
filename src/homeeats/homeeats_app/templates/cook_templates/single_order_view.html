@@ -4,6 +4,12 @@
 {% block title %}Home{% endblock %}
 {% block pagecontent %}
 
+<script
+    src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+    crossorigin="anonymous">
+</script>
+
 <div class="container mt-2">
     <h2>Items in Order #{{order.id}}</h2>
     <ul class="list-group list-group-horizontal">
@@ -25,12 +31,13 @@
             <p class="card-text font-weight-bold text-secondary">Phone: {{customer.phone_number}}</p>
         </div>
     </div>
-    <span id="timer"><span id="minutes"></span>:<span id="seconds"></span></span>
+    <!-- <span id="timer"><span id="minutes"></span>:<span id="seconds"></span></span> -->
 </div>
 
-<script>
-    let timezonefix = new Date("{{order.pending_deadline.isoformat}}");
-    let deadline = new Date(timezonefix.getTime() + 5*3600000);
+<!-- <script>
+    // let timezonefix = new Date("{{order.pending_deadline.isoformat}}");
+    // let deadline = new Date(timezonefix.getTime() + 5*3600000);
+    let deadline = new Date({{ order.pending_deadline|date:"U" }} * 1000);
     console.log("Deadline:",deadline);
     var interval = setInterval(function() { 
         let now = new Date(Date.now());
@@ -44,10 +51,22 @@
         document.getElementById("seconds").innerHTML = seconds;
         if (timeLeft < 0) { 
             clearInterval(interval); 
-            document.getElementById("timer").innerHTML = "EXPIRED"; 
+            document.getElementById("timer").innerHTML = "EXPIRED";
+            $.ajax({
+                type: "POST",
+                url: "{% url 'reject_order' %}",
+                data: {
+                'order_id': '{{order.id}}',
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                dataType: 'json',
+                success: function (data) {
+                    console.log("success");
+                }
+            });
         } 
     }, 1000);
-</script>
+</script> -->
 
 
 

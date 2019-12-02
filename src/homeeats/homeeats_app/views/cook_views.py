@@ -10,6 +10,9 @@ from django.contrib.auth.decorators import login_required
 from ..decorators import cook_required
 from django.contrib import messages
 from datetime import datetime
+import datetime
+from django.template.defaulttags import register
+
 
 #cook home page after login
 @login_required
@@ -30,25 +33,29 @@ def home(request):
   cook = model_to_dict(get_object_or_404(Cook, user_id=request.user.id))
   pending_orders = []
   in_progress_orders = []
-  deadline = datetime.now()
+  deadlines = {}
   for order in orders:
     if order['status'] == 'p':
       print(order)
       pending_orders.append(order)
-      deadline = order['pending_deadline']
+      deadlines[order['id']] = order['pending_deadline']
     elif order['status'] == 'o' or order['status'] == 'c':
       in_progress_orders.append(order)
 
   #test timer crap
   # deadline = datetime.datetime.now() + datetime.timedelta(minutes=5)
-
+  print(deadlines)
   context = {
     'pending_orders': pending_orders,
     'in_progress_orders': in_progress_orders,
     'cook': cook,
-    'deadline': deadline
+    'deadlines': deadlines
   }
   return render(request, 'cook_templates/cook_home.html', context)
+
+@register.filter
+def getvalue(d, key):
+    return d.get(key)
 
 @login_required
 @cook_required
