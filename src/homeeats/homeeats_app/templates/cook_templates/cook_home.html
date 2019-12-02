@@ -4,6 +4,12 @@
 {% block title %}Home{% endblock %}
 {% block pagecontent %}
 
+<script
+    src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+    crossorigin="anonymous">
+</script>
+
 {% if cook.online == True %}
 
 {% if messages %}
@@ -21,12 +27,17 @@
 </ul>
 {% endif %}
 
+<script>
+    var intervals = {};
+    var deadlines = {};
+</script>
+
 <div class="container mt-2">
     <h4>Pending Orders 
     </h4>
     {% if pending_orders %}
     <ul class="list-group list-group-horizontal">
-            {% for order in pending_orders %}
+        {% for order in pending_orders %}
         <div class="card justify-content-between m-2" style="width: 16rem;">
             <h5 class="card-header">
                 <a href="{% url 'single_order_view' order.id %}">{{order.name}}</a>
@@ -36,11 +47,49 @@
                 <p class="card-text font-weight-bold text-secondary">Total: ${{order.total}}</p>
             </div>
             <div class="card-footer text-center">
-                    <!-- <span id="timer"><span id="minutes"></span>:<span id="seconds"></span></span> -->
+                    <span id="timer{{order.id}}"><span id="minutes{{order.id}}"></span>:<span id="seconds{{order.id}}"></span></span>
                     <a href="{% url 'accept_order' order.id %}"><button type="button" class="btn btn-success btn-sm">Accept</button></a>
                     <a href="{% url 'reject_order' order.id %}"><button type="button" class="btn btn-danger btn-sm">Reject</button></a>
             </div>
         </div>
+        <script>
+            {% with id=order.id %}
+            deadlines["{{order.id}}"] = new Date({{ deadlines|getvalue:id|date:"U" }} * 1000 + 5 *3600000);
+            console.log("Deadline:",deadlines["{{order.id}}"]);
+            intervals["{{order.id}}"] = setInterval(function() { 
+                let now = new Date(Date.now());
+                console.log(now);
+                let timeLeft = deadlines["{{order.id}}"]-now;
+                console.log("Time left",timeLeft);
+                let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60)); 
+                let seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                if (seconds < 10){
+                    seconds = '0'+seconds;
+                }
+                let minutesDiv = "minutes"+'{{order.id}}';
+                let secondsDiv = "seconds"+'{{order.id}}';
+                let timerDiv = "timer"+'{{order.id}}';
+                document.getElementById(minutesDiv).innerHTML = minutes;
+                document.getElementById(secondsDiv).innerHTML = seconds;
+                if (timeLeft < 0) { 
+                    clearInterval(intervals["{{order.id}}"]); 
+                    document.getElementById(timerDiv).innerHTML = "EXPIRED";
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url 'reject_order' %}",
+                        data: {
+                        'order_id': '{{order.id}}',
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                        },
+                        dataType: 'json',
+                        success: function (data) {
+                            console.log("success");
+                        }
+                    }); 
+                } 
+                {% endwith %}
+            }, 1000);
+        </script>
         {% endfor %}
     </ul>
 
@@ -109,27 +158,6 @@
         </div>
     </div>
 {% endif %}
-
-<!-- <script>
-    let timezonefix = new Date("{{deadline.isoformat}}");
-    let deadline = new Date(timezonefix.getTime() + 5*3600000);
-    console.log("Deadline:",deadline);
-    var interval = setInterval(function() { 
-        let now = new Date(Date.now());
-        let timeLeft = deadline-now;
-        let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60)); 
-        let seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-        if (seconds < 10){
-            seconds = '0'+seconds;
-        }
-        document.getElementById("minutes").innerHTML = minutes;
-        document.getElementById("seconds").innerHTML = seconds;
-        if (timeLeft < 0) { 
-            clearInterval(interval); 
-            document.getElementById("timer").innerHTML = "EXPIRED"; 
-        } 
-    }, 1000);
-</script> -->
 
 
 {% endblock %}
