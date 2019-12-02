@@ -47,7 +47,7 @@
                 <p class="card-text font-weight-bold text-secondary">Total: ${{order.total}}</p>
             </div>
             <div class="card-footer text-center">
-                    <span id="timer{{order.id}}"><span id="minutes{{order.id}}"></span>:<span id="seconds{{order.id}}"></span></span>
+                    <span id="timer{{order.id}}"><span id="hours{{order.id}}"></span><span id="hoursColon{{order.id}}">:</span><span id="minutes{{order.id}}"></span>:<span id="seconds{{order.id}}"></span></span>
                     <a href="{% url 'accept_order' order.id %}"><button type="button" class="btn btn-success btn-sm">Accept</button></a>
                     <a href="{% url 'reject_order' order.id %}"><button type="button" class="btn btn-danger btn-sm">Reject</button></a>
             </div>
@@ -61,14 +61,27 @@
                 console.log(now);
                 let timeLeft = deadlines["{{order.id}}"]-now;
                 console.log("Time left",timeLeft);
+                let hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60)); 
                 let seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-                if (seconds < 10){
-                    seconds = '0'+seconds;
-                }
+                
+                let hoursColonDiv = "hoursColon"+'{{order.id}}';
+                let hoursDiv = "hours"+'{{order.id}}';
                 let minutesDiv = "minutes"+'{{order.id}}';
                 let secondsDiv = "seconds"+'{{order.id}}';
                 let timerDiv = "timer"+'{{order.id}}';
+
+                if (seconds < 10){
+                    seconds = '0'+seconds;
+                }
+                if (hours == 0){
+                    document.getElementById(hoursDiv).innerHTML = "";
+                    document.getElementById(hoursColonDiv).innerHTML = "";
+                }
+                else{
+                    document.getElementById(hoursDiv).innerHTML = hours;
+                }
+
                 document.getElementById(minutesDiv).innerHTML = minutes;
                 document.getElementById(secondsDiv).innerHTML = seconds;
                 if (timeLeft < 0) { 

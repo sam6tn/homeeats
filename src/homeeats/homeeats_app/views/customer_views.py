@@ -22,6 +22,8 @@ import urllib.parse
 import json
 import ssl
 from django.http import Http404
+from django.template.defaulttags import register
+
 
 @login_required
 @customer_required
@@ -245,6 +247,10 @@ def removeItem(request):
   cart.save()
   return HttpResponse(202, 'ok')
 
+@register.filter
+def getvalue(d, key):
+    return d.get(key)
+
 @login_required
 @customer_required
 def orders(request):
@@ -252,7 +258,11 @@ def orders(request):
   orders = customer.order_set.all()
   current_orders = customer.order_set.filter(Q(status='p') | Q(status='c') | Q(status='o'))
   past_orders = customer.order_set.filter(Q(status='d') | Q(status='r'))
-  return render(request, 'customer_templates/orders.html', {'current_orders':current_orders,'past_orders':past_orders})
+  deadlines = {}
+  for order in current_orders:
+    if order.status == 'p':
+      deadlines[order.id] = order.pending_deadline
+  return render(request, 'customer_templates/orders.html', {'current_orders':current_orders,'past_orders':past_orders,'deadlines':deadlines})
 
 @login_required
 @customer_required

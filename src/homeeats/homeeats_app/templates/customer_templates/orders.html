@@ -71,6 +71,11 @@
     </div>
 </nav>
 
+<script>
+    var intervals = {};
+    var deadlines = {};
+</script>
+
 
 {% if current_orders%}
 <h2 style="margin-left:60px">Current Orders</h2>
@@ -86,7 +91,60 @@
                         <p class="card-title">Cook: {{order.cook.user.first_name}} {{order.cook.user.last_name}}</p>
                         <p class="card-text">Total: ${{order.total}}</p>
                         {% if order.status == 'p' %}
-                        <p class="card-text">Order Pending</p>
+                        <span class="card-text">Order Pending </span>
+                        <span id="timer{{order.id}}"><span id="hours{{order.id}}"></span><span id="hoursColon{{order.id}}">:</span><span id="minutes{{order.id}}"></span>:<span id="seconds{{order.id}}"></span></span>
+                        <br></br>
+                        <script>
+                            {% with id=order.id %}
+                            deadlines["{{order.id}}"] = new Date({{ deadlines|getvalue:id|date:"U" }} * 1000 + 5 *3600000);
+                            console.log("Deadline:",deadlines["{{order.id}}"]);
+                            intervals["{{order.id}}"] = setInterval(function() { 
+                                let now = new Date(Date.now());
+                                console.log(now);
+                                let timeLeft = deadlines["{{order.id}}"]-now;
+                                console.log("Time left",timeLeft);
+                                let hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60)); 
+                                let seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                                
+                                let hoursColonDiv = "hoursColon"+'{{order.id}}';
+                                let hoursDiv = "hours"+'{{order.id}}';
+                                let minutesDiv = "minutes"+'{{order.id}}';
+                                let secondsDiv = "seconds"+'{{order.id}}';
+                                let timerDiv = "timer"+'{{order.id}}';
+                
+                                if (seconds < 10){
+                                    seconds = '0'+seconds;
+                                }
+                                if (hours == 0){
+                                    document.getElementById(hoursDiv).innerHTML = "";
+                                    document.getElementById(hoursColonDiv).innerHTML = "";
+                                }
+                                else{
+                                    document.getElementById(hoursDiv).innerHTML = hours;
+                                }
+                
+                                document.getElementById(minutesDiv).innerHTML = minutes;
+                                document.getElementById(secondsDiv).innerHTML = seconds;
+                                if (timeLeft < 0) { 
+                                    clearInterval(intervals["{{order.id}}"]); 
+                                    document.getElementById(timerDiv).innerHTML = "EXPIRED";
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "{% url 'reject_order' %}",
+                                        data: {
+                                        'order_id': '{{order.id}}',
+                                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                                        },
+                                        dataType: 'json',
+                                        success: function (data) {
+                                            console.log("success");
+                                        }
+                                    }); 
+                                } 
+                            }, 1000);
+                            {% endwith %}
+                        </script>
                         {% elif order.status == 'c' %}
                         <p class="card-text">Order Cooking</p>
                         {% elif order.status == 'o' %}
