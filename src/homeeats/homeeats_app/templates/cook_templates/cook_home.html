@@ -36,6 +36,7 @@
                 <p class="card-text font-weight-bold text-secondary">Total: ${{order.total}}</p>
             </div>
             <div class="card-footer text-center">
+                    <span id="timer"><span id="minutes"></span>:<span id="seconds"></span></span>
                     <a href="{% url 'accept_order' order.id %}"><button type="button" class="btn btn-success btn-sm">Accept</button></a>
                     <a href="{% url 'reject_order' order.id %}"><button type="button" class="btn btn-danger btn-sm">Reject</button></a>
             </div>
@@ -108,4 +109,26 @@
         </div>
     </div>
 {% endif %}
+
+<script>
+    // var deadline = new Date(Date.now() + 5 * 60000);
+    var deadline = new Date("{{deadline.isoformat}}");
+    var interval = setInterval(function() { 
+        var now = new Date(Date.now());
+        var timeLeft = deadline-now;
+        var minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60)); 
+        var seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+        if (seconds < 10){
+            seconds = '0'+seconds;
+        }
+        if (timeLeft < 0) { 
+            clearInterval(interval); 
+            document.getElementById("timer").innerHTML = "EXPIRED"; 
+        } 
+        document.getElementById("minutes").innerHTML = minutes;
+        document.getElementById("seconds").innerHTML = seconds;
+    }, 1000);
+</script>
+
+
 {% endblock %}

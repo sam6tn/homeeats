@@ -6,6 +6,7 @@ from django.dispatch import receiver
 from .managers import CustomUserManager
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.postgres.fields import ArrayField
+import datetime
 
 class User(AbstractUser):
   is_cook = models.BooleanField(default=False)
@@ -92,6 +93,9 @@ class Address(models.Model):
   class Meta:
     verbose_name_plural = "Addresses"
 
+def calculateTime():
+  return datetime.datetime.now() + datetime.timedelta(minutes=5)
+
 class Order(models.Model):
   name = models.CharField(max_length=60, default="") #make it first name <space> last name of customer
   customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
@@ -107,6 +111,7 @@ class Order(models.Model):
     ]
   status = models.CharField(max_length=1, choices=status_choices, default='p')
   date = models.DateTimeField(auto_now_add=True)
+  pending_deadline = models.DateTimeField(default=calculateTime)
 
 class Item(models.Model):
   dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
