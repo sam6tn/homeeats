@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from .. import forms
 from .. import models
-from ..models import User, Cook, Order
+from ..models import User, Cook, Order, Customer
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.template import loader
@@ -129,7 +129,7 @@ def userLogin(request):
                   return redirect('/')
                 else:
                   # If it is not a cook then we know its a customer
-                  customer = models.custoemr.objects.get(user=user)
+                  customer = Customer.objects.get(user=user)
                   if (customer.banned):
                     messages.add_message(request, messages.ERROR, 'You are currently banned from this site, please contact an administrator')
                     return redirect('/')
