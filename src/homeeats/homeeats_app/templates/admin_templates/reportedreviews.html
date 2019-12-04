@@ -15,7 +15,7 @@ integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw
 <div class="container" style="overflow-x:scroll;">
     <div class="row flex-row flex-nowrap">
         {% for review in reviews %}
-        <div class="col-3" style="margin-bottom:20px;display:inline-block;">
+        <div class="col-4" style="margin-bottom:20px;display:inline-block;">
             <div class="card">
                 <div class="card-header">{{review.date}}</div>
                 <div class="card-body">
@@ -27,7 +27,8 @@ integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw
                     <form method="POST">
                         {% csrf_token %}
                         <input name="id" type="hidden" value="{{review.id}}">
-                        <button name="delete" type="submit" class="btn btn-danger">Delete</button>
+                        <button name="ban" type="submit" class="btn btn-danger">Ban/Delete</button>
+                        <button name="delete" type="submit" class="btn btn-warning">Delete</button>
                         <button name="allow" type="submit" class="btn btn-success">Allow</button>
                     </form>
                     
