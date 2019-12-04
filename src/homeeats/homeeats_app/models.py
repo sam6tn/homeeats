@@ -16,6 +16,7 @@ class User(AbstractUser):
 Columns in the cook database table
 '''
 class Cook(models.Model):
+  banned = models.BooleanField(default=False)
   approved = models.BooleanField(default=False)
   online = models.BooleanField(default=False)
   kitchen_license = models.CharField(max_length=30)
@@ -53,6 +54,7 @@ class Dish(models.Model):
     verbose_name_plural = "Dishes"
 
 class Customer(models.Model):
+  banned = models.BooleanField(default=False)
   phone_number = models.CharField(max_length=30, default="")
   user = models.OneToOneField(User, on_delete=models.CASCADE)
   favorites = models.ManyToManyField(Dish, blank=True)
@@ -94,6 +96,9 @@ class Address(models.Model):
 def calculateTime():
   return datetime.datetime.now() + datetime.timedelta(minutes=5)
 
+class RejectReason(models.Model):
+  reason = models.CharField(max_length=60, default="")
+
 class Order(models.Model):
   name = models.CharField(max_length=60, default="") #make it first name <space> last name of customer
   customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
@@ -105,13 +110,15 @@ class Order(models.Model):
         ('c', 'Cooking'),
         ('o', 'Out For Delivery'),
         ('d', 'Delivered'),
-        ('r', 'Rejected')
+        ('r', 'Rejected'),
+        ('x', 'Customer Canceled')
     ]
   status = models.CharField(max_length=1, choices=status_choices, default='p')
   date = models.DateTimeField(auto_now_add=True)
   estimated_arrival_time = models.DateTimeField(null=True, blank=True)
   actual_arrival_time = models.DateTimeField(null=True, blank=True)
   pending_deadline = models.DateTimeField(default=calculateTime)
+  reject_reason = models.ForeignKey(RejectReason, on_delete=models.CASCADE, null=True, blank=True)
 
 class Item(models.Model):
   dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
