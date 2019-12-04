@@ -346,7 +346,11 @@ def checkout(request):
     cook = order_cook,
     customer = customer,
     status = 'p',
-    total = shopping_cart.total
+    total = shopping_cart.total,
+    item_subtotal = shopping_cart.item_subtotal,
+    tax = shopping_cart.tax,
+    delivery_fee = order_cook.delivery_fee,
+    tip = shopping_cart.tip
   )
   order.save()
   max_cook_time = 0
