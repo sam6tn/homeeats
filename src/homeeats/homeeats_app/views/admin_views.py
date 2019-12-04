@@ -52,6 +52,12 @@ def reportedreviews(request):
         print(request.POST)
         if 'delete' in request.POST:
             review.delete()
+        elif 'ban' in request.POST:
+            customer = Customer.objects.get(id=review.customer.id)
+            print(customer)
+            customer.banned = True
+            customer.save()
+            review.delete()
         elif 'allow' in request.POST:
             review.report_flag = False
             review.save()
