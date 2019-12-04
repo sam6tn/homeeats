@@ -129,7 +129,7 @@ def userLogin(request):
                   return redirect('/')
                 else:
                   # If it is not a cook then we know its a customer
-                  customer = models.custoemr.objects.get(user=user)
+                  customer = models.Customer.objects.get(user=user)
                   if (customer.banned):
                     messages.add_message(request, messages.ERROR, 'You are currently banned from this site, please contact an administrator')
                     return redirect('/')
