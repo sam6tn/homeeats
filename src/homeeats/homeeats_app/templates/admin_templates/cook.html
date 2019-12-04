@@ -33,6 +33,7 @@
             <th>Our Split</th>
             <th>Total</th>
             <th>Date</th>
+            <th>Other</th>
         </tr>
         {% for order in cook.order_set.all %}
             <tr>
@@ -42,6 +43,7 @@
                 <td id="oursplit{{order.id}}"></td>
                 <td>{{order.total}}</td>
                 <td>{{order.date}}</td>
+                <td>{% if order.status == 'r' %}{{order.reject_reason.reason}}{% endif %}</td>
             </tr>
             <script>
                 document.getElementById("cooksplit"+'{{order.id}}').innerHTML = cooksplits[{{order.id}}];
