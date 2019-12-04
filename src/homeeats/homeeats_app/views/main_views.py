@@ -117,14 +117,22 @@ def userLogin(request):
                   is_cook = False
                 # Checks if cook is approved and redirects them to the home page
                 if (is_cook and cook.approved):
+                  if (cook.banned):
+                    messages.add_message(request, messages.ERROR, 'You are currently banned from this site, please contact an administrator')
+                    return redirect('/')
                   login(request, user)
                   return redirect('/cook/home')
                 # Checks if cook is not approved and redirects them back to the login page
                 elif(is_cook and not cook.approved):
                   form = AuthenticationForm()
-                  render(request = request, template_name = "../templates/login.html", context={"form":form})
+                  messages.add_message(request, messages.ERROR, 'You have not been approved yet, contact an administrator about your approval status')
+                  return redirect('/')
                 else:
                   # If it is not a cook then we know its a customer
+                  customer = models.custoemr.objects.get(user=user)
+                  if (customer.banned):
+                    messages.add_message(request, messages.ERROR, 'You are currently banned from this site, please contact an administrator')
+                    return redirect('/')
                   login(request, user)
                   return redirect('/customer/home')
 
