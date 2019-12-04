@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from .. import forms
 from .. import models
-from ..models import User, Cook, Order
+from ..models import User, Cook, Order, Customer
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.template import loader
