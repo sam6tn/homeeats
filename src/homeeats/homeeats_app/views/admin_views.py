@@ -15,14 +15,24 @@ def cookApplications(request):
 
 def cook(request,cook_id):
     cook = Cook.objects.get(id=cook_id)
-    splits = {}
+    cooksplits = {}
+    oursplits = {}
+    total=0
     for order in cook.order_set.all():
-        splits[order.id] = float("{0:.2f}".format(float(order.total) * 0.2))
-    total = 0
-    for order in cook.order_set.filter(status="d"):
+        cooksplits[order.id] = float("{0:.2f}".format(float(order.total) * 0.8))
+        oursplits[order.id] = float("{0:.2f}".format(float(order.total) * 0.2))
         total += order.total
-    total_split = float("{0:.2f}".format(float(total) * 0.2))
-    return render(request, 'admin_templates/cook.html', {'cook':cook,'splits':splits,'total':total,'total_split':total_split})
+    total_cooksplit = float("{0:.2f}".format(float(total) * 0.8))
+    total_oursplit = float("{0:.2f}".format(float(total) * 0.2))
+    context = {
+        'cook':cook,
+        'cooksplits':cooksplits,
+        'oursplits':oursplits,
+        'total':total,
+        'total_cooksplit':total_cooksplit,
+        'total_oursplit':total_oursplit
+    }
+    return render(request, 'admin_templates/cook.html', context)
 
 # def customers(request):
 #     customers = Customer.objects.all()

@@ -6,71 +6,56 @@
 {% block breadcrumbs %}
 <div class="breadcrumbs">
 <a href="{% url 'admin:index' %}">Home</a>
-&rsaquo; {{cook.user.first_name}} {{cook.user.last_name}}
+&rsaquo; <a href="/admin/homeeats_app">HomeEats_App</a>
+&rsaquo; <a href="/admin/homeeats_app/cook">Cooks</a>
+&rsaquo; <a href="/admin/homeeats_app/cook/{{cook.id}}/change">{{cook}}</a>
+&rsaquo; Order History
 </div>
 {% endblock %}
 
 {% block content %}
 
 <script>
-    var splits = {{splits}};
+    var cooksplits = {{cooksplits}};
+    var oursplits = {{oursplits}};
 </script>
-
 
 <div id="content-main">
     <div class="app-homeeats_app module" style="display:inline-block;margin:10px;vertical-align:top;">
         <table>
         <caption>
-            <p class="section">Past Orders for {{cook.user.first_name}} {{cook.user.last_name}}</p>
+            <p class="section">Orders for {{cook.user.first_name}} {{cook.user.last_name}}</p>
         </caption>
         <tr>
             <th>Order Name</th>
-            <th>Total</th>
+            <th>Status</th>
+            <th>Cook Split</th>
             <th>Our Split</th>
+            <th>Total</th>
             <th>Date</th>
         </tr>
         {% for order in cook.order_set.all %}
-            {% if order.status == 'd'%}
             <tr>
                 <td>{{order.name}}</td>
+                <td>{{order.get_status_display}}</td>
+                <td id="cooksplit{{order.id}}"></td>
+                <td id="oursplit{{order.id}}"></td>
                 <td>{{order.total}}</td>
-                <td id="split{{order.id}}"></td>
                 <td>{{order.date}}</td>
             </tr>
             <script>
-                document.getElementById("split"+'{{order.id}}').innerHTML = splits[{{order.id}}];
+                document.getElementById("cooksplit"+'{{order.id}}').innerHTML = cooksplits[{{order.id}}];
+                document.getElementById("oursplit"+'{{order.id}}').innerHTML = oursplits[{{order.id}}];
             </script>
-            {% endif %}
         {% endfor %}
         <tr>
             <th></th>
-            <th>{{total}}</th>
-            <th>{{total_split}}</th>
+            <th></th>
+            <th>${{total_cooksplit}}</th>
+            <th>${{total_oursplit}}</th>
+            <th>${{total}}</th>
             <th></th>
         </tr>
-        </table>
-    </div>
-    
-    <div class="app-homeeats_app module" style="display:inline-block;margin:10px;vertical-align:top;">
-        <table>
-        <caption>
-            <p class="section">Rejected Orders for {{cook.user.first_name}} {{cook.user.last_name}}</p>
-        </caption>
-        <tr>
-            <th>Order Name</th>
-            <th>Customer</th>
-            <th>Date</th>
-        </tr>
-        {% for order in cook.order_set.all %}
-            {% if order.status == 'r' %}
-            <tr>
-                <td>{{order.name}}</td>
-                <td>{{order.customer.user.first_name}} {{order.customer.user.last_name}}</td>
-                <td>{{order.date}}</td>
-            </tr>
-            {% endif %}
-            
-        {% endfor %}
         </table>
     </div>
 </div>
