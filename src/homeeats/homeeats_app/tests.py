@@ -47,7 +47,7 @@ class CookHomeTest(TestCase):
     def test_cook_online_no_orders_so_can_logout(self):
        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
        response = self.client.get(reverse('cook_home'))
-       self.client.get(reverse('reject_order', args=[1]))
+       self.client.get(reverse('reject_order', args=[1,1]))
        self.client.get(reverse('cooking_to_delivery', args=[2]))
        self.client.get(reverse('completed_delivery', args=[2]))
        response = self.client.get(reverse('logout_view'))
@@ -56,7 +56,7 @@ class CookHomeTest(TestCase):
     def test_reject_order_changes_status(self):
        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
        response = self.client.get(reverse('cook_home'))
-       self.client.get(reverse('reject_order', args=[1]))
+       self.client.get(reverse('reject_order', args=[1,1]))
        order = Order.objects.get(id=1)
        self.assertEquals(order.status, 'r')
     def test_accept_order_changes_status(self):
