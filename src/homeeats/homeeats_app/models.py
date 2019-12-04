@@ -112,7 +112,8 @@ class Order(models.Model):
         ('c', 'Cooking'),
         ('o', 'Out For Delivery'),
         ('d', 'Delivered'),
-        ('r', 'Rejected')
+        ('r', 'Rejected'),
+        ('x', 'Customer Canceled')
     ]
   status = models.CharField(max_length=1, choices=status_choices, default='p')
   date = models.DateTimeField(auto_now_add=True)
