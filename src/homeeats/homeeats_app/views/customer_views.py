@@ -272,7 +272,7 @@ def orders(request):
   cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
   orders = customer.order_set.all()
   current_orders = customer.order_set.filter(Q(status='p') | Q(status='c') | Q(status='o'))
-  past_orders = customer.order_set.filter(Q(status='d') | Q(status='r'))
+  past_orders = customer.order_set.filter(Q(status='d') | Q(status='r') | Q(status='x'))
   deadlines = {}
   for order in current_orders:
     if order.status == 'p':
@@ -283,7 +283,8 @@ def orders(request):
 @customer_required
 def cancel_order(request):
   order = Order.objects.get(id=request.POST["order_id"])
-  order.delete()
+  order.status = 'x'
+  order.save()
   return HttpResponseRedirect(reverse('orders'))
 
 @login_required

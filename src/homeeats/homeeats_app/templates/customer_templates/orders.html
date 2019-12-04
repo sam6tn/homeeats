@@ -189,9 +189,11 @@
                             <div class="card-footer">
                                 {% if order.status == "d" %}
                                 <p class= "card-text font-weight-bold text-success">  Delivered: {{order.actual_arrival_time.time}} </p>
-                                {% else %}
+                                {% elif order.status == "r" %}
                                 <p class= "card-text font-weight-bold text-danger">Rejected</p>
                                 <p class= "card-text">Reason: {{order.reject_reason.reason}}</p>
+                                {% else %}
+                                <p class= "card-text font-weight-bold text-danger">Customer Canceled</p>
                                 {% endif %}
                             </div>
                         </div>
