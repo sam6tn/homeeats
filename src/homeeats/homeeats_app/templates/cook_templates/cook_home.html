@@ -58,7 +58,7 @@
             console.log("Deadline:",deadlines["{{order.id}}"]);
             intervals["{{order.id}}"] = setInterval(function() { 
                 let now = new Date(Date.now());
-                console.log(now);
+                console.log("Now:",now);
                 let timeLeft = deadlines["{{order.id}}"]-now;
                 console.log("Time left",timeLeft);
                 let hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));

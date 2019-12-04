@@ -7,7 +7,8 @@
 <div class="container">
     <div class="row">
         <div class="col-6">
-            
+            <ul class="list-group" style="margin-top:10px;">
+            <li class="list-group-item" style="width:100%">
             <h1>
                 {{dish.title}}
                 <form method="POST" action="{% url 'addtocart' %}" style="display:inline">
@@ -17,23 +18,33 @@
                 </form>
             </h1>
             <h4>{{dish.description}} </h4>
-            <img src="{{ dish.dish_image.url }}" width=400px height=300px>
+            <img src="{{ dish.dish_image.url }}" width=300px height=220px>
             <h3>Cook time: {{dish.cook_time}} </h3>
             <h3>Cook: {{dish.cook.user.first_name}} {{dish.cook.user.last_name}}</h3>
             <h3>Rating: {{dish.rating}}</h3>
+            </li>
+            </ul>
         </div>
         <div class="col-6">
             <h2>Reviews</h2>
-            {% for review in reviews %}
-                <div style="margin:10px 0px;">
-                    <span class="fa fa-star {% if review.dish_rating >= 1 %}checked{% endif %} fa-sm"></span>
-                    <span class="fa fa-star {% if review.dish_rating >= 2 %}checked{% endif %} fa-sm"></span>
-                    <span class="fa fa-star {% if review.dish_rating >= 3 %}checked{% endif %} fa-sm"></span>
-                    <span class="fa fa-star {% if review.dish_rating >= 4 %}checked{% endif %} fa-sm"></span>
-                    <span class="fa fa-star {% if review.dish_rating >= 5 %}checked{% endif %} fa-sm"></span>
-                    <h6>{{review.description}}</h6>
-                </div>
-            {% endfor %}
+            <div style="height:80vh;overflow-y:scroll;">
+            <ul class="list-group">
+                {% for review in reviews %}
+                    <li class="list-group-item" style="width:100%;margin-bottom:5px;">
+                        <div>
+                            <h6>{{review.customer.user.first_name}} {{review.customer.user.last_name}}</h6>
+                            <p style="margin-bottom:5px;">Posted: {{review.date}}</p>
+                        </div>
+                        <span class="fa fa-star {% if review.dish_rating >= 1 %}checked{% endif %} fa-sm"></span>
+                        <span class="fa fa-star {% if review.dish_rating >= 2 %}checked{% endif %} fa-sm"></span>
+                        <span class="fa fa-star {% if review.dish_rating >= 3 %}checked{% endif %} fa-sm"></span>
+                        <span class="fa fa-star {% if review.dish_rating >= 4 %}checked{% endif %} fa-sm"></span>
+                        <span class="fa fa-star {% if review.dish_rating >= 5 %}checked{% endif %} fa-sm"></span>
+                        <p>{{review.description}}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+            </div>
         </div>
     </div>
 </div>

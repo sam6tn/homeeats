@@ -88,7 +88,7 @@ def dish(request, dish_id):
     customer = Customer.objects.get(user_id=request.user.id)
     if(dish.cook_disabled or dish.cook.online == False or (not customer.shoppingcart.empty and customer.shoppingcart.cook != dish.cook)):
       raise Http404()
-    reviews = dish.dish_review_set.filter(report_flag=False) #get all reviews for that Dish
+    reviews = dish.dish_review_set.filter(report_flag=False).order_by('date') #get all reviews for that Dish
     form = DishReviewForm()
     return render(request, 'customer_templates/customer_dish.html', {'dish': dish, 'reviews':reviews, 'form':form})
 
