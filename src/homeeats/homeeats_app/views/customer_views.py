@@ -29,11 +29,14 @@ from django.template.defaulttags import register
 @customer_required
 def addresses(request):
   customer = Customer.objects.get(user_id=request.user.id)
+  shopping_cart = ShoppingCart.objects.get(customer=customer)
+  cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
   current_address = Address.objects.get(customer=customer, current_customer_address=True)
   other_addresses = Address.objects.filter(customer=customer, current_customer_address=False)
   context = {
     'current_address': current_address,
-    'other_addresses': other_addresses
+    'other_addresses': other_addresses,
+    'cart_items': cart_items
   }
   return render(request, 'customer_templates/addresses.html', context)
 
@@ -62,6 +65,8 @@ def delete_address(request, address_id):
 @customer_required
 def add_address(request):
   customer = Customer.objects.get(user_id=request.user.id)
+  shopping_cart = ShoppingCart.objects.get(customer=customer)
+  cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
   if request.method == 'POST':
       form = forms.AddressCreateForm(request.POST)
       if form.is_valid():
@@ -76,7 +81,7 @@ def add_address(request):
         address.save()
         return HttpResponseRedirect(reverse('addresses'))
       else:
-        return render(request, 'customer_templates/add_address.html', {'form': form})
+        return render(request, 'customer_templates/add_address.html', {'form': form, 'cart_items': cart_items})
   else:
     form = forms.AddressCreateForm()
     return render(request, 'customer_templates/add_address.html', {'form':form})
@@ -86,11 +91,13 @@ def add_address(request):
 def dish(request, dish_id):
     dish = Dish.objects.get(id=dish_id) #get Dish object from dish_id
     customer = Customer.objects.get(user_id=request.user.id)
+    shopping_cart = ShoppingCart.objects.get(customer=customer)
+    cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
     if(dish.cook_disabled or dish.cook.online == False or (not customer.shoppingcart.empty and customer.shoppingcart.cook != dish.cook)):
       raise Http404()
     reviews = dish.dish_review_set.filter(report_flag=False).order_by('date') #get all reviews for that Dish
     form = DishReviewForm()
-    return render(request, 'customer_templates/customer_dish.html', {'dish': dish, 'reviews':reviews, 'form':form})
+    return render(request, 'customer_templates/customer_dish.html', {'dish': dish, 'reviews':reviews, 'form':form, 'cart_items': cart_items})
 
 # @login_required
 # @customer_required
@@ -101,6 +108,8 @@ def dish(request, dish_id):
 @customer_required
 def home(request):
     customer = Customer.objects.get(user_id=request.user.id)
+    shopping_cart = ShoppingCart.objects.get(customer=customer)
+    cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
     if request.method == 'POST':
       form = forms.DishSearchForm(request.POST)
       if form.is_valid():
@@ -128,10 +137,10 @@ def home(request):
         elif (sort == 'reverse_price'):
           dishes = dishes.order_by('-price')
 
-        return render(request, 'customer_templates/customer_home.html', {'dishes':dishes, 'form': form, 'customer':customer})
+        return render(request, 'customer_templates/customer_home.html', {'dishes':dishes, 'form': form, 'customer':customer, 'cart_items':cart_items})
       else:
         dishes = find_nearby_dishes(request)
-        return render(request, 'customer_templates/customer_home.html', {'dishes': dishes, 'form': form, 'customer':customer})
+        return render(request, 'customer_templates/customer_home.html', {'dishes': dishes, 'form': form, 'customer':customer, 'cart_items':cart_items})
 
     else:
       form = forms.DishSearchForm()
@@ -142,7 +151,7 @@ def home(request):
         dishes = dishes.filter(cook=customer.shoppingcart.cook)
       dishes=dishes.order_by('-rating')
       
-      return render(request, 'customer_templates/customer_home.html', {'dishes': dishes, 'form':form, 'customer':customer})
+      return render(request, 'customer_templates/customer_home.html', {'dishes': dishes, 'form':form, 'customer':customer, 'cart_items':cart_items})
 
 @login_required
 @customer_required
@@ -217,15 +226,19 @@ def toggle_favorite(request):
 @customer_required
 def cart(request):
   customer = Customer.objects.get(user_id=request.user.id)
+  shopping_cart = ShoppingCart.objects.get(customer=customer)
+  cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
   cart = customer.shoppingcart
-  return render(request, 'customer_templates/cart.html', {'cart':cart})
+  return render(request, 'customer_templates/cart.html', {'cart':cart, 'cart_items':cart_items})
 
 @login_required
 @customer_required
 def payment(request):
   customer = Customer.objects.get(user_id=request.user.id)
+  shopping_cart = ShoppingCart.objects.get(customer=customer)
+  cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
   cart = customer.shoppingcart
-  return render(request, 'customer_templates/payment.html', {'cart':cart})
+  return render(request, 'customer_templates/payment.html', {'cart':cart, 'cart_items':cart_items})
 
 @login_required
 @customer_required
@@ -255,6 +268,8 @@ def getvalue(d, key):
 @customer_required
 def orders(request):
   customer = Customer.objects.get(user_id=request.user.id)
+  shopping_cart = ShoppingCart.objects.get(customer=customer)
+  cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
   orders = customer.order_set.all()
   current_orders = customer.order_set.filter(Q(status='p') | Q(status='c') | Q(status='o'))
   past_orders = customer.order_set.filter(Q(status='d') | Q(status='r'))
@@ -262,7 +277,7 @@ def orders(request):
   for order in current_orders:
     if order.status == 'p':
       deadlines[order.id] = order.pending_deadline
-  return render(request, 'customer_templates/orders.html', {'current_orders':current_orders,'past_orders':past_orders,'deadlines':deadlines})
+  return render(request, 'customer_templates/orders.html', {'current_orders':current_orders,'past_orders':past_orders,'deadlines':deadlines, 'cart_items': cart_items})
 
 @login_required
 @customer_required
@@ -311,7 +326,9 @@ def order(request, order_id):
     form = DishReviewForm()
     reviewed_items = order.item_set.filter(review__isnull = False)
     customer = Customer.objects.get(user_id=request.user.id)
-    return render(request, 'customer_templates/order.html', {'order':order, 'form':form, 'reviewed_items':reviewed_items, 'customer':customer})
+    shopping_cart = ShoppingCart.objects.get(customer=customer)
+    cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
+    return render(request, 'customer_templates/order.html', {'order':order, 'form':form, 'reviewed_items':reviewed_items, 'customer':customer, 'cart_items':cart_items})
 
 @login_required
 @customer_required
@@ -432,10 +449,14 @@ def customer_edit_profile(request):
       phone_form.save()
       return HttpResponseRedirect(reverse('customer_home'))
   else:
+    customer = Customer.objects.get(user_id=request.user.id)
+    shopping_cart = ShoppingCart.objects.get(customer=customer)
+    cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
     current_user.email = request.user.username
     form = UserEditForm(instance=request.user)
     phone_form = PhoneEditForm(instance=request.user.customer)
     context = {
+      'cart_items': cart_items,
       'phone_form': phone_form,
       'form': form,
     }
@@ -445,8 +466,11 @@ def customer_edit_profile(request):
 @customer_required
 def favorites(request):
   customer = Customer.objects.get(user_id=request.user.id)
+  shopping_cart = ShoppingCart.objects.get(customer=customer)
+  cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
   favorite_dishes = customer.favorites.all()
   context = {
+    'cart_items':cart_items,
     'customer': customer,
     'dishes': favorite_dishes
   }
@@ -461,6 +485,9 @@ def myaccount(request):
     username = request.GET.get('username')
     print('first_name: ' , first_name)
     return HttpResponseRedirect(reverse('customer_edit_profile'))
-  return render(request, 'customer_templates/customer_profile.html')
+  customer = Customer.objects.get(user_id=request.user.id)
+  shopping_cart = ShoppingCart.objects.get(customer=customer)
+  cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
+  return render(request, 'customer_templates/customer_profile.html', {'cart_items':cart_items})
 
     
