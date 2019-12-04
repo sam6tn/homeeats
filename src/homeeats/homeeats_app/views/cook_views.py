@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from .. import models
 from ..models import User
 from .. import forms
-from ..models import Cook, Cuisine, Dish, Order, Customer, Item, Dish_Review, Address
+from ..models import Cook, Cuisine, Dish, Order, Customer, Item, Dish_Review, Address, RejectReason
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.forms import model_to_dict
@@ -44,7 +44,9 @@ def home(request):
   #test timer crap
   # deadline = datetime.datetime.now() + datetime.timedelta(minutes=5)
   print(deadlines)
+  reject_reasons = RejectReason.objects.all()
   context = {
+    'reject_reasons': reject_reasons,
     'pending_orders': pending_orders,
     'in_progress_orders': in_progress_orders,
     'cook': cook,
@@ -191,8 +193,12 @@ def accept_order(request, order_id):
 
 @login_required
 @cook_required
-def reject_order(request, order_id):
+def reject_order(request, order_id, reason_id):
   change_order_status('p', 'r', request, order_id)
+  order = Order.objects.get(id=order_id)
+  reject_reason = RejectReason.objects.get(id=reason_id)
+  order.reject_reason = reject_reason
+  order.save()
   return HttpResponseRedirect(reverse('cook_home'))
 
 @login_required
