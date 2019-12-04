@@ -10,64 +10,43 @@
     crossorigin="anonymous">
 </script>
 
-<div class="container mt-2">
-    <h2>Items in Order #{{order.id}}</h2>
-    <ul class="list-group list-group-horizontal">
-            {% for item in items  %}
-        <div class="card justify-content-between m-2" style="width: 14rem;">
-            <h5 class="card-header">{{item.dish.title}}</h5>
-            <div class="card-body ">
-                <h5 class="card-title">Quantity: {{item.quantity}}</h5>
+<div class="container" style="margin-top:1em;margin-bottom:1em;">
+    <span style="font-weight:normal;font-size:1.5em;">Order #{{order.id}} </span>
+    <span style="font-weight:normal;font-size:1.3em;"> - {{order.date}}</span>
+</div>
+<div class="container" style="overflow-x:scroll;margin-top:20px;">
+    <div class="row flex-row flex-nowrap">
+        {% for item in items  %}
+        <div class="col-3" style="margin-bottom:20px;display:inline-block;display:flex">
+            <div class="card">
+                <h5 class="card-header">
+                    <span style="float:left">{{item.dish.title}}</span>
+                    <span style="float:right">{{item.quantity}}</span>
+                </h5>
+                <div class="card-body">
+                    <img src="{{ item.dish.dish_image.url }}" width="100%" style="max-height: 200px;">
+                    <p class="card-text font-weight-bold text-secondary">Subtotal: ${{item.subtotal}}</p>
+                </div>
+                <div class="card-footer">
+                    
+                </div>
             </div>
         </div>
         {% endfor %}
-    </ul>
-    <h2>Delivery Total: ${{order.total}}</h2>
-    <div class="card justify-content-between m-2" style="width: 18rem;">
-        <h5 class="card-header">{{user.first_name}} {{user.last_name}}</h5>
-        <div class="card-body ">
-            <p class="card-text">{{address.street_name}}</p>
-            <p class="card-text">{{address.city}}, {{address.state}} {{address.zipcode}}</p>
-            <p class="card-text font-weight-bold text-secondary">Phone: {{customer.phone_number}}</p>
-        </div>
     </div>
-    <!-- <span id="timer"><span id="minutes"></span>:<span id="seconds"></span></span> -->
+</div>
+<div class="container" style="margin-top:1em;">
+    <p><span class="order-field">Cook: </span>{{ order.cook.user.first_name }} {{ order.cook.user.last_name }}</p>
+    <p><span class="order-field">Total: </span>${{ order.total }}</p>
+    <p><span class="order-field">Status: </span>{{ order.get_status_display }}</p>
+    <p>
+    <span class="order-field">Special requests: </span>
+      {% if order.special_requests %}
+        {{ order.special_requests }}
+      {% else %}
+        None
+      {% endif %}
+    </p>
 </div>
 
-<!-- <script>
-    // let timezonefix = new Date("{{order.pending_deadline.isoformat}}");
-    // let deadline = new Date(timezonefix.getTime() + 5*3600000);
-    let deadline = new Date({{ order.pending_deadline|date:"U" }} * 1000);
-    console.log("Deadline:",deadline);
-    var interval = setInterval(function() { 
-        let now = new Date(Date.now());
-        let timeLeft = deadline-now;
-        let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60)); 
-        let seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-        if (seconds < 10){
-            seconds = '0'+seconds;
-        }
-        document.getElementById("minutes").innerHTML = minutes;
-        document.getElementById("seconds").innerHTML = seconds;
-        if (timeLeft < 0) { 
-            clearInterval(interval); 
-            document.getElementById("timer").innerHTML = "EXPIRED";
-            $.ajax({
-                type: "POST",
-                url: "{% url 'reject_order' %}",
-                data: {
-                'order_id': '{{order.id}}',
-                'csrfmiddlewaretoken': '{{ csrf_token }}'
-                },
-                dataType: 'json',
-                success: function (data) {
-                    console.log("success");
-                }
-            });
-        } 
-    }, 1000);
-</script> -->
-
-
-
-        {% endblock %}
+{% endblock %}
