@@ -2,45 +2,59 @@
 
 {% block breadcrumbs %}
 <div class="breadcrumbs">
-<<<<<<< Updated upstream
-<a href="{% url 'admin:index' %}">Home</a>
-&rsaquo; {{customer.user.first_name}} {{customer.user.last_name}}
-</div>
-=======
     <a href="{% url 'admin:index' %}">Home</a>
     &rsaquo; <a href="/admin/homeeats_app">HomeEats_App</a>
     &rsaquo; <a href="/admin/homeeats_app/customer">Customers</a>
     &rsaquo; <a href="/admin/homeeats_app/customer/{{customer.id}}/change">{{customer}}</a>
     &rsaquo; Order History
     </div>
->>>>>>> Stashed changes
 {% endblock %}
 
 {% block content %}
 
+<script>
+    var cooksplits = {{cooksplits}};
+    var oursplits = {{oursplits}};
+</script>
+
 <div id="content-main">
-        
         <div class="app-homeeats_app module" style="display:inline-block;margin:20px;">
             <table>
             <caption>
-                <p class="section">Past Orders for {{customer.user.first_name}} {{customer.user.last_name}}</p>
+                <p class="section"> Orders for {{customer.user.first_name}} {{customer.user.last_name}}</p>
             </caption>
             <tr>
                 <th>Order Name</th>
+                <th>Status</th>
+                <th>Cook Split</th>
+                <th>Our Split</th>
                 <th>Total</th>
-                <!-- <th>Split</th> -->
                 <th>Date</th>
+                <th>Other</th>
             </tr>
-            {% for order in customer.order_set.all %}  
-                {% with var=forloop.counter0 %}
+            {% for order in orders %}  
                 <tr>
                     <td>{{order.name}}</td>
+                    <td>{{order.get_status_display}}</td>
+                    <td id="cooksplit{{order.id}}"></td>
+                    <td id="oursplit{{order.id}}"></td>
                     <td>{{order.total}}</td>
-                    <!-- <td>{{cook_totals.var}}</td> -->
                     <td>{{order.date}}</td>
+                    <td>{% if order.status == 'r' %}{{order.reject_reason.reason}}{% endif %}</td>
                 </tr>
-                {% endwith %}
+                <script>
+                    document.getElementById("cooksplit"+'{{order.id}}').innerHTML = cooksplits[{{order.id}}];
+                    document.getElementById("oursplit"+'{{order.id}}').innerHTML = oursplits[{{order.id}}];
+                </script>
             {% endfor %}
+            <tr>
+                <th></th>
+                <th></th>
+                <th>${{total_cooksplit}}</th>
+                <th>${{total_oursplit}}</th>
+                <th>${{total}}</th>
+                <th></th>
+            </tr>
             </table>
         </div>
         

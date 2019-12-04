@@ -35,7 +35,7 @@
             <th>Date</th>
             <th>Other</th>
         </tr>
-        {% for order in cook.order_set.all %}
+        {% for order in orders %}
             <tr>
                 <td>{{order.name}}</td>
                 <td>{{order.get_status_display}}</td>

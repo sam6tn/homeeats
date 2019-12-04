@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from ..models import Cook, Customer, Dish_Review
+from ..models import Cook, Customer, Dish_Review, Order
 
 def cookApplications(request):
     if request.method == 'POST':
@@ -18,7 +18,8 @@ def cook(request,cook_id):
     cooksplits = {}
     oursplits = {}
     total=0
-    for order in cook.order_set.all():
+    orders = Order.objects.filter(cook=cook).order_by('-date')
+    for order in orders:
         cooksplits[order.id] = float("{0:.2f}".format(float(order.total) * 0.8))
         oursplits[order.id] = float("{0:.2f}".format(float(order.total) * 0.2))
         total += order.total
@@ -26,6 +27,7 @@ def cook(request,cook_id):
     total_oursplit = float("{0:.2f}".format(float(total) * 0.2))
     context = {
         'cook':cook,
+        'orders':orders,
         'cooksplits':cooksplits,
         'oursplits':oursplits,
         'total':total,
@@ -40,10 +42,26 @@ def cook(request,cook_id):
 
 def customer(request,customer_id):
     customer = Customer.objects.get(id=customer_id)
-    cook_totals = []
-    for order in customer.order_set.all():
-        cook_totals.append(str(order.total*4/5))
-    return render(request, 'admin_templates/customer.html', {'customer':customer,'cook_totals':cook_totals})
+    cooksplits = {}
+    oursplits = {}
+    total=0
+    orders = Order.objects.filter(customer=customer).order_by('-date')
+    for order in orders:
+        cooksplits[order.id] = float("{0:.2f}".format(float(order.total) * 0.8))
+        oursplits[order.id] = float("{0:.2f}".format(float(order.total) * 0.2))
+        total += order.total
+    total_cooksplit = float("{0:.2f}".format(float(total) * 0.8))
+    total_oursplit = float("{0:.2f}".format(float(total) * 0.2))
+    context = {
+        'customer':customer,
+        'orders':orders,
+        'cooksplits':cooksplits,
+        'oursplits':oursplits,
+        'total':total,
+        'total_cooksplit':total_cooksplit,
+        'total_oursplit':total_oursplit
+    }
+    return render(request, 'admin_templates/customer.html', context)
 
 def reportedreviews(request):
     reviews = Dish_Review.objects.filter(report_flag=True)
