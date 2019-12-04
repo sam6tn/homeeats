@@ -313,6 +313,7 @@ def order_history(request):
   for obj in objs:
     ord = model_to_dict(obj)
     ord['date'] = obj.date.strftime("%m/%d/%y")
+    ord['rejected_reason'] = RejectReason.objects.get(id=ord['reject_reason']).reason
     rejected_orders.append(ord)
   for obj in objs2:
     ord = model_to_dict(obj)
