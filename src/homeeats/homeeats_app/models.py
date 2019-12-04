@@ -98,6 +98,8 @@ def calculateTime():
 
 class RejectReason(models.Model):
   reason = models.CharField(max_length=60, default="")
+  def __str__(self):
+    return self.reason
 
 class Order(models.Model):
   name = models.CharField(max_length=60, default="") #make it first name <space> last name of customer
