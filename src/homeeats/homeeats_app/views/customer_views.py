@@ -283,8 +283,10 @@ def orders(request):
 @customer_required
 def cancel_order(request):
   order = Order.objects.get(id=request.POST["order_id"])
-  order.status = 'x'
-  order.save()
+  customer = Customer.objects.get(user_id=request.user.id)
+  if order.customer == customer: #make sure order belongs to customer
+    order.status = 'x'
+    order.save()
   return HttpResponseRedirect(reverse('orders'))
 
 @login_required
