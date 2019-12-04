@@ -23,7 +23,7 @@ class Cook(models.Model):
   phone_number = models.CharField(max_length=30, default="")
   user = models.OneToOneField(User, on_delete=models.CASCADE)
   def __str__(self):
-    return "Cook " + self.user.first_name + " " + self.user.last_name + " (" + str(self.id) + ")"
+    return self.user.first_name + " " + self.user.last_name + " (" + str(self.id) + ")"
   delivery_distance_miles = models.IntegerField(default=30)
   delivery_fee = models.DecimalField(default=0, decimal_places=2, max_digits=6)
 
@@ -47,8 +47,6 @@ class Dish(models.Model):
   rating = models.IntegerField(default=0)
   vegan = models.BooleanField(default=False)
   allergies = models.CharField(default="", max_length=200)
-  # total_rating = models.IntegerField(default=0)
-  # num_ratings = models.IntegerField(default=0)
 
   def __str__(self):
     return self.title + " (" + str(self.id) + ")"
@@ -61,7 +59,7 @@ class Customer(models.Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE)
   favorites = models.ManyToManyField(Dish, blank=True)
   def __str__(self):
-    return "Customer " + self.user.first_name + " " + self.user.last_name + " (" + str(self.id) + ")"
+    return self.user.first_name + " " + self.user.last_name + " (" + str(self.id) + ")"
 
 class Dish_Review(models.Model):
   dish_rating = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)])

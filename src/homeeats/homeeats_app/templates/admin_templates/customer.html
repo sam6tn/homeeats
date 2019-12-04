@@ -2,9 +2,18 @@
 
 {% block breadcrumbs %}
 <div class="breadcrumbs">
+<<<<<<< Updated upstream
 <a href="{% url 'admin:index' %}">Home</a>
 &rsaquo; {{customer.user.first_name}} {{customer.user.last_name}}
 </div>
+=======
+    <a href="{% url 'admin:index' %}">Home</a>
+    &rsaquo; <a href="/admin/homeeats_app">HomeEats_App</a>
+    &rsaquo; <a href="/admin/homeeats_app/customer">Customers</a>
+    &rsaquo; <a href="/admin/homeeats_app/customer/{{customer.id}}/change">{{customer}}</a>
+    &rsaquo; Order History
+    </div>
+>>>>>>> Stashed changes
 {% endblock %}
 
 {% block content %}
