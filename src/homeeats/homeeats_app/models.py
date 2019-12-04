@@ -105,6 +105,10 @@ class Order(models.Model):
   name = models.CharField(max_length=60, default="") #make it first name <space> last name of customer
   customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
   cook = models.ForeignKey(Cook, on_delete=models.CASCADE)
+  item_subtotal = models.DecimalField(default=0, decimal_places=2, max_digits=6)
+  tax = models.DecimalField(default=0, decimal_places=2, max_digits=6)
+  tip = models.DecimalField(default=0, decimal_places=2, max_digits=6)
+  delivery_fee = models.DecimalField(default=0, decimal_places=2, max_digits=6)
   total = models.DecimalField(default=0, decimal_places=2, max_digits=6)
   special_requests = models.CharField(max_length=120, default="")
   status_choices = [
@@ -134,6 +138,7 @@ class ShoppingCart(models.Model):
   cook = models.ForeignKey(Cook, on_delete=models.CASCADE, null=True, blank=True)
   item_subtotal = models.DecimalField(default=0, decimal_places=2, max_digits=6)
   tax = models.DecimalField(default=0, decimal_places=2, max_digits=6)
+  tip = models.DecimalField(default=0, decimal_places=2, max_digits=6)
   total = models.DecimalField(default=0, decimal_places=2, max_digits=6)
   empty = models.BooleanField(default=True)
 
