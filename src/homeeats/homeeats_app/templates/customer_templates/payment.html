@@ -172,8 +172,9 @@
                     <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Order Subtotal </strong><strong>${{cart.item_subtotal}}</strong></li>
                     <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Delivery</strong><strong>${{cart.cook.delivery_fee}}</strong></li>
                     <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Tax</strong><strong>${{cart.tax}}</strong></li>
+                    <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Tip</strong><strong>${{cart.tip}}</strong></li>
                     <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Total</strong>
-                        <h5 class="font-weight-bold">${{cart.total}}</h5>
+                        <h5 class="font-weight-bold">${{cart.total_after_tip}}</h5>
                     </li>
                 </ul>
             </div>

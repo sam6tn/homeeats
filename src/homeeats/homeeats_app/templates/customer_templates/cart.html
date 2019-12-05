@@ -139,6 +139,11 @@
                 </tr>
               </tbody>
           </table>
+          <form method="POST" action="{% url 'cart' %}" style="display:inline;">
+              {% csrf_token %}
+          Special Requests:
+          <input type=text name="special_requests" value="{{cart.special_requests}}">
+
       </div>
   </div>
 </div>
@@ -153,11 +158,20 @@
               <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Order Subtotal </strong><strong>${{cart.item_subtotal}}</strong></li>
               <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Delivery</strong><strong>${{cart.cook.delivery_fee}}</strong></li>
               <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Tax</strong><strong>${{cart.tax}}</strong></li>
-              <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Total</strong>
-                <h5 class="font-weight-bold">${{cart.total}}</h5>
+              <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Total (before tip)</strong>
+                <h5 class="font-weight-bold">${{cart.total_before_tip}}</h5>
+              </li>
+              <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Add a Tip</strong>
+                <div class="input-group mb-3" style="width:7rem;">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">$</span>
+                  </div>
+                  <input type="text" class="form-control" aria-label="Amount" name="tip" value="{{cart.tip}}">
+                </div>
               </li>
           </ul>
-          <a href="{% url 'payment' %}" class="btn btn-primary rounded-pill py-2 btn-block">Proceed to Payment</a>
+          <input type=submit class="btn btn-primary btn-block" value="Proceed to Payment">
+        </form>
       </div>
   </div>
 </div>

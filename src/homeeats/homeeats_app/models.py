@@ -144,8 +144,10 @@ class ShoppingCart(models.Model):
   item_subtotal = models.DecimalField(default=0, decimal_places=2, max_digits=6)
   tax = models.DecimalField(default=0, decimal_places=2, max_digits=6)
   tip = models.DecimalField(default=0, decimal_places=2, max_digits=6)
-  total = models.DecimalField(default=0, decimal_places=2, max_digits=6)
+  total_before_tip = models.DecimalField(default=0, decimal_places=2, max_digits=6)
+  total_after_tip = models.DecimalField(default=0, decimal_places=2, max_digits=6)
   empty = models.BooleanField(default=True)
+  special_requests = models.CharField(max_length=120, default="")
 
 class CartItem(models.Model):
   dish = models.ForeignKey(Dish, on_delete=models.CASCADE)

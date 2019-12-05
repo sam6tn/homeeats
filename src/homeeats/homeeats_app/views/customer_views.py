@@ -163,11 +163,11 @@ def addtocart(request):
       raise Http404()
     customer = Customer.objects.get(user_id=request.user.id)
     shopping_cart = customer.shoppingcart
-    shopping_cart.total += dish.price
+    shopping_cart.total_before_tip += dish.price
     shopping_cart.item_subtotal += dish.price
-    shopping_cart.total -= shopping_cart.tax
+    shopping_cart.total_before_tip -= shopping_cart.tax
     shopping_cart.tax = Decimal(round((.06 * float(shopping_cart.item_subtotal)), 2))
-    shopping_cart.total += shopping_cart.tax
+    shopping_cart.total_before_tip += shopping_cart.tax
     existing_already = False
     for existing_item in shopping_cart.cartitem_set.all(): 
       if (existing_item.dish == dish): #dish already in cart so add to existing cart item
@@ -189,7 +189,7 @@ def addtocart(request):
       shopping_cart.cook = dish.cook
     if shopping_cart.empty == True:
       shopping_cart.empty = False
-      shopping_cart.total += dish.cook.delivery_fee
+      shopping_cart.total_before_tip += dish.cook.delivery_fee
     shopping_cart.save()
   data = {
     'quantity': return_quantity,
@@ -227,6 +227,12 @@ def toggle_favorite(request):
 def cart(request):
   customer = Customer.objects.get(user_id=request.user.id)
   shopping_cart = ShoppingCart.objects.get(customer=customer)
+  if request.method == "POST":
+    shopping_cart.tip = round(float(request.POST["tip"]), 2)
+    shopping_cart.special_requests = request.POST["special_requests"]
+    shopping_cart.total_after_tip = float(shopping_cart.total_before_tip) + shopping_cart.tip
+    shopping_cart.save()
+    return HttpResponseRedirect(reverse('payment'))
   cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
   cart = customer.shoppingcart
   return render(request, 'customer_templates/cart.html', {'cart':cart, 'cart_items':cart_items})
@@ -246,15 +252,15 @@ def removeItem(request):
   item = CartItem.objects.get(id=request.POST["item_id"])
   customer = Customer.objects.get(user_id=request.user.id)
   cart = customer.shoppingcart
-  cart.total = cart.total - item.subtotal
+  cart.total_before_tip = cart.total_before_tip - item.subtotal
   cart.item_subtotal = cart.item_subtotal - item.subtotal
-  cart.total -= cart.tax
+  cart.total_before_tip -= cart.tax
   cart.tax = Decimal(round((.06 * float(cart.item_subtotal)), 2))
-  cart.total += cart.tax
-  if cart.total == cart.cook.delivery_fee:
+  cart.total_before_tip += cart.tax
+  if cart.total_before_tip == cart.cook.delivery_fee:
     cart.cook_id = None
     cart.empty = True
-    cart.total = 0
+    cart.total_before_tip = 0
     cart.tax = 0
   item.delete()
   cart.save()
@@ -352,11 +358,12 @@ def checkout(request):
     cook = order_cook,
     customer = customer,
     status = 'p',
-    total = shopping_cart.total,
+    total = shopping_cart.total_after_tip,
     item_subtotal = shopping_cart.item_subtotal,
     tax = shopping_cart.tax,
     delivery_fee = order_cook.delivery_fee,
-    tip = shopping_cart.tip
+    tip = shopping_cart.tip,
+    special_requests = shopping_cart.special_requests
   )
   order.save()
   max_cook_time = 0
@@ -373,7 +380,11 @@ def checkout(request):
     order_item.save()
     item.delete() #delete item from CartItem
   shopping_cart.empty = True #set shopping cart back to empty
-  shopping_cart.total = 0 #clear total for shopping cart
+  shopping_cart.total_before_tip = 0 #clear total for shopping cart
+  shopping_cart.total_after_tip = 0
+  shopping_cart.special_requests = ""
+  shopping_cart.tip = 0
+  shopping_cart.delivery_fee = 0
   shopping_cart.item_subtotal = 0
   shopping_cart.tax = 0
   shopping_cart.save()
