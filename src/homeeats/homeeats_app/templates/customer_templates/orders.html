@@ -76,6 +76,7 @@
     var deadlines = {};
 </script>
 
+{% load tz %}
 
 {% if current_orders%}
 <h2 style="margin-left:60px">Current Orders</h2>
@@ -96,7 +97,7 @@
                         <br></br>
                         <script>
                             {% with id=order.id %}
-                            deadlines["{{order.id}}"] = new Date({{ deadlines|getvalue:id|date:"U" }} * 1000 + 5 *3600000);
+                            deadlines["{{order.id}}"] = new Date({{ deadlines|getvalue:id|date:"U" }} * 1000);
                             console.log("Deadline:",deadlines["{{order.id}}"]);
                             intervals["{{order.id}}"] = setInterval(function() { 
                                 let now = new Date(Date.now());
@@ -153,7 +154,9 @@
                         <p class="card-text">Placed {{order.date}}</p>
                     </div>
                     <div class="card-footer">
-                        <span class= "card-text font-weight-bold text-success">  ETA: {{order.estimated_arrival_time.time}}  </span>
+                        {% with local=order.estimated_arrival_time|localtime %}
+                        <span class= "card-text font-weight-bold text-success">  ETA: {{local.time}}  </span>
+                        {% endwith %}
                         {% if order.status == 'p' %}
                         <form method="POST" action="{% url 'cancel_order' %}" style="display:inline;">
                             {% csrf_token %}
