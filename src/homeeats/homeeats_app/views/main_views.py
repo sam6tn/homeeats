@@ -74,6 +74,8 @@ def cookcreate(request):
         delivery_fee=data['delivery_fee'],
         user_id=user.id
       )
+      address = models.Address.objects.create(cook=cook, street_name=data['street'], city=data['town'], state=data['state'], zipcode=data['zipcode'], is_cook_address=True)
+      address.save()
       user.is_cook = True
       user.save()
       cook.save()
