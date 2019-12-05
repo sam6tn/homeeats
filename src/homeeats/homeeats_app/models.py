@@ -155,3 +155,11 @@ class CartItem(models.Model):
   quantity = models.IntegerField(default=0)
   subtotal = models.DecimalField(default=0, decimal_places=2, max_digits=6)
   shopping_cart = models.ForeignKey(ShoppingCart, on_delete=models.CASCADE)
+
+class CookChangeRequest(models.Model):
+  kitchen_license = models.CharField(max_length=30)
+  phone_number = models.CharField(max_length=30, default="")
+  street_name = models.CharField(max_length=60, default="")
+  city = models.CharField(max_length=60, default="")
+  state = models.CharField(max_length=20, default="")
+  zipcode = models.CharField(max_length=20, default="")

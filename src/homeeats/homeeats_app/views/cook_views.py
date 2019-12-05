@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from .. import models
 from ..models import User
 from .. import forms
-from ..models import Cook, Cuisine, Dish, Order, Customer, Item, Dish_Review, Address, RejectReason
+from ..models import Cook, Cuisine, Dish, Order, Customer, Item, Dish_Review, Address, RejectReason, CookChangeRequest
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.forms import model_to_dict
@@ -339,4 +339,13 @@ def requestchange(request):
   new_city = request.POST["city"]
   new_state = request.POST["state"]
   new_zipcode = request.POST["zipcode"]
-  return HttpResponseRedirect(reverse('cookeditprofile'))
+  change = CookChangeRequest(
+    kitchen_license = new_kitchen_license,
+    phone_number = new_phone_number,
+    street_name = new_street_address,
+    city = new_city,
+    state = new_state,
+    zipcode = new_zipcode
+  )
+  change.save()
+  return HttpResponseRedirect(reverse('cookaccount'))
