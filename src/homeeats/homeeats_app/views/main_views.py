@@ -135,6 +135,11 @@ def userLogin(request):
                     return redirect('/')
                   login(request, user)
                   return redirect('/customer/home')
+        #Authentication form not valid
+        else:
+          messages.add_message(request, messages.ERROR, 'Invalid Login Credentials. Please Try Again.')
+
+
 
     form = AuthenticationForm()
     return render(request = request, template_name = "../templates/login.html", context={"form":form})
