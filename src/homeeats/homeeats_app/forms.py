@@ -74,6 +74,10 @@ class CookCreateForm(forms.ModelForm):
     phone_number = forms.CharField(label='Phone Number')
     delivery_distance_miles = forms.IntegerField(label='Maximum Delivery Distance (miles)')
     delivery_fee = forms.DecimalField(label='Delivery Fee', decimal_places=2, max_digits=6)
+    street = forms.CharField(required=True,label='Street Address')
+    town = forms.CharField(required=True,label='City/Town')
+    state = forms.CharField(required=True,)
+    zipcode = forms.CharField(required=True,)
     
     class Meta:
       model = User

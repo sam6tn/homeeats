@@ -22,6 +22,7 @@ class Cook(models.Model):
   approved = models.BooleanField(default=False)
   online = models.BooleanField(default=False)
   kitchen_license = models.CharField(max_length=30)
+  government_id = models.ImageField(default="", upload_to='cook_government_ids')
   phone_number = models.CharField(max_length=30, default="")
   user = models.OneToOneField(User, on_delete=models.CASCADE)
   def __str__(self):
