@@ -7,6 +7,8 @@ from .managers import CustomUserManager
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.postgres.fields import ArrayField
 import datetime
+from django.utils import timezone
+import pytz
 
 class User(AbstractUser):
   is_cook = models.BooleanField(default=False)
@@ -93,13 +95,16 @@ class Address(models.Model):
   class Meta:
     verbose_name_plural = "Addresses"
 
-def calculateTime():
-  return datetime.datetime.now() + datetime.timedelta(minutes=5)
-
 class RejectReason(models.Model):
   reason = models.CharField(max_length=60, default="")
   def __str__(self):
     return self.reason
+
+def calculateTime():
+  return timezone.localtime(timezone.now()) + datetime.timedelta(minutes=5)
+
+def getOrderDate():
+  return timezone.localtime(timezone.now())
 
 class Order(models.Model):
   name = models.CharField(max_length=60, default="") #make it first name <space> last name of customer
@@ -120,7 +125,7 @@ class Order(models.Model):
         ('x', 'Customer Canceled')
     ]
   status = models.CharField(max_length=1, choices=status_choices, default='p')
-  date = models.DateTimeField(auto_now_add=True)
+  date = models.DateTimeField(default=getOrderDate)
   estimated_arrival_time = models.DateTimeField(null=True, blank=True)
   actual_arrival_time = models.DateTimeField(null=True, blank=True)
   pending_deadline = models.DateTimeField(default=calculateTime)

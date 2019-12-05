@@ -82,7 +82,7 @@
         </div>
         <script>
             {% with id=order.id %}
-            deadlines["{{order.id}}"] = new Date({{ deadlines|getvalue:id|date:"U" }} * 1000 + 5 *3600000);
+            deadlines["{{order.id}}"] = new Date({{ deadlines|getvalue:id|date:"U" }} * 1000);
             console.log("Deadline:",deadlines["{{order.id}}"]);
             intervals["{{order.id}}"] = setInterval(function() { 
                 let now = new Date(Date.now());

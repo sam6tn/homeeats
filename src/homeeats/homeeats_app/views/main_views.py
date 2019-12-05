@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from .. import forms
 from .. import models
-from ..models import User, Cook, Order, Customer
+from ..models import User, Cook, Order, Customer, RejectReason
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.template import loader
@@ -142,6 +142,12 @@ def userLogin(request):
 def reject_order(request):
   order = Order.objects.get(id=request.POST["order_id"])
   order.status = 'r'
+  try:
+    order.reject_reason = RejectReason.objects.get(reason="Expired")
+  except:
+    e = RejectReason(reason="Expired")
+    e.save()
+    order.reject_reason = RejectReason.objects.get(reason="Expired")
   order.save()
   data={
     'success':True

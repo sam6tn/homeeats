@@ -277,7 +277,13 @@ def orders(request):
   for order in current_orders:
     if order.status == 'p':
       deadlines[order.id] = order.pending_deadline
-  return render(request, 'customer_templates/orders.html', {'current_orders':current_orders,'past_orders':past_orders,'deadlines':deadlines, 'cart_items': cart_items})
+  context = {
+    'current_orders':current_orders,
+    'past_orders':past_orders,
+    'deadlines':deadlines,
+    'cart_items': cart_items,
+  }
+  return render(request, 'customer_templates/orders.html', context)
 
 @login_required
 @customer_required
@@ -376,7 +382,6 @@ def checkout(request):
   time = 5 + max_cook_time + round(int(get_delivery_time(cook_address, customer_address)) / 60)
   order.estimated_arrival_time = order.date + timedelta(minutes=time)
   order.save()
-
   return HttpResponseRedirect(reverse('customer_home'))
 
 #get the time to travel from cook_address to customer_address
