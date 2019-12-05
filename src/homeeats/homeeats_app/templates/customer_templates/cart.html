@@ -141,9 +141,13 @@
           </table>
           <form method="POST" action="{% url 'cart' %}" style="display:inline;">
               {% csrf_token %}
-          Special Requests:
-          <input type=text name="special_requests" value="{{cart.special_requests}}">
-
+          <!-- <input type=text name="special_requests" value="{{cart.special_requests}}"> -->
+          <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Special Requests</span>
+              </div>
+              <textarea class="form-control" aria-label="With textarea" name="special_requests">{{cart.special_requests}}</textarea>
+            </div>
       </div>
   </div>
 </div>
