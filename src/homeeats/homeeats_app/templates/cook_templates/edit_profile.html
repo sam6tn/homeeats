@@ -4,21 +4,6 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 
-{% if messages %}
-<ul class="messages" style="padding-right:40px;">
-    {% for message in messages %}
-    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <strong>{{message}}</strong>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    {% endif %}
-    {% endfor %}
-</ul>
-{% endif %}
-
   <div style="text-align: center;width:27%;margin: 20px auto;">
     <h2>Edit Account</h2>
     <form method="post" action="{% url 'requestchange' %}">

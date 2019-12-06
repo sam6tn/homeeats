@@ -349,4 +349,5 @@ def requestchange(request):
     zipcode = new_zipcode
   )
   change.save()
+  messages.success(request, 'Change Request Sent To Admin!')
   return HttpResponseRedirect(reverse('cookaccount'))
