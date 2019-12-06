@@ -10,7 +10,7 @@
     <h2>My Account</h2>
     <form method="post">
       {% csrf_token %}
-  
+      <img src="{{ user.cook.government_id.url }}">
       <div style="margin:10px;text-align: left;">
        First Name
         <div style="float:right;">

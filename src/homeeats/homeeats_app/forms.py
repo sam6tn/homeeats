@@ -78,14 +78,11 @@ class CookCreateForm(forms.ModelForm):
     town = forms.CharField(required=True,label='City/Town')
     state = forms.CharField(required=True,)
     zipcode = forms.CharField(required=True,)
-    
+    government_id = forms.ImageField()
     class Meta:
       model = User
       fields = ['first_name', 'last_name', 'email', 'password']
-
-#class CuisineCreateForm(forms.Form):
     
-
 class DishCreateForm(forms.Form):
     title = forms.CharField(required=True,)
     #cuisine = forms.ModelChoiceField(queryset=Cuisine.objects.all())
