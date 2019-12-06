@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from .. import models
 from ..models import User
 from .. import forms
-from ..models import Cook, Cuisine, Dish, Order, Customer, Item, Dish_Review, Address, RejectReason
+from ..models import Cook, Cuisine, Dish, Order, Customer, Item, Dish_Review, Address, RejectReason, CookChangeRequest
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.forms import model_to_dict
@@ -293,17 +293,6 @@ def cook_edit_dish(request, dish_id):
     form = forms.DishEditForm(instance=dish)
   return render(request, 'cook_templates/cook_edit_dish.html', {'form': form, 'cuisine_id': dish.cuisine_id})
 
-@login_required
-@cook_required
-def myaccount(request):
-  if request.method == 'POST':
-    first_name = request.GET.get('first_name')
-    last_name = request.GET.get('last_name')
-    username = request.GET.get('username')
-    print('first_name: ' , first_name)
-    #return HttpResponseRedirect(reverse('customer_edit_profile'))
-  return render(request, 'cook_templates/cook_profile.html')
-
 def order_history(request):
   cook = Cook.objects.get(user_id=request.user.id)
   objs = Order.objects.filter(cook=cook, status='r').order_by('-date')
@@ -326,3 +315,39 @@ def order_history(request):
 
   return render(request, 'cook_templates/order_history.html', context)
   
+@login_required
+@cook_required
+def myaccount(request):
+  cook = Cook.objects.get(user_id=request.user.id)
+  address = Address.objects.get(cook=cook)
+  return render(request, 'cook_templates/cook_profile.html', {'address':address,'cook':cook})
+
+@login_required
+@cook_required
+def editprofile(request):
+  cook = Cook.objects.get(user_id=request.user.id)
+  address = Address.objects.get(cook=cook)
+  return render(request, 'cook_templates/edit_profile.html', {'address':address,'cook':cook})
+
+@login_required
+@cook_required
+def requestchange(request):
+  cook = Cook.objects.get(user_id=request.user.id)
+  new_kitchen_license = request.POST["kitchen_license"]
+  new_phone_number = request.POST["phone_number"]
+  new_street_address = request.POST["street_address"]
+  new_city = request.POST["city"]
+  new_state = request.POST["state"]
+  new_zipcode = request.POST["zipcode"]
+  change = CookChangeRequest(
+    cook = cook,
+    kitchen_license = new_kitchen_license,
+    phone_number = new_phone_number,
+    street_name = new_street_address,
+    city = new_city,
+    state = new_state,
+    zipcode = new_zipcode
+  )
+  change.save()
+  messages.success(request, 'Change Request Sent To Admin!')
+  return HttpResponseRedirect(reverse('cookaccount'))
