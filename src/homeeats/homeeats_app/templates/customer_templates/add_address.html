@@ -70,6 +70,21 @@
     </div>
 </nav>
 
+{% if messages %}
+<ul class="messages" style="padding-right:40px;">
+    {% for message in messages %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>{{message}}</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endif %}
+    {% endfor %}
+</ul>
+{% endif %}
+
 {% csrf_token %}
 
   <div style="text-align: center;width:25%;margin: 20px auto;">

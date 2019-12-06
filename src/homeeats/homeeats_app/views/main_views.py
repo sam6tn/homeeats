@@ -11,27 +11,14 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from ..forms import CustomerCreateForm, AddressCreateForm
 from django.urls import reverse_lazy
+import urllib.request
+import urllib.parse
+import json
+import ssl
 
 def index(request):
     template = loader.get_template('../templates/index.html')
     return HttpResponse(template.render())
-
-# def signup(request):
-#   if request.method == 'POST':
-#     form = forms.RegisterForm(request.POST)
-#     if form.is_valid():
-#       data = form.cleaned_data
-#       user = User.objects.create_user(username=data['username'], password=data['password'])
-#       customer = models.Customer.objects.create(first_name=data['first_name'], last_name=data['last_name'], user_id=user.id)
-#       user.has_perm('customer')
-#       user.save()
-#       customer.save()
-#       return HttpResponse('ok')
-#     else:
-#       return render(request, 'customer_templates/customer_create.html', {'userForm': form})
-#   else:
-#     userForm = forms.RegisterForm()
-#     return render(request, 'customer_templates/customer_create.html', {'userForm': userForm})
 
 '''
 View of the customer creation form with form validation.
@@ -42,18 +29,21 @@ def customercreate(request):
     form = forms.CustomerCreateForm(request.POST)
     if form.is_valid():
       data = form.cleaned_data
-      user = User.objects.create_user(username=data['email'], email=data['email'], password=data['password'], first_name=data['first_name'], last_name=data['last_name'])
-      customer = models.Customer.objects.create(phone_number=data['phone_number'], user_id=user.id)
-      
-      user.is_customer = True
-      user.save()
-      customer.save()
-      customer = models.Customer.objects.get(user_id=user.id)
-      address = models.Address.objects.create(customer=customer, street_name=data['street'], city=data['town'], state=data['state'], zipcode=data['zipcode'], current_customer_address=True)
-      address.save()
-      shopping_cart = models.ShoppingCart.objects.create(customer=customer)
-      shopping_cart.save()
-      return HttpResponseRedirect(reverse('login'))
+      if verify_address(data['street'], data['town'], data['state']):
+        user = User.objects.create_user(username=data['email'], email=data['email'], password=data['password'], first_name=data['first_name'], last_name=data['last_name'])
+        customer = models.Customer.objects.create(phone_number=data['phone_number'], user_id=user.id)
+        user.is_customer = True
+        user.save()
+        customer.save()
+        customer = models.Customer.objects.get(user_id=user.id)
+        address = models.Address.objects.create(customer=customer, street_name=data['street'], city=data['town'], state=data['state'], zipcode=data['zipcode'], current_customer_address=True)
+        address.save()
+        shopping_cart = models.ShoppingCart.objects.create(customer=customer)
+        shopping_cart.save()
+        return HttpResponseRedirect(reverse('login'))
+      else:
+        messages.add_message(request, messages.ERROR, 'Address not valid, please try again')
+        return render(request, 'customer_create.html', {'form': form})
     else:
       return render(request, 'customer_create.html', {'form': form})
   else:
@@ -66,21 +56,25 @@ def cookcreate(request):
     cook_create_form = forms.CookCreateForm(request.POST, request.FILES)
     if cook_create_form.is_valid():
       data = cook_create_form.cleaned_data
-      user = User.objects.create_user(username=data['email'], password=data['password'], first_name=data['first_name'], last_name=data['last_name'])
-      cook = models.Cook.objects.create(
-        kitchen_license=data['kitchen_license'],
-        government_id = data['government_id'],
-        phone_number=data['phone_number'],
-        delivery_distance_miles=data['delivery_distance_miles'],
-        delivery_fee=data['delivery_fee'],
-        user_id=user.id
-      )
-      address = models.Address.objects.create(cook=cook, street_name=data['street'], city=data['town'], state=data['state'], zipcode=data['zipcode'], is_cook_address=True)
-      address.save()
-      user.is_cook = True
-      user.save()
-      cook.save()
-      return HttpResponseRedirect(reverse('login'))
+      if verify_address(data['street'], data['town'], data['state']):
+        user = User.objects.create_user(username=data['email'], password=data['password'], first_name=data['first_name'], last_name=data['last_name'])
+        cook = models.Cook.objects.create(
+          kitchen_license=data['kitchen_license'],
+          government_id = data['government_id'],
+          phone_number=data['phone_number'],
+          delivery_distance_miles=data['delivery_distance_miles'],
+          delivery_fee=data['delivery_fee'],
+          user_id=user.id
+        )
+        address = models.Address.objects.create(cook=cook, street_name=data['street'], city=data['town'], state=data['state'], zipcode=data['zipcode'], is_cook_address=True)
+        address.save()
+        user.is_cook = True
+        user.save()
+        cook.save()
+        return HttpResponseRedirect(reverse('login'))
+      else: 
+        messages.add_message(request, messages.ERROR, 'Address not valid, please try again')
+        return render(request, 'cook_create.html', {'cook_create_form': cook_create_form})
     else:
       return render(request, 'cook_create.html', {'cook_create_form': cook_create_form})
   else:
@@ -161,3 +155,15 @@ def reject_order(request):
     'success':True
   }
   return JsonResponse(data)
+
+def verify_address(street, town, state):
+  add = street #format the cook_address as a url parameter
+  add = add.replace(" ", "+")
+  add = add + "+" + town + "+" + state
+  req = urllib.request.Request('https://maps.googleapis.com/maps/api/geocode/json?address=' + add + '&key=AIzaSyCPqdytEpfi1zIU4dj8B3KddX8-b6OPJoM')
+  resp_json = urllib.request.urlopen(req, context=ssl.SSLContext()).read().decode('utf-8')
+  resp = json.loads(resp_json)
+  if resp['status'] == 'OK':
+    return True
+  else:
+    return False

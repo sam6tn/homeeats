@@ -15,6 +15,7 @@ from ..decorators import customer_required
 from django.forms import model_to_dict
 from django.views.generic import UpdateView
 from django.urls import reverse_lazy
+from django.contrib import messages
 from decimal import Decimal
 from datetime import timedelta
 import urllib.request
@@ -71,15 +72,19 @@ def add_address(request):
       form = forms.AddressCreateForm(request.POST)
       if form.is_valid():
         data = form.cleaned_data
-        address = Address.objects.create(
-          street_name=data['street'], 
-          city=data['town'],
-          state=data['state'],
-          zipcode=data['zipcode'],
-          customer=customer
-          )
-        address.save()
-        return HttpResponseRedirect(reverse('addresses'))
+        if verify_address(data['street'], data['town'], data['state']):
+          address = Address.objects.create(
+            street_name=data['street'], 
+            city=data['town'],
+            state=data['state'],
+            zipcode=data['zipcode'],
+            customer=customer
+            )
+          address.save()
+          return HttpResponseRedirect(reverse('addresses'))
+        else:
+          messages.add_message(request, messages.ERROR, 'Address not valid, please try again')
+          return render(request, 'customer_templates/add_address.html', {'form': form, 'cart_items': cart_items})
       else:
         return render(request, 'customer_templates/add_address.html', {'form': form, 'cart_items': cart_items})
   else:
@@ -99,10 +104,17 @@ def dish(request, dish_id):
     form = DishReviewForm()
     return render(request, 'customer_templates/customer_dish.html', {'dish': dish, 'reviews':reviews, 'form':form, 'cart_items': cart_items})
 
-# @login_required
-# @customer_required
-# def checkout(request):
-#   return render(request, 'customer_templates/checkout.html')
+def verify_address(street, town, state):
+  add = street #format the cook_address as a url parameter
+  add = add.replace(" ", "+")
+  add = add + "+" + town + "+" + state
+  req = urllib.request.Request('https://maps.googleapis.com/maps/api/geocode/json?address=' + add + '&key=AIzaSyCPqdytEpfi1zIU4dj8B3KddX8-b6OPJoM')
+  resp_json = urllib.request.urlopen(req, context=ssl.SSLContext()).read().decode('utf-8')
+  resp = json.loads(resp_json)
+  if resp['status'] == 'OK':
+    return True
+  else:
+    return False
 
 @login_required
 @customer_required
