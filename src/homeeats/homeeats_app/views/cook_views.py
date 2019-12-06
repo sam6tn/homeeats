@@ -12,6 +12,10 @@ from django.contrib import messages
 import datetime
 from django.template.defaulttags import register
 from django.utils import timezone
+import urllib.request
+import urllib.parse
+import json
+import ssl
 
 
 #cook home page after login
@@ -338,15 +342,30 @@ def requestchange(request):
   new_city = request.POST["city"]
   new_state = request.POST["state"]
   new_zipcode = request.POST["zipcode"]
-  change = CookChangeRequest(
-    cook = cook,
-    kitchen_license = new_kitchen_license,
-    phone_number = new_phone_number,
-    street_name = new_street_address,
-    city = new_city,
-    state = new_state,
-    zipcode = new_zipcode
-  )
-  change.save()
-  messages.success(request, 'Change Request Sent To Admin!')
-  return HttpResponseRedirect(reverse('cookaccount'))
+  if verify_address(new_street_address, new_city, new_zipcode):
+    change = CookChangeRequest(
+      cook = cook,
+      kitchen_license = new_kitchen_license,
+      phone_number = new_phone_number,
+      street_name = new_street_address,
+      city = new_city,
+      state = new_state,
+      zipcode = new_zipcode
+    )
+    change.save()
+    messages.success(request, 'Change Request Sent To Admin!')
+    return HttpResponseRedirect(reverse('cookaccount'))
+  messages.add_message(request, messages.ERROR, 'Address not valid, cannot send change request')
+  return HttpResponseRedirect(reverse('cookeditprofile'))
+
+def verify_address(street, town, state):
+  add = street #format the cook_address as a url parameter
+  add = add.replace(" ", "+")
+  add = add + "+" + town + "+" + state
+  req = urllib.request.Request('https://maps.googleapis.com/maps/api/geocode/json?address=' + add + '&key=AIzaSyCPqdytEpfi1zIU4dj8B3KddX8-b6OPJoM')
+  resp_json = urllib.request.urlopen(req, context=ssl.SSLContext()).read().decode('utf-8')
+  resp = json.loads(resp_json)
+  if resp['status'] == 'OK':
+    return True
+  else:
+    return False
