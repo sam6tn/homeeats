@@ -94,6 +94,22 @@
         }
     });
   }
+  function cash(){
+    document.getElementById("cashButton").classList.add("btn-dark");
+    document.getElementById("cashButton").classList.remove("btn-light");
+    document.getElementById("cardButton").classList.add("btn-light");
+    document.getElementById("cardButton").classList.remove("btn-dark");
+    document.getElementById("cardpayment").style.display = "none";
+    document.getElementById("cashpayment").style.display = "block";
+  }
+  function card(){
+    document.getElementById("cardButton").classList.add("btn-dark");
+    document.getElementById("cardButton").classList.remove("btn-light");
+    document.getElementById("cashButton").classList.add("btn-light");
+    document.getElementById("cashButton").classList.remove("btn-dark");
+    document.getElementById("cardpayment").style.display = "block";
+    document.getElementById("cashpayment").style.display = "none";
+  }
 </script>
 
 <!--
@@ -107,35 +123,52 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-8 p-5 bg-white rounded shadow-sm mb-5">
-            <form action="{% url 'checkout' %}">
-                <div class="form-row justify-content-md-center">
+            <div class="text-center mb-5">
+                <span style="margin-right:10px;">Select Payment Method</span>
+                <button onclick="cash();" id="cashButton" class="btn btn-dark">Cash</button>
+                <button onclick="card();" id="cardButton" class="btn btn-light">Card</button>
+            </div>
+            <div id="cashpayment" class="text-center">
+                <strong class="text-muted">Please have cash ready when the order is delivered</strong>
+                <div class="form-row justify-content-md-center mt-5">
                     <div class="form-group col-md-6">
-                        <label for="cardNumber">Card Number</label>
-                        <input type="text" class="form-control" id="cardNumber" placeholder="Card Number*">
+                        <form action="{% url 'checkout' %}">
+                            <button type="submit" style="width:100%;" class="btn btn-primary btn-lg">Place Order</button>
+                        </form>
                     </div>
                 </div>
-                <div class="form-row justify-content-md-center">
-                    <div class="form-group col-md-6">
-                        <label for="nameOnCard">Name on Card</label>
-                        <input type="text" class="form-control" id="nameOnCard" placeholder="Name on Card*">
+            </div>
+            <div id="cardpayment" style="display:none">
+                <form action="{% url 'checkout' %}">
+                    <div class="form-row justify-content-md-center">
+                        <div class="form-group col-md-6">
+                            <label for="cardNumber">Card Number</label>
+                            <input type="text" class="form-control" id="cardNumber" placeholder="Card Number*">
+                        </div>
                     </div>
+                    <div class="form-row justify-content-md-center">
+                        <div class="form-group col-md-6">
+                            <label for="nameOnCard">Name on Card</label>
+                            <input type="text" class="form-control" id="nameOnCard" placeholder="Name on Card*">
+                        </div>
+                    </div>
+                    <div class="form-row justify-content-md-center">
+                        <div class="form-group col-md-3">
+                            <label for="expDate">Exp. Date</label>
+                            <input type="text" class="form-control" id="expDate" placeholder="Exp. Date*">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="CVV">CVV</label>
+                            <input type="text" class="form-control" id="CVV" placeholder="CVV*">
+                        </div>
+                    </div>
+                    <div class="form-row justify-content-md-center">
+                        <div class="form-group col-md-6">
+                            <button type="submit" style="width:100%;" class="btn btn-primary btn-lg">Place Order</button>
+                        </div>
+                    </div>
+                </form>
                 </div>
-                <div class="form-row justify-content-md-center">
-                    <div class="form-group col-md-3">
-                        <label for="expDate">Exp. Date</label>
-                        <input type="text" class="form-control" id="expDate" placeholder="Exp. Date*">
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label for="CVV">CVV</label>
-                        <input type="text" class="form-control" id="CVV" placeholder="CVV*">
-                    </div>
-                </div>
-                <div class="form-row justify-content-md-center">
-                    <div class="form-group col-md-6">
-                        <button type="submit" style="width:100%;" class="btn btn-primary btn-lg">Place Order</button>
-                    </div>
-                </div>
-            </form>
         </div>
         
         <div class="col-lg-4 p-5 bg-white rounded shadow-sm mb-5">
