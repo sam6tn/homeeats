@@ -313,7 +313,8 @@ def order_history(request):
     completed_orders.append(ord)
   context = {
     'rejected_orders': rejected_orders,
-    'completed_orders': completed_orders
+    'completed_orders': completed_orders,
+    'cook': cook
   }
 
   return render(request, 'cook_templates/order_history.html', context)
