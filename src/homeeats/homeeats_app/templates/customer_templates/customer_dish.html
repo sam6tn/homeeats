@@ -28,6 +28,7 @@
                 <span>{{ingredient}}, </span>
             {% endfor %}
             </p>
+            <p>Allergies: {{dish.allergies}}</p>
             <form method="POST" action="{% url 'addtocart' %}" style="display:inline">
                 {% csrf_token %}  
                 <input name="dish_id" type="hidden" value="{{dish.id}}">
