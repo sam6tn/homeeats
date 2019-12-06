@@ -157,6 +157,7 @@ class CartItem(models.Model):
   shopping_cart = models.ForeignKey(ShoppingCart, on_delete=models.CASCADE)
 
 class CookChangeRequest(models.Model):
+  cook = models.ForeignKey(Cook, on_delete=models.CASCADE)
   kitchen_license = models.CharField(max_length=30)
   phone_number = models.CharField(max_length=30, default="")
   street_name = models.CharField(max_length=60, default="")

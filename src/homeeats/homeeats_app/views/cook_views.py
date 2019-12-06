@@ -340,6 +340,7 @@ def requestchange(request):
   new_state = request.POST["state"]
   new_zipcode = request.POST["zipcode"]
   change = CookChangeRequest(
+    cook = cook,
     kitchen_license = new_kitchen_license,
     phone_number = new_phone_number,
     street_name = new_street_address,
