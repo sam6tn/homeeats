@@ -1,5 +1,11 @@
 {% extends "admin/base_site.html" %}
 
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">Home</a>
+&rsaquo; Change Requests
+</div>
+{% endblock %}
 
 {% block content %}
 

@@ -11,6 +11,7 @@ from ..decorators import cook_required
 from django.contrib import messages
 import datetime
 from django.template.defaulttags import register
+from django.utils import timezone
 
 
 #cook home page after login
@@ -35,7 +36,6 @@ def home(request):
   deadlines = {}
   for order in orders:
     if order['status'] == 'p':
-      print(order)
       pending_orders.append(order)
       deadlines[order['id']] = order['pending_deadline']
     elif order['status'] == 'o' or order['status'] == 'c':
@@ -43,7 +43,6 @@ def home(request):
 
   #test timer crap
   # deadline = datetime.datetime.now() + datetime.timedelta(minutes=5)
-  print(deadlines)
   reject_reasons = RejectReason.objects.all()
   context = {
     'reject_reasons': reject_reasons,
@@ -213,7 +212,7 @@ def completed_delivery(request, order_id):
   change_order_status('o', 'd', request, order_id)
   order = Order.objects.get(id=order_id)
   if (order.status == 'd'):
-    order.actual_arrival_time = datetime.datetime.now()
+    order.actual_arrival_time = timezone.localtime(timezone.now())
     order.save()
   return HttpResponseRedirect(reverse('cook_home'))
 
