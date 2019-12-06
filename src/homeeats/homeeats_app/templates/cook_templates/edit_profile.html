@@ -1,0 +1,51 @@
+{% extends '../cook_base.html' %}
+{% block pagecontent %}
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+  <div style="text-align: center;width:27%;margin: 20px auto;">
+    <h2>Edit Account</h2>
+    <form method="post" action="{% url 'requestchange' %}">
+      {% csrf_token %}
+      <div style="margin:10px;text-align: left;">
+        Kitchen License
+        <div style="float:right;">
+          <input name="kitchen_license" value="{{cook.kitchen_license}}">
+        </div>
+      </div>
+      <div style="margin:10px;text-align: left;">
+        Phone Number
+        <div style="float:right;">
+            <input name="phone_number" value="{{cook.phone_number}}">
+        </div>
+      </div>
+      <div style="margin:10px;text-align: left;">
+        Street Address
+        <div style="float:right;">
+          <input name="street_address" value="{{address.street_name}}">
+        </div>
+      </div>
+      <div style="margin:10px;text-align: left;">
+        City
+        <div style="float:right;">
+          <input name="city" value="{{address.city}}">
+        </div>
+      </div>
+      <div style="margin:10px;text-align: left;">
+        State
+        <div style="float:right;">
+          <input name="state" value="{{address.state}}">
+        </div>
+      </div>
+      <div style="margin:10px;text-align: left;">
+        Zip Code
+        <div style="float:right;">
+          <input name="zipcode" value="{{address.zipcode}}">
+        </div>
+      </div>
+      <input type="submit" value="Submit Change Request" class="btn btn-primary">
+    </form>
+  </div>
+
+  {% endblock %}

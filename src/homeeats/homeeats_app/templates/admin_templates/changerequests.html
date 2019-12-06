@@ -1,0 +1,54 @@
+{% extends "admin/base_site.html" %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">Home</a>
+&rsaquo; Change Requests
+</div>
+{% endblock %}
+
+{% block content %}
+
+<link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet">
+{% if requests %}
+<div class="container" style="overflow-x:scroll;">
+    <div class="row flex-row flex-nowrap">
+        {% for r in requests %}
+        {% with id=r.cook.id %}
+        <div class="col-4" style="margin-bottom:20px;display:inline-block;">
+            <div class="card">
+                <div class="card-header">
+                    {{r.cook}}
+                </div>
+                <div class="card-body">
+                    {% if r.cook.kitchen_license != r.kitchen_license %}
+                        <p>License: {{r.cook.kitchen_license}} -> {{r.kitchen_license}}</p>
+                    {% endif %}
+                    {% if r.cook.phone_number != r.phone_number %}
+                        <p>Phone: {{r.cook.phone_number}} -> {{r.phone_number}}</p>
+                    {% endif %}
+                    {% if address_changes|getvalue:id %}
+                    <p id="street">Street: {{r.street_name}}</p>
+                    <p id="city">City: {{r.city}}</p>
+                    <p id="state">State: {{r.state}}</p>
+                    <p id="zip">Zip Code: {{r.zipcode}}</p>
+                    {% endif %}
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input name="id" type="hidden" value="{{r.id}}">
+                        <button name="approve" class="btn btn-success">Approve</button>
+                        <button name="decline" class="btn btn-danger">Decline</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endwith %}
+        {% endfor %}
+    </div>
+</div>
+
+{% else %}
+<h1>No Change Requests</h1>
+{% endif %}
+{% endblock %}

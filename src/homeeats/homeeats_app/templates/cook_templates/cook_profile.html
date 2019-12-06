@@ -6,11 +6,26 @@
   
     </style>
   </head>
+
+  {% if messages %}
+  <ul class="messages" style="padding-right:40px;">
+      {% for message in messages %}
+      {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+      <div class="alert alert-success alert-dismissible fade show" role="alert" style="text-align:center;">
+          <strong>{{message}}</strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+      {% endif %}
+      {% endfor %}
+  </ul>
+  {% endif %}
+
   <div style="text-align: center;width:27%;margin: 20px auto;">
     <h2>My Account</h2>
-    <form method="post">
-      {% csrf_token %}
       <img src="{{ user.cook.government_id.url }}">
+
       <div style="margin:10px;text-align: left;">
        First Name
         <div style="float:right;">
@@ -24,6 +39,12 @@
         </div>
       </div>
       <div style="margin:10px;text-align: left;">
+        Kitchen License
+        <div style="float:right;">
+          {{ cook.kitchen_license }}
+        </div>
+      </div>
+      <div style="margin:10px;text-align: left;">
         Email
         <div style="float:right;">
           {{ user.username }}
@@ -32,11 +53,26 @@
       <div style="margin:10px;text-align: left;">
         Phone Number
         <div style="float:right;">
-          {{ user.cook.phone_number }}
+          {{ cook.phone_number }}
         </div>
       </div>
-      <input type="submit" value="Submit Change Request" class="btn btn-primary">
-    </form>
+      <div style="margin:10px;text-align: left;">
+        Street Name
+        <div style="float:right;">
+          {{ address.street_name }}
+        </div>
+      </div>
+      <div style="margin:10px;text-align: left;">
+        City, State, Zip
+        <div style="float:right;">
+          {{ address.city }}, {{address.state}}, {{address.zipcode}}
+        </div>
+      </div>
+
+      <form action="{% url 'cookeditprofile' %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="Edit Profile" class="btn btn-primary">
+      </form>
   </div>
 
   {% endblock %}

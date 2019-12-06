@@ -1,5 +1,11 @@
 {% extends "admin/base_site.html" %}
 
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">Home</a>
+&rsaquo; Cook Applications
+</div>
+{% endblock %}
 
 {% block content %}
 
@@ -21,9 +27,10 @@ integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw
                     <form method="POST">
                         {% csrf_token %}
                         <input name="id" type="hidden" value="{{cook.id}}">
-                        <button class="btn btn-success">Approve</button>
+                        <button name="approve" class="btn btn-success">Approve</button>
+                        <button name="decline" class="btn btn-danger">Decline</button>
+
                     </form>
-                    <!-- <button class="btn btn-danger">Decline</button> -->
                 </div>
             </div>
         </div>
