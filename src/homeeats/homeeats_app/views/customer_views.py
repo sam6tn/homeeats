@@ -26,7 +26,7 @@ from django.template.defaulttags import register
 
 @login_required
 @customer_required
-def messages(request):
+def messaging(request):
   return render(request, 'customer_templates/messages.html')
 
 @login_required
