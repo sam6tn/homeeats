@@ -330,6 +330,9 @@ def myaccount(request):
 def editprofile(request):
   cook = Cook.objects.get(user_id=request.user.id)
   address = Address.objects.get(cook=cook)
+  change = cook.cookchangerequest_set.all()
+  if change.count()>0:
+    messages.warning(request, 'Your Change Request Is Still Pending. Submitting A New Request Will Overwrite The Current Request.')
   return render(request, 'cook_templates/edit_profile.html', {'address':address,'cook':cook})
 
 @login_required
@@ -343,6 +346,10 @@ def requestchange(request):
   new_state = request.POST["state"]
   new_zipcode = request.POST["zipcode"]
   if verify_address(new_street_address, new_city, new_zipcode):
+    current_change = cook.cookchangerequest_set.all()
+    if current_change.count()>0:
+      for c in current_change:
+        c.delete()
     change = CookChangeRequest(
       cook = cook,
       kitchen_license = new_kitchen_license,
