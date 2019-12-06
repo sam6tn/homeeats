@@ -8,9 +8,8 @@
 </head>
 <div style="text-align: center;width:34%;margin: 20px auto;">
   <h2>Cook Registration</h2>
-  <form method="post">
+  <form enctype="multipart/form-data" method="post">
     {% csrf_token %}
-
     <div style="margin:10px;text-align: left;">
       {{ cook_create_form.first_name.label_tag }}
       <div style="float:right;">
@@ -34,6 +33,12 @@
       <div style="float:right;">
         {{ cook_create_form.password }}
       </div>
+    </div>
+    <div style="margin:10px;text-align: left;">
+        {{ cook_create_form.government_id.label_tag }}
+        <div style="float:right;">
+          {{ cook_create_form.government_id }}
+        </div>
     </div>
     <div style="margin:10px;text-align: left;">
       <label for="kitchen_license">Kitchen License:</label>

@@ -63,12 +63,13 @@ def customercreate(request):
 
 def cookcreate(request):
   if request.method == 'POST':
-    cook_create_form = forms.CookCreateForm(request.POST)
+    cook_create_form = forms.CookCreateForm(request.POST, request.FILES)
     if cook_create_form.is_valid():
       data = cook_create_form.cleaned_data
       user = User.objects.create_user(username=data['email'], password=data['password'], first_name=data['first_name'], last_name=data['last_name'])
       cook = models.Cook.objects.create(
         kitchen_license=data['kitchen_license'],
+        government_id = data['government_id'],
         phone_number=data['phone_number'],
         delivery_distance_miles=data['delivery_distance_miles'],
         delivery_fee=data['delivery_fee'],
