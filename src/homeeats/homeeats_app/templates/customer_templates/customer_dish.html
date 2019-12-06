@@ -11,11 +11,15 @@
             <li class="list-group-item" style="width:100%">
             <h2>
                 {{dish.title}}
-                <span class="fa fa-star {% if dish.rating >= 1 %}checked{% endif %} fa-sm"></span>
-                <span class="fa fa-star {% if dish.rating >= 2 %}checked{% endif %} fa-sm"></span>
-                <span class="fa fa-star {% if dish.rating >= 3 %}checked{% endif %} fa-sm"></span>
-                <span class="fa fa-star {% if dish.rating >= 4 %}checked{% endif %} fa-sm"></span>
-                <span class="fa fa-star {% if dish.rating >= 5 %}checked{% endif %} fa-sm"></span>
+                {% if dish.rating > 0 %}
+                    <span class="fa fa-star {% if dish.rating >= 1 %}checked{% endif %} fa-sm"></span>
+                    <span class="fa fa-star {% if dish.rating >= 2 %}checked{% endif %} fa-sm"></span>
+                    <span class="fa fa-star {% if dish.rating >= 3 %}checked{% endif %} fa-sm"></span>
+                    <span class="fa fa-star {% if dish.rating >= 4 %}checked{% endif %} fa-sm"></span>
+                    <span class="fa fa-star {% if dish.rating >= 5 %}checked{% endif %} fa-sm"></span>
+                {% else %}
+                    <span style="font-weight:normal;font-size:16pt;">NO RATING</span>
+                {% endif %}
             </h2>
             <h4>${{dish.price}}</h4>
             <h6>{{dish.description}} </h6>
