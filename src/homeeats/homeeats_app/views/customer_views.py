@@ -365,6 +365,7 @@ def checkout(request):
   order_name = request.user.first_name + " " + request.user.last_name
   order_cook = Cook.objects.get(id=shopping_cart.cook_id)
   cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
+  address = Address.objects.get(customer=customer, current_customer_address=True)
   order = Order.objects.create( #create new pending order
     name = order_name,
     cook = order_cook,
@@ -375,7 +376,11 @@ def checkout(request):
     tax = shopping_cart.tax,
     delivery_fee = order_cook.delivery_fee,
     tip = shopping_cart.tip,
-    special_requests = shopping_cart.special_requests
+    special_requests = shopping_cart.special_requests,
+    street_name = address.street_name,
+    city = address.city,
+    state = address.state,
+    zipcode = address.zipcode
   )
   order.save()
   max_cook_time = 0

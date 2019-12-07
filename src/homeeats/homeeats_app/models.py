@@ -131,6 +131,10 @@ class Order(models.Model):
   actual_arrival_time = models.DateTimeField(null=True, blank=True)
   pending_deadline = models.DateTimeField(default=calculateTime)
   reject_reason = models.ForeignKey(RejectReason, on_delete=models.CASCADE, null=True, blank=True)
+  street_name = models.CharField(max_length=60, default="")
+  city = models.CharField(max_length=60, default="")
+  state = models.CharField(max_length=20, default="")
+  zipcode = models.CharField(max_length=20, default="")
 
 class Item(models.Model):
   dish = models.ForeignKey(Dish, on_delete=models.CASCADE)

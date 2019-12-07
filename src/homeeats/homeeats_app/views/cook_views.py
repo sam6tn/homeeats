@@ -69,11 +69,9 @@ def single_order_view(request, order_id):
   order = Order.objects.get(id=order_id)
   customer = Customer.objects.get(id=order.customer_id)
   user = customer.user
-  address = Address.objects.get(customer=customer)
   context = {
     'user': user,
     'customer': customer,
-    'address': address,
     'order': order,
     'items': items,
     'cook': cook
