@@ -88,6 +88,19 @@
     </div>
 </nav>
 
+{% if not dishes %}
+
+<div class="container mt-2">
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container text-center">
+            <h1 class="display-4 brand-name">HomeEats</h1>
+            <p class="lead">Currently no cooks are online in your area...</p>
+            <p class="lead">We're working on expanding in your area!</p>
+    </div>
+</div>
+
+{% endif %}
+
 {% if not customer.shoppingcart.empty%}
     <div class="container">
         <h2 style="color:red;">{{customer.shoppingcart.cook.user.first_name}} {{customer.shoppingcart.cook.user.last_name}}</h2>
