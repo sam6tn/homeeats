@@ -153,6 +153,12 @@ class ShoppingCart(models.Model):
   total_after_tip = models.DecimalField(default=0, decimal_places=2, max_digits=6)
   empty = models.BooleanField(default=True)
   special_requests = models.CharField(max_length=120, default="")
+  paid = models.BooleanField(default=False)
+  payment_choices = [
+        ('a', 'Cash'),
+        ('b', 'Card')
+    ]
+  status = models.CharField(max_length=1, choices=payment_choices, default='a') 
 
 class CartItem(models.Model):
   dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
