@@ -135,6 +135,12 @@ class Order(models.Model):
   city = models.CharField(max_length=60, default="")
   state = models.CharField(max_length=20, default="")
   zipcode = models.CharField(max_length=20, default="")
+  paid = models.BooleanField(default=False)
+  payment_choices = [
+        ('a', 'Cash'),
+        ('b', 'Card')
+    ]
+  payment_option = models.CharField(max_length=1, choices=payment_choices, default='a')
 
 class Item(models.Model):
   dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
@@ -158,7 +164,7 @@ class ShoppingCart(models.Model):
         ('a', 'Cash'),
         ('b', 'Card')
     ]
-  status = models.CharField(max_length=1, choices=payment_choices, default='a') 
+  payment_option = models.CharField(max_length=1, choices=payment_choices, default='a') 
 
 class CartItem(models.Model):
   dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
