@@ -111,7 +111,7 @@ class CustomerCheckoutTest(TestCase):
         response = self.client.get(reverse('customer_home'))
         self.assertEquals(response.status_code, 302)
 
-class CustomerMessagingTest(TestCase):
+#class CustomerMessagingTest(TestCase):
     #def test_checkout_access(self):
     #    self.client.login(username='anki@anki.com', password='ankith')
     #    response = self.client.get(reverse('messaging'))
