@@ -95,7 +95,7 @@ class DishCreateForm(forms.Form):
 class DishEditForm(forms.ModelForm):
     class Meta:
         model = Dish
-        fields = ('title', 'description','ingredients', 'dish_image', 'cook_time')
+        fields = ('title', 'description','ingredients', 'dish_image', 'cook_time', 'cuisine', 'vegan', 'allergies')
 
 class DishSearchForm(forms.Form):
     search = forms.CharField(label="Search",max_length=30, required=False, widget=forms.TextInput(attrs={'placeholder':'Search','class':'form-control mr-sm-2'}))
