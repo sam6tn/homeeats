@@ -317,7 +317,7 @@ def orders(request):
     current_orders = customer.order_set.filter(
         Q(status='p') | Q(status='c') | Q(status='o'))
     past_orders = customer.order_set.filter(
-        Q(status='d') | Q(status='r') | Q(status='x'))
+        Q(status='d') | Q(status='r') | Q(status='x')).order_by('-date')
     deadlines = {}
     for order in current_orders:
         if order.status == 'p':
