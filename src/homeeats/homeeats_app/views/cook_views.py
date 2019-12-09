@@ -13,7 +13,6 @@ import datetime
 from django.template.defaulttags import register
 from django.utils import timezone
 
-
 #cook home page after login
 @login_required
 @cook_required
