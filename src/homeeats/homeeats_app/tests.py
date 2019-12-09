@@ -110,6 +110,63 @@ class CustomerCheckoutTest(TestCase):
         self.client.get(reverse('checkout'))
         response = self.client.get(reverse('customer_home'))
         self.assertEquals(response.status_code, 302)
+    def test_valid_payment(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        self.client.post(reverse('addtocart'), {'quantity': 1, 'dish_id': 1}, content_type='application/x-www-form-urlencoded')
+        data = {
+            "cardNumber": "4242424242424242",
+            "expDate": 12/20,
+            "cvc": "314",
+            "payment_option": "card",
+        }
+        response = self.client.post(reverse('checkout'), data, content_type='application/x-www-form-urlencoded')
+        self.assertEquals(response.status_code, 302)
+    def test_invalid_payment(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        self.client.post(reverse('addtocart'), {'quantity': 1, 'dish_id': 1}, content_type='application/x-www-form-urlencoded')
+        data = {
+            "cardNumber": "5242424242424242",
+            "expDate": 12/20,
+            "cvc": "314",
+            "payment_option": "card",
+        }
+        response = self.client.post(reverse('checkout'), data, content_type='application/x-www-form-urlencoded', follow=True)
+        self.assertEquals(response.status_code, 200)
+    def test_invalid_date(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        self.client.post(reverse('addtocart'), {'quantity': 1, 'dish_id': 1}, content_type='application/x-www-form-urlencoded')
+        data = {
+            "cardNumber": "4242424242424242",
+            "expDate": 12/18,
+            "cvc": "314",
+            "payment_option": "card",
+        }
+        response = self.client.post(reverse('checkout'), data, content_type='application/x-www-form-urlencoded', follow=True)
+        self.assertEquals(response.status_code, 200)
+    def test_invalid_cvv(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        self.client.post(reverse('addtocart'), {'quantity': 1, 'dish_id': 1}, content_type='application/x-www-form-urlencoded')
+        data = {
+            "cardNumber": "4242424242424242",
+            "expDate": 12/20,
+            "cvc": "34",
+            "payment_option": "card",
+        }
+        response = self.client.post(reverse('checkout'), data, content_type='application/x-www-form-urlencoded', follow=True)
+        self.assertEquals(response.status_code, 200)
+    def test_cash(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        self.client.post(reverse('addtocart'), {'quantity': 1, 'dish_id': 1}, content_type='application/x-www-form-urlencoded')
+        data = {
+            "payment_option": "cash",
+        }
+        response = self.client.post(reverse('checkout'), data, content_type='application/x-www-form-urlencoded', follow=True)
+        self.assertEquals(response.status_code, 200)
+    def test_skip_checkout(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        self.client.post(reverse('addtocart'), {'quantity': 1, 'dish_id': 1}, content_type='application/x-www-form-urlencoded')
+        response = self.client.get(reverse('checkout'), follow=True)
+        self.assertEquals(response.status_code, 200)
 
 class CustomerCartTest(TestCase):
     def test_cart_access(self):
