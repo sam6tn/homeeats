@@ -79,6 +79,7 @@ class CookCreateForm(forms.ModelForm):
     state = forms.CharField(required=True,)
     zipcode = forms.CharField(required=True,)
     government_id = forms.ImageField()
+    password = forms.CharField(widget=forms.PasswordInput())
     class Meta:
       model = User
       fields = ['first_name', 'last_name', 'email', 'password']
