@@ -433,8 +433,13 @@ def checkout(request):
             street_name=address.street_name,
             city=address.city,
             state=address.state,
-            zipcode=address.zipcode
+            zipcode=address.zipcode,
+            payment_option="a"
         )
+
+        if request.POST['payment_option'] == 'cash':
+            order.payment_option = "b"
+
         order.save()
         max_cook_time = 0
         for item in cart_items:  # for each CartItem in shopping cart
