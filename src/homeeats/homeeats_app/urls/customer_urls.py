@@ -7,7 +7,6 @@ urlpatterns = [
   path('editprofile/', customer_views.customer_edit_profile, name='customer_edit_profile'),
   path('cart/', customer_views.cart, name='cart'), #customer shopping cart
   path('messaging/', customer_views.messaging, name='messaging'), #customer shopping cart
-  path('bulkorder/', customer_views.messaging, name='bulkorder'), #bulk order request form
   path('addtocart/', customer_views.addtocart, name='addtocart'), #controller for adding dish to cart
   path('removeItem/', customer_views.removeItem, name='removeItem'), #controller for adding dish to cart
   path('payment/', customer_views.payment, name='payment'), #controller for adding dish to cart
