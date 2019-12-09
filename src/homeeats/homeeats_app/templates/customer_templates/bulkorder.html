@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+.dropbtn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+}
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+.dropdown-content a {
+  color: black;
+  padding: 10px 14px;
+  text-decoration: none;
+  display: block;
+}
+body {
+  font-family: Arial;
+  font-size: 17px;
+  padding: 8px;
+}
+* {
+  box-sizing: border-box;
+}
+.row {
+  display: -ms-flexbox; /* IE10 */
+  display: flex;
+  -ms-flex-wrap: wrap; /* IE10 */
+  flex-wrap: wrap;
+  margin: 0 -16px;
+}
+.col-25 {
+  -ms-flex: 25%; /* IE10 */
+  flex: 25%;
+}
+.col-50 {
+  -ms-flex: 50%; /* IE10 */
+  flex: 50%;
+}
+.col-75 {
+  -ms-flex: 75%; /* IE10 */
+  flex: 75%;
+}
+.col-25,
+.col-50,
+.col-75 {
+  padding: 0 16px;
+}
+.container {
+  background-color: #f2f2f2;
+  padding: 5px 20px 15px 20px;
+  border: 1px solid lightgrey;
+  border-radius: 3px;
+}
+input[type=text] {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+label {
+  margin-bottom: 10px;
+  display: block;
+}
+.icon-container {
+  margin-bottom: 20px;
+  padding: 7px 0;
+  font-size: 24px;
+}
+.btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  width: 100%;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 17px;
+}
+.btn:hover {
+  background-color: #45a049;
+}
+a {
+  color: #2196F3;
+}
+hr {
+  border: 1px solid lightgrey;
+}
+span.price {
+  float: right;
+  color: grey;
+}
+/* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other (also change the direction - make the "cart" column go on top) */
+@media (max-width: 800px) {
+  .row {
+    flex-direction: column-reverse;
+  }
+  .col-25 {
+    margin-bottom: 20px;
+  }
+}
+.dropdown-content a:hover {background-color: #ddd;}
+.dropdown:hover .dropdown-content {display: block;}
+.dropdown:hover .dropbtn {background-color: #3e8e41;}
+</style>
+</head>
+<body>
+
+<h2>Bulk Order Form</h2>
+<p>Love a dish? Get it for your next dinner party! Fill out this request form with what you want. The Chef will reach out with any further inquiries about the order and then will either accept/reject the order based on feasibility! Happy ordering :)</p>
+<div class="row">
+  <div class="col-75">
+    <div class="container">
+      <form action="/action_page.php">
+
+        <div class="row">
+          <div class="col-50">
+            <h3></h3>
+            <label for="fname"><i class="fa fa-user"></i> Full Name of Chef</label>
+            <input type="text" id="fname" name="firstname" placeholder="Gordon Ramsey">
+            <div class="dropdown">
+  <button class="dropbtn">Chef Options</button>
+  <div class="dropdown-content">
+    <a href="#">Gordon Ramsey</a>
+    <a href="#">Anki Ankith</a>
+    <a href="#">Shivani Saboo</a>
+  </div>
+</div>
+
+            <label for="email">Dish</label>
+            <input type="text" id="email" name="email" placeholder="Chicken Alfredo">
+             <div class="dropdown">
+  <button class="dropbtn">Dish Options</button>
+  <div class="dropdown-content">
+    <a href="#">Chicken Alfredo</a>
+    <a href="#">Butter Chicken</a>
+    <a href="#">Chocolate Cake</a>
+  </div>
+</div>
+            <label for="adr">How many people do you want to feed?</label>
+            <input type="text" id="adr" name="address" placeholder="Approximately 20 people">
+            <label for="city">Additional requests:</label>
+            <input type="text" id="city" name="city" placeholder="Make it extra mild! Have kids coming over">
+
+            <div class="row">
+              <div class="col-50">
+
+              </div>
+              <div class="col-50">
+
+              </div>
+            </div>
+          </div>
+
+          <div class="col-50">
+            <h3>Contact Information</h3>
+            <p>Please put the best way for the Chef to reach out to you with further inquiries about your order</p>
+
+            <label for="fname"><i class="fa fa-user"></i> Full Name</label>
+            <input type="text" id="cname" name="cardname" placeholder="Habib Karaky">
+            <label for="ccnum">Phone Number </label>
+            <input type="text" id="ccnum" name="cardnumber" placeholder="1111-2222-3333-4444">
+            <label for="expmonth">Email</label>
+            <input type="text" id="expmonth" name="expmonth" placeholder="habib@uva.com">
+            <div class="row">
+              <div class="col-50">
+
+              </div>
+              <div class="col-50">
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <label>
+          <input type="checkbox" checked="checked" name="sameadr"> I give permission for the chef to contact me with further inquiries about my bulk order
+        </label>
+        <label>
+          <input type="checkbox" checked="checked" name="sameadr"> I understand this is just a request form. My order is not complete till the Chef approves the request. 
+        </label>
+        <input type="submit" value="Submit Bulk Order Request" class="btn">
+      </form>
+    </div>
+  </div>
+
+</div>
+
+
+</body>
+</html>
