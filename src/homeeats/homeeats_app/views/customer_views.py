@@ -26,6 +26,11 @@ from django.template.defaulttags import register
 
 @login_required
 @customer_required
+def bulkorder(request):
+  return render(request, 'customer_templates/bulkorder.html')
+
+@login_required
+@customer_required
 def messaging(request):
   #Linking shopping cart with messaging platform
   customer = Customer.objects.get(user_id=request.user.id)
