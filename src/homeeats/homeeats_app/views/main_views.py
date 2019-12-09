@@ -40,6 +40,7 @@ def customercreate(request):
         address.save()
         shopping_cart = models.ShoppingCart.objects.create(customer=customer)
         shopping_cart.save()
+        messages.add_message(request, messages.SUCCESS, 'Your account has been successfully created, login to start ordering now!')
         return HttpResponseRedirect(reverse('login'))
       else:
         messages.add_message(request, messages.ERROR, 'Address not valid, please try again')
@@ -71,6 +72,7 @@ def cookcreate(request):
         user.is_cook = True
         user.save()
         cook.save()
+        messages.add_message(request, messages.SUCCESS, 'Cook account requested, please wait til your account is approved!')
         return HttpResponseRedirect(reverse('login'))
       else: 
         messages.add_message(request, messages.ERROR, 'Address not valid, please try again')
