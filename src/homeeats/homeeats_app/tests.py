@@ -199,7 +199,27 @@ class CustomerRemoveFromFavoritesTest(TestCase):
     def test_removefromfavorites_returns(self):
         response = self.client.post(reverse('togglefav'), {})
         self.assertEqual(str(response.content, encoding='utf8'),'')
-        
+
+class CustomerCancelOrderTest(TestCase):
+    fixtures = ['test_data.json']
+    def test_cancelorder_success(self):
+        response = self.client.post(reverse('cancel_order'), {'order_id':'1'})
+        self.assertEquals(response.status_code, 302)
+    def test_cancelorder_failure(self):
+        response = self.client.post(reverse('cancel_order'), {'order_id':'5'})
+        self.assertEquals(response.status_code, 302)
+
+class CustomAdminInterfaceTest(TestCase):
+    def test_cook_applications(self):
+        response = self.client.get(reverse('admin_applications'))
+        self.assertEquals(response.status_code, 200)
+    def test_cook_changerequests(self):
+        response = self.client.get(reverse('admin_changerequests'))
+        self.assertEquals(response.status_code, 200)
+    def test_reported_reviews(self):
+        response = self.client.get(reverse('admin_reportedreviews'))
+        self.assertEquals(response.status_code, 200)
+
 
 class CustomerDishReviewTest(TestCase):
     def test_review_form_is_valid(self):

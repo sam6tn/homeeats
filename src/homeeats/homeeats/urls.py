@@ -20,8 +20,8 @@ from django.conf.urls.static import static
 from homeeats_app.views import admin_views
 
 urlpatterns = [
-    path('admin/cook/applications/', admin_views.cookApplications),
-    path('admin/cook/changerequests/', admin_views.changerequests),
+    path('admin/cook/applications/', admin_views.cookApplications, name='admin_applications'),
+    path('admin/cook/changerequests/', admin_views.changerequests, name='admin_changerequests'),
     # path('admin/cooks/', admin_views.cooks, name='admin_cooks'),
     path('admin/cooks/<int:cook_id>/', admin_views.cook, name='admin_cook'),
     # path('admin/customers/', admin_views.customers, name='admin_customers'),
