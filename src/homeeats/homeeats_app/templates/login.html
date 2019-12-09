@@ -25,11 +25,23 @@
 </ul>
 {% endif %}
 <div style="text-align:center;">
-  <div class="col-4 p-4 bg-white rounded shadow-lg" style="display:inline-block;margin-top:8%">
+  <div class="col-4 p-4 bg-white rounded shadow-lg" style="display:inline-block;margin-top:8%;">
   <h2 style="margin-bottom:20px;">Login</h2>
   <form method="post">
-    {% csrf_token %}
-    <div class="form-group row">
+      {% csrf_token %}
+  <div class="form-group">
+      <label for="exampleInputEmail1" style="float:left">Email address</label>
+      <input type="email" name="username" id="exampleInputPassword1" class="form-control"  {% if form.name.value != None %}value="{{ form.name.value|stringformat:'s' }}"{% endif %} maxlength="30" aria-describedby="emailHelp">
+      <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+    </div>
+    <div class="form-group">
+      <label for="exampleInputPassword1" style="float:left">Password</label>
+      <input type="password" name="password" class="form-control" id="exampleInputPassword1">
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
+</form>
+  
+    <!-- <div class="form-group row">
         <div class="col-sm-6">
           {{form.username.label_tag}}
         </div>
@@ -47,7 +59,10 @@
         </div>
     </div>
     <input type="submit" value="Login" class="btn btn-primary">
-  </form>
+  </form> -->
+
+
+
     Create <a href="/cookcreate"><strong>Cook account</strong></a> or <a href="/customercreate"><strong>Customer account</strong></a>!  </br></br>
   
     <a href="/password_reset"><strong>Forgot password?</strong></a>
