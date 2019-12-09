@@ -145,17 +145,23 @@ def userLogin(request):
 
 def reject_order(request):
   order = Order.objects.get(id=request.POST["order_id"])
-  order.status = 'r'
-  try:
-    order.reject_reason = RejectReason.objects.get(reason="Expired")
-  except:
-    e = RejectReason(reason="Expired")
-    e.save()
-    order.reject_reason = RejectReason.objects.get(reason="Expired")
-  order.save()
-  data={
-    'success':True
-  }
+  if order.status == 'p':
+    order.status = 'r'
+    try:
+      order.reject_reason = RejectReason.objects.get(reason="Expired")
+    except:
+      #Create the "Expired" reject reason if not already existing
+      e = RejectReason(reason="Expired")
+      e.save()
+      order.reject_reason = RejectReason.objects.get(reason="Expired")
+    order.save()
+    data={
+      'success':True
+    }
+  else:
+    data={
+      'success':False
+    }
   return JsonResponse(data)
 
 def verify_address(street, town, state):
