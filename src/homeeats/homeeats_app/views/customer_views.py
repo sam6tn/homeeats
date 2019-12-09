@@ -336,7 +336,7 @@ def orders(request):
 def cancel_order(request):
     order = Order.objects.get(id=request.POST["order_id"])
     customer = Customer.objects.get(user_id=request.user.id)
-    if order.customer == customer:  # make sure order belongs to customer
+    if order.customer == customer and order.status == 'p':  # make sure order belongs to customer and order was pending
         order.status = 'x'
         order.save()
     return HttpResponseRedirect(reverse('orders'))
@@ -413,6 +413,8 @@ def checkout(request):
                     source=token
                 )
             except Exception as e:
+                messages.add_message(
+                    request, messages.ERROR, 'Payment not valid, please try again')
                 return HttpResponseRedirect(reverse('payment'))
                 pass
 
@@ -438,11 +440,11 @@ def checkout(request):
             city=address.city,
             state=address.state,
             zipcode=address.zipcode,
-            payment_option="a"
+            payment_option="b"
         )
 
         if request.POST['payment_option'] == 'cash':
-            order.payment_option = "b"
+            order.payment_option = "a"
 
         order.save()
         max_cook_time = 0
@@ -475,6 +477,9 @@ def checkout(request):
         shopping_cart.tax = 0
         shopping_cart.cook = None
         shopping_cart.save()
+
+        messages.add_message(
+          request, messages.SUCCESS, 'Your order has been submitted, go to the orders section to view order status!')
         return HttpResponseRedirect(reverse('customer_home'))
     else:
         return HttpResponseRedirect(reverse('customer_home'))

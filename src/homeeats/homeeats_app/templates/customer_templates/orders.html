@@ -87,6 +87,11 @@
                 <div class="card">
                     <h5 class="card-header">
                         <a href="{% url 'order' order.id %}">Order #{{order.id}}</a>
+                        {% if order.payment_option == 'a' %} 
+                                        <span style="float:right;" class="badge badge-success">Cash</span>
+                                    {% else %}
+                                        <span style="float:right;" class="badge badge-primary">Card</span>
+                                    {% endif %}
                     </h5>
                     <div class="card-body">
                         <p class="card-title">Cook: {{order.cook.user.first_name}} {{order.cook.user.last_name}}</p>
@@ -164,6 +169,7 @@
                             <button class="btn btn-danger">Cancel</button>
                         </form>
                         {% endif %}
+
                     </div>
                 </div>
             </div>
@@ -183,6 +189,11 @@
                     <div class="card">
                             <h5 class="card-header">
                                 <a href="{% url 'order' order.id %}">Order #{{order.id}}</a>
+                                {% if order.payment_option == 'a' %} 
+                                        <span style="float:right;" class="badge badge-success">Cash</span>
+                                    {% else %}
+                                        <span style="float:right;" class="badge badge-primary">Card</span>
+                                    {% endif %}
                             </h5>
                             <div class="card-body">
                                 <p class="card-title">Cook: {{order.cook.user.first_name}} {{order.cook.user.last_name}}</p>
@@ -191,7 +202,8 @@
                             </div>
                             <div class="card-footer">
                                 {% if order.status == "d" %}
-                                <p class= "card-text font-weight-bold text-success">  Delivered: {{order.actual_arrival_time.time}} </p>
+                                <p class= "card-text font-weight-bold text-success">  Delivered: {{order.actual_arrival_time.time}} 
+                                </p>
                                 {% elif order.status == "r" %}
                                 <p class= "card-text font-weight-bold text-danger">Rejected: {{order.reject_reason.reason}}</p>
                                 {% else %}

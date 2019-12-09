@@ -22,7 +22,14 @@
                     <td><p class="font-weight-normal" style="float: right">{{order.name}}</p></td>
                 </tr>
                 <tr>
-                        <td><p class="card-text font-weight-bold text-secondary">Total: ${{order.total}}</p></td>
+                        <td><p class="card-text font-weight-bold text-secondary">
+                                Total: ${{order.total}} 
+                                {% if order.payment_option == 'a' %} 
+                                    <span class="badge badge-success">Cash</span>
+                                {% else %}
+                                    <span class="badge badge-primary">Card</span>
+                                {% endif %}
+                            </p></td>
                         <td><p class="text-muted" style="float: right;">Delivered: {{order.actual_arrival_time}}</p></td>
                 </tr>
 
@@ -48,7 +55,14 @@
                     <td><p class="font-weight-normal" style="float: right">{{order.name}}</p></td>
                 </tr>
                 <tr>
-                        <td><p class="card-text font-weight-bold text-secondary">Total: ${{order.total}}</p></td>
+                        <td><p class="card-text font-weight-bold text-secondary">
+                            Total: ${{order.total}} 
+                            {% if order.payment_option == 'a' %} 
+                                <span class="badge badge-success">Cash</span>
+                            {% else %}
+                                <span class="badge badge-primary">Card</span>
+                            {% endif %}
+                        </p></td>
                         <td><p class="text-muted" style="float: right;">{{order.date}}</p></td>
                 </tr>
                 <tr>
