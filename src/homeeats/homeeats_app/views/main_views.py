@@ -72,12 +72,13 @@ def cookcreate(request):
         user.is_cook = True
         user.save()
         cook.save()
-        messages.add_message(request, messages.SUCCESS, 'Cook account requested, please wait til your account is approved!')
+        messages.add_message(request, messages.SUCCESS, 'Cook account requested, please wait until your account is approved!')
         return HttpResponseRedirect(reverse('login'))
       else: 
         messages.add_message(request, messages.ERROR, 'Address not valid, please try again')
         return render(request, 'cook_create.html', {'cook_create_form': cook_create_form})
     else:
+      messages.add_message(request, messages.ERROR, 'One or more of the fields entered are missing or invalid')
       return render(request, 'cook_create.html', {'cook_create_form': cook_create_form})
   else:
     cook_create_form = forms.CookCreateForm()

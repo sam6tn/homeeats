@@ -21,94 +21,77 @@
 
   </style>
 </head>
-<div style="text-align: center;width:34%;margin: 20px auto;">
-  <h2>Cook Registration</h2>
-  <form enctype="multipart/form-data" method="post">
-    {% csrf_token %}
-    <div style="margin:10px;text-align: left;">
-      {{ cook_create_form.first_name.label_tag }}
-      <div style="float:right;">
-        {{ cook_create_form.first_name }}
-      </div>
-    </div>
-    <div style="margin:10px;text-align: left;">
-      {{ cook_create_form.last_name.label_tag }}
-      <div style="float:right;">
-        {{ cook_create_form.last_name }}
-      </div>
-    </div>
-    <div style="margin:10px;text-align: left;">
-      {{ cook_create_form.email.label_tag }}
-      <div style="float:right;">
-        {{ cook_create_form.email }}
-      </div>
-    </div>
-    <div style="margin:10px;text-align: left;">
-      {{ cook_create_form.password.label_tag }}
-      <div style="float:right;">
-        {{ cook_create_form.password }}
-      </div>
-    </div>
-    <div style="margin:10px;text-align: left;">
-        {{ cook_create_form.government_id.label_tag }}
-        <div style="float:right;">
-          {{ cook_create_form.government_id }}
-        </div>
-    </div>
-    <div style="margin:10px;text-align: left;">
-      <label for="kitchen_license">Kitchen License:</label>
-      <div style="float:right;">
-        <input id="kitchen_license" type="text" name="kitchen_license" required>
-      </div>
-    </div>
-    <div style="margin:10px;text-align: left;">
-      <label for="phone_number">Phone Number:</label>
-      <div style="float:right;">
-        <input id="phone_number" type="text" name="phone_number" required>
-      </div>
-    </div>
-    <div style="margin:10px;text-align: left;">
-        <label for="delivery_distance_miles">Max Delivery Distance (miles):</label>
-        <div style="float:right;">
-          <input id="delivery_distance_miles" type="text" name="delivery_distance_miles" required>
-        </div>
-    </div>
-    <div style="margin:10px;text-align: left;">
-        <label for="delivery_fee">Delivery Fee:</label>
-        <div style="float:right;">
-          <input id="delivery_fee" type="text" name="delivery_fee" required>
-        </div>
-    </div>
-    <h3>Kitchen Address:</h3>
-    <div style="margin:10px;text-align: left;">
-        <label for="street">Street:</label>
-        <div style="float:right;">
-          <input id="street" type="text" name="street" required>
-        </div>
-    </div>
-    <div style="margin:10px;text-align: left;">
-        <label for="town">City:</label>
-        <div style="float:right;">
-          <input id="town" type="text" name="town" required>
-        </div>
-    </div>
-    <div style="margin:10px;text-align: left;">
-        <label for="state">State:</label>
-        <div style="float:right;">
-          <input id="state" type="text" name="state" required>
-        </div>
-    </div>
-    <div style="margin:10px;text-align: left;">
-        <label for="zipcode">ZipCode:</label>
-        <div style="float:right;">
-          <input id="zipcode" type="text" name="zipcode" required>
-        </div>
-    </div>
 
+</br>
+<h2 style="text-align:center;">Cook Signup</h2>
+</br>
+
+<div class="d-flex justify-content-center">
     
-    <input type="submit" value="Create cook account" class="btn btn-primary">
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="inputfirst">First Name</label>
+        <input type="text" name="first_name" class="form-control" id="inputfirst" placeholder="Joe">
+      </div>
+      <div class="form-group col-md-6">
+        <label for="inputlast">Last Name</label>
+        <input type="text" name="last_name" class="form-control" id="inputlast" placeholder="Smith">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="inputEmail4">Email (username)</label>
+        <input type="email" name="email" class="form-control" id="inputEmail4">
+      </div>
+      <div class="form-group col-md-6">
+        <label for="inputPassword4">Password</label>
+        <input type="password" name="password" class="form-control" id="inputPassword4">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="inputAddress">Kitchen Address</label>
+      <input type="text" name="street" class="form-control" id="inputAddress" placeholder="1234 Main St">
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="inputCity">City</label>
+        <input type="text" name="town" class="form-control" id="inputCity">
+      </div>
+      <div class="form-group col-md-4">
+        <label for="inputState">State</label>
+        <input type="text" name="state" class="form-control" id="inputState">
+      </div>
+      <div class="form-group col-md-2">
+        <label for="inputZip">Zip</label>
+        <input type="text" name="zipcode" class="form-control" id="inputZip">
+      </div>
+    </div>
+    <div class="form-group">
+        <label for="inputphone">Phone Number</label>
+        <input type="text" name="phone_number" class="form-control" id="inputphone" placeholder="9999999999">
+      </div>
+      <div class="form-group">
+          <label for="inputphone">Kitchen License</label>
+          <input type="text" name="kitchen_license" class="form-control" id="inputphone">
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="inputdeliverydistance">Max Delivery Distance(miles)</label>
+              <input type="text" name="delivery_distance_miles" class="form-control" id="inputdeliverydistance" placeholder="25">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="inputdeliveryfee">Delivery Fee</label>
+              <input type="text" name="delivery_fee" class="form-control" id="inputdeliveryfee" placeholder="2.50">
+            </div>
+          </div>
+          <div class="custom-file">
+              <input type="file" name="government_id" class="custom-file-input" id="customFile">
+              <label class="custom-file-label" for="customFile">Government ID</label>
+            </div></br></br>
+    <button style="float:right;" type="submit" class="btn btn-primary">Sign up</button>
   </form>
-
-</div>
+  </div>
 
 {% endblock %}
