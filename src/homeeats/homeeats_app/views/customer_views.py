@@ -544,8 +544,11 @@ def find_nearby_cooks(request):
     for distance in distance_cooks:
         cook = Cook.objects.get(id=distance[1])
         dist = distance[0].replace(",", "")
-        if float(dist) < cook.delivery_distance_miles:
-            nearby_cooks.append(cook)
+        try:
+          if float(dist) < cook.delivery_distance_miles:
+              nearby_cooks.append(cook)
+        except:
+          nearby_cooks.append(cook)
     return nearby_cooks  # returning a queryset of cooks
 
 # use find_nearby_cooks to find all nearby dishes

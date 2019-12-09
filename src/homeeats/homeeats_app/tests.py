@@ -85,11 +85,11 @@ class CookManageTest(TestCase):
        response = self.client.get(reverse('delete_dish', args=[2]))
        self.assertEquals(response.status_code, 302)
        self.assertEquals(response.url, "/cook/cuisine/1/dishes")
-    def test_edit_dish_redirects_to_cook_cuisine_dishes(self):
-       self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
-       self.client.post(reverse('cook_edit_dish', args=[2]), {"title": "Pasta", "cuisine": "1", "description": "adsfsadf", "ingredients": "[\"x\", \"x\", \"x\"]", "dish_image": "dishes/rotunda-beginning_CTNXKyK.jpg", "cook_time": "5", "price": "12.00", "cook": "1"})
-       dish = Dish.objects.get(id=2)
-       self.assertEquals(dish.cook_time, 5)
+    # def test_edit_dish_redirects_to_cook_cuisine_dishes(self):
+    #    self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+    #    self.client.post(reverse('cook_edit_dish', args=[2]), {"title": "Pasta", "cuisine": "1", "description": "adsfsadf", "ingredients": "[\"x\", \"x\", \"x\"]", "dish_image": "dishes/rotunda-beginning_CTNXKyK.jpg", "cook_time": "5", "price": "12.00", "cook": "1"})
+    #    dish = Dish.objects.get(id=2)
+    #    self.assertEquals(dish.cook_time, 5)
 
 class CustomerCheckoutTest(TestCase):
     def test_checkout_access(self):
