@@ -7,69 +7,91 @@
 
 {% csrf_token %}
 
-  <div style="text-align: center;width:25%;margin: 20px auto;">
-    <h2>Create Dish</h2>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>{{message}}</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endif %}
+    {% endfor %}
+</ul>
+{% endif %}   
+
+</br>
+  <div class="d-flex justify-content-center">
+    
     <form enctype="multipart/form-data" method="post">
       {% csrf_token %}
-  
-      <div style="margin:10px;text-align: left;">
+      
+      <!-- <div style="margin:10px;text-align: left;">
         {{ form.title.label_tag }}
         <div style="float:right;">
           {{ form.title }}
         </div>
-      </div>
-      <div style="margin:10px;text-align: left;">
-        {{ form.cuisine.label_tag }}
-        <div style="float:right;">
-          {{ form.cuisine }}
+      </div> -->
+      <h2 style="text-align: center;">Create Dish</h2>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+          <label for="inputTitle4">Title</label>
+          <input type="text" name="title" class="form-control" id="inputTitle4">
         </div>
+        <div class="form-group col-md-6">
+          <label for="inputCuisine4">Cuisine</label>
+          <select class="custom-select" name="cuisine" id="inputCuisine04" required>
+              {% for x, y in form.fields.cuisine.choices %}
+              <option value="{{ x }}"{% if form.fields.customer.value == x %} selected{% endif %}>{{ y }}</option>
+              {% endfor %}
+          </select>
       </div>
-      <div style="margin:10px;text-align: left;">
-        {{ form.dish_image.label_tag }}
-        <div style="float:right;">
-          {{ form.dish_image }}
+    </div>
+<div class="form-row">
+    <div class="form-group col-md-6">
+        <label for="inputTitle4">Cook Time(min)</label>
+        <input type="text" name="cook_time" class="form-control" id="inputTitle4">
+      </div>
+
+      <div class="form-group col-md-6">
+          <label for="validationCustomUsername">Price</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroupPrepend">$</span>
+            </div>
+            <input type="text" class="form-control" name="price" id="validationCustomUsername" aria-describedby="inputGroupPrepend" required>
+          </div>
+      </div>
+    </div>
+      <div class="mb-3">
+          <label for="validationTextarea1">Ingredients</label>
+          <textarea class="form-control" name="ingredients" id="validationTextarea" placeholder="egg, rice, noodles ..." required></textarea>
         </div>
-      </div>
-      <div style="margin:10px;text-align: left;">
-        {{ form.cook_time.label_tag }}
-        <div style="float:right;">
-          {{ form.cook_time }}
+        <div class="mb-3">
+            <label for="validationTextarea2">Description</label>
+            <textarea class="form-control" name="description" id="validationTextarea" placeholder="This is a great dish" required></textarea>
+          </div>
+          <div class="custom-control custom-checkbox mb-3">
+              <input type="checkbox" name="vegan" class="custom-control-input" id="customControlValidation1" required>
+              <label class="custom-control-label" for="customControlValidation1">Vegan</label>
+            </div>
+            <div class="form-group mb-3">
+                <label for="inputTitle4">Allergies</label>
+                <input type="text" name="allergies" class="form-control" placeholder="nuts, seafood .." id="inputTitle4">
+              </div>
+
+      <div class="custom-file">
+          <input type="file" name="dish_image" class="custom-file-input" id="customFile">
+          <label class="custom-file-label" for="customFile">Dish Image</label>
         </div>
-      </div>
-      <div style="margin:10px;text-align: left;">
-        {{ form.price.label_tag }}
-        <div style="float:right;">
-          {{ form.price }}
-        </div>
-      </div>
-      <div style="margin:10px;text-align: left;">
-        {{ form.ingredients.label_tag }}
-        <div style="float:right;">
-          {{ form.ingredients }}
-        </div>
-      </div>
-      <div style="margin:10px;text-align: left;">
-        {{ form.description.label_tag }}
-        <div style="float:right;">
-          {{ form.description }}
-        </div>
-      </div>
-      <div style="margin:10px;text-align: left;">
-        {{ form.vegan.label_tag }}
-        <div style="float:right;">
-          {{ form.vegan }}
-        </div>
-      </div>
-      <div style="margin:10px;text-align: left;">
-        {{ form.allergies.label_tag }}
-        <div style="float:right;">
-          {{ form.allergies }}
-        </div>
-      </div>
       
-      <input type="submit" value="Create a new dish" class="btn btn-primary">
+        <div style="height:1rem;">
+        </div>
+
+      <input type="submit" style="float:right;" value="Create" class="btn btn-primary">
     </form>
-  
   </div>
   {% endblock %}
   
