@@ -396,21 +396,25 @@ def checkout(request):
             stripe.api_key = "sk_test_X4wFRNpe69n5mSKzoDBZ4JYp00EWm97YCx"
             customer = Customer.objects.get(user_id=request.user.id)
             shopping_cart = ShoppingCart.objects.get(customer=customer)
-            token = stripe.Token.create(
-                card={
-                    "number": request.POST['cardNumber'],
-                    "exp_month": request.POST['expDate'].split('/')[0],
-                    "exp_year": request.POST['expDate'].split('/')[1],
-                    "cvc": request.POST['cvc'],
-                },
-            )
+            try:
+                token = stripe.Token.create(
+                    card={
+                        "number": request.POST['cardNumber'],
+                        "exp_month": request.POST['expDate'].split('/')[0],
+                        "exp_year": request.POST['expDate'].split('/')[1],
+                        "cvc": request.POST['cvc'],
+                    },
+                )
 
-            charge = stripe.Charge.create(
-                amount=int(shopping_cart.total_after_tip * 100),
-                currency='usd',
-                description='Buying a meal',
-                source=token
-            )
+                charge = stripe.Charge.create(
+                    amount=int(shopping_cart.total_after_tip * 100),
+                    currency='usd',
+                    description='Buying a meal',
+                    source=token
+                )
+            except Exception as e:
+                return HttpResponseRedirect(reverse('payment'))
+                pass
 
         customer = Customer.objects.get(user_id=request.user.id)
         shopping_cart = ShoppingCart.objects.get(customer=customer)
