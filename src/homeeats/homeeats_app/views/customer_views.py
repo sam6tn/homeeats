@@ -27,7 +27,18 @@ from django.template.defaulttags import register
 @login_required
 @customer_required
 def messaging(request):
-  return render(request, 'customer_templates/messages.html')
+  #Linking shopping cart with messaging platform
+  customer = Customer.objects.get(user_id=request.user.id)
+  shopping_cart = ShoppingCart.objects.get(customer=customer)
+  if request.method == "POST":
+    shopping_cart.tip = round(float(request.POST["tip"]), 2)
+    shopping_cart.special_requests = request.POST["special_requests"]
+    shopping_cart.total_after_tip = float(shopping_cart.total_before_tip) + shopping_cart.tip
+    shopping_cart.save()
+    return HttpResponseRedirect(reverse('payment'))
+  cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
+  cart = customer.shoppingcart
+  return render(request, 'customer_templates/messages.html', {'cart':cart, 'cart_items':cart_items})
 
 @login_required
 @customer_required

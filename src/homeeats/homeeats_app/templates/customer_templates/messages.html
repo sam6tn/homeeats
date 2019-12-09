@@ -301,6 +301,10 @@
     </style>
 </head>
 <body>
+{% if cart.empty %}
+<h2>Please order items to be able to message chefs!</h2>
+{% else %}
+<h2>{{user.first_name}}'s Messages</h2>
 	<div class="main-section">
 		<div class="head-section">
 			<div class="headLeft-section">
@@ -311,7 +315,7 @@
 			</div>
 			<div class="headRight-section">
 				<div class="headRight-sub">
-					<h3>Customer 3</h3>
+					<h3>{{cart.cook.user.first_name}}</h3>
 					
 				</div>
 			</div>
@@ -319,117 +323,20 @@
 		<div class="body-section">
 			<div class="left-section mCustomScrollbar" data-mcs-theme="minimal-dark">
 				<ul>
-					<li>
+					{% for item in cart.cartitem_set.all%}
+            		<li class="active">
 						<div class="chatList">
 							<div class="img">
-								<i class="fa fa-circle"></i>
-								<img src="/demo/man01.png">
+								<img src="/media/dishes/pasta.jpg">
 							</div>
 							<div class="desc">
-								<small class="time">1 min</small>
-								<h5>Customer 1</h5>
-								<small>Thank you...</small>
+								<small class="time">25 min</small>
+								<h5>{{cart.cook.user.first_name}}</h5><br>
+								<small>Dish Preparing: {{item.dish.title}}</small>
 							</div>
 						</div>
 					</li>
-					<li>
-						<div class="chatList">
-							<div class="img">
-								<i class="fa fa-circle"></i>
-								<img src="/demo/man02.png">
-							</div>
-							<div class="desc">
-								<small class="time">3 min</small>
-								<h5>Customer 2</h5>
-								<small>No tomatoes please...</small>
-							</div>
-						</div>
-					</li>
-					<li class="active">
-						<div class="chatList">
-							<div class="img">
-								<img src="/demo/man03.png">
-							</div>
-							<div class="desc">
-								<small class="time">4 min</small>
-								<h5>Customer 3</h5>
-								<small>Make it extra spicy...</small>
-							</div>
-						</div>
-					</li>
-					<li>
-						<div class="chatList">
-							<div class="img">
-								<img src="/demo/man04.png">
-							</div>
-							<div class="desc">
-								<small class="time">18 min</small>
-								<h5>Customer 4</h5>
-								<small>Make it mild...</small>
-							</div>
-						</div>
-					</li>
-					<li>
-						<div class="chatList">
-							<div class="img">
-								<i class="fa fa-circle"></i>
-								<img src="/demo/man01.png">
-							</div>
-							<div class="desc">
-								<small class="time">11 min</small>
-								<h5>Customer 5</h5>
-								<small>No peanuts please...</small>
-							</div>
-						</div>
-					</li>
-					<li>
-						<div class="chatList">
-							<div class="img">
-								<img src="/demo/man02.png">
-							</div>
-							<div class="desc">
-								<small class="time">20 min</small>
-								<h5>Custmer 6</h5>
-								<small>Extra rice please...</small>
-							</div>
-						</div>
-					</li>
-					<li>
-						<div class="chatList">
-							<div class="img">
-								<img src="/demo/man03.png">
-							</div>
-							<div class="desc">
-								<small class="time">18 min</small>
-								<h5>Customer 7</h5>
-								<small>No meat, substitute with beans...</small>
-							</div>
-						</div>
-					</li>
-					<li>
-						<div class="chatList">
-							<div class="img">
-								<img src="/demo/man02.png">
-							</div>
-							<div class="desc">
-								<small class="time">20 min</small>
-								<h5>Customer 8</h5>
-								<small>How much longer...</small>
-							</div>
-						</div>
-					</li>
-					<li>
-						<div class="chatList">
-							<div class="img">
-								<img src="/demo/man03.png">
-							</div>
-							<div class="desc">
-								<small class="time">18 min</small>
-								<h5>Jack Clerk</h5>
-								<small>Lorem ipsum dolor sit amet...</small>
-							</div>
-						</div>
-					</li>
+            		{% endfor %}
 				</ul>
 			</div>
 			<div class="right-section">
@@ -512,6 +419,8 @@
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<!-- custom scrollbar plugin -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+	{% endif %}
+
 </body>
 </html>
 
