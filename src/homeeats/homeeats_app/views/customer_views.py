@@ -438,11 +438,11 @@ def checkout(request):
             city=address.city,
             state=address.state,
             zipcode=address.zipcode,
-            payment_option="a"
+            payment_option="b"
         )
 
         if request.POST['payment_option'] == 'cash':
-            order.payment_option = "b"
+            order.payment_option = "a"
 
         order.save()
         max_cook_time = 0

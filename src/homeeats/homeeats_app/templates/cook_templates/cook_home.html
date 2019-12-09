@@ -45,7 +45,7 @@
             <div class="card-body">
                 <h5 class="card-title">Order #{{order.id}}</h5>
                 <p class="card-text font-weight-bold text-secondary">Total: ${{order.total}}</p>
-                <p class="card-text font-weight-bold text-secondary">Payment Option: {% if order.payment_option == "a" %} Card {% else %} Cash {% endif %}</p>
+                <p class="card-text font-weight-bold text-secondary">Payment Option: {% if order.payment_option == "a" %} Cash {% else %} Card {% endif %}</p>
             </div>
             <div class="card-footer text-center">
                     <span id="timer{{order.id}}"><span id="hours{{order.id}}"></span><span id="hoursColon{{order.id}}">:</span><span id="minutes{{order.id}}"></span>:<span id="seconds{{order.id}}"></span></span>
