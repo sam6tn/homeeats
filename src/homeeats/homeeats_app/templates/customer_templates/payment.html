@@ -191,33 +191,24 @@
         </div>
         
         <div class="col-lg-4 p-5 bg-white rounded shadow-sm mb-5">
-            <div class="bg-light square-pill px-4 py-3 text-uppercase font-weight-bold">Order Summary </div>
+            <div class="bg-light square-pill px-4 py-3 text-center font-weight-bold">Order from {{cart.cook.user.first_name}} {{cart.cook.user.last_name}}</div>
                 <div class="table-responsive">
-                    <table class="table">
-                    <thead>
-                        <tr>
-                        <th scope="col" class="border-2 bg-primary">
-                            <div class="p-2 px-3 text-uppercase text-white">Item</div>
-                        </th>
-                        <th scope="col" class="border-0 bg-primary">
-                            <div class="py-2 text-uppercase text-white">Quantity</div>
-                        </th>
-                        <th scope="col" class="border-0 bg-primary">
-                            <div class="py-2 text-uppercase text-white">Subtotal</div>
-                        </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-              	        <tbody>
-              	        {% for item in cart.cartitem_set.all%}
-                        <tr>
-                        <td class="border-0 align-middle"><strong>{{item.dish.title}}</strong></td>
-                        <td class="border-0 align-middle"><strong>{{item.quantity}}</strong></td>
-                        <td class="border-0 align-middle"><strong>${{item.subtotal}}</strong></td>
-                        {% endfor %}
-                        </tr>
-                    </tbody>
-                </table>
+                        <div class="table-responsive">
+                                <ul class="list-group list-group-flush">
+                                  {% for item in cart_items%}
+                                    <li class="list-group-item">
+                                      <table class="table">
+                                        <tr>
+                                          <td class="border-0 align-middle" style="width:25%"><strong>{{item.dish.title}}</strong></td>
+                                          <td class="border-0 align-middle" style="width:25%"><strong>x{{item.quantity}}</strong></td>
+                                          <td class="border-0 align-middle" style="width:25%"><strong>${{item.subtotal}}</strong></td>
+                                          <td onclick="removeItem('{{item.id}}', '{{cart.id}}')" class="border-0 align-middle" style="width:25%"><a href="#" class="text-dark"><i class="fa fa-trash"></i></a></td>
+                                        </tr>
+                                      </table>
+                                    </li>   
+                                    {% endfor %}
+                                  </ul>
+                            </div>
                 </div>
                 <div class="p-4">
                     <ul class="list-unstyled mb-4">

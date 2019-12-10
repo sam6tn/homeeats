@@ -109,38 +109,36 @@
 -->
 <div class="container">
   <div class="row">
-    <div class="col-lg-8 p-4 bg-white rounded shadow-sm mb-5 text-center">
-      <h1 class="display-4">{{user.first_name}}'s Cart</h1>
+    <div class="col-lg-8 p-4 bg-white rounded shadow-sm mb-5">
+      <h1 class="text-center">Review Order</h1>
+      <div class="row" style="float:left;">
+          <div class="col-sm-6">
+            <div class="card text-center" style="width:250px">
+              <div class="card-body">
+                <h5 class="card-title">Delivering to</h5>
+                <p class="card-text">{{cart.customer.user.first_name}} {{cart.customer.user.last_name}} </br>{{address.street_name}} </br> {{address.city}}, {{address.state}} {{address.zipcode}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
       <div class="table-responsive">
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col" class="border-2 bg-primary">
-                <div class="p-2 px-3 text-uppercase text-white">Item</div>
-              </th>
-              <th scope="col" class="border-0 bg-primary">
-                <div class="py-2 text-uppercase text-white">Quantity</div>
-              </th>
-              <th scope="col" class="border-0 bg-primary">
-                <div class="py-2 text-uppercase text-white">Subtotal</div>
-              </th>
-              <th scope="col" class="border-0 bg-primary">
-                <div class="py-2 text-uppercase text-white">Remove</div>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for item in cart.cartitem_set.all%}
-            <tr>
-              <td class="border-0 align-middle"><strong>{{item.dish.title}}</strong></td>
-              <td class="border-0 align-middle"><strong>{{item.quantity}}</strong></td>
-              <td class="border-0 align-middle"><strong>${{item.subtotal}}</strong></td>
-              <td onclick="removeItem('{{item.id}}', '{{cart.id}}')" class="border-0 align-middle"><a href="#" class="text-dark"><i class="fa fa-trash"></i></a></td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-        <form method="POST" action="{% url 'cart' %}" style="display:inline;">
+          <ul class="list-group list-group-flush">
+            {% for item in cart_items%}
+              <li class="list-group-item">
+                <table class="table">
+                  <tr>
+                    <td class="border-0 align-middle" style="width:25%"><strong>{{item.dish.title}}</strong></td>
+                    <td class="border-0 align-middle" style="width:25%"><strong>x{{item.quantity}}</strong></td>
+                    <td class="border-0 align-middle" style="width:25%"><strong>${{item.subtotal}}</strong></td>
+                    <td onclick="removeItem('{{item.id}}', '{{cart.id}}')" class="border-0 align-middle" style="width:25%"><a href="#" class="text-dark"><i class="fa fa-trash"></i></a></td>
+                  </tr>
+                </table>
+              </li>   
+              {% endfor %}
+            </ul>
+      </div>
+      <form method="POST" action="{% url 'cart' %}" style="display:inline;">
           {% csrf_token %}
           <div class="input-group">
             <div class="input-group-prepend">
@@ -148,10 +146,9 @@
             </div>
             <textarea class="form-control" aria-label="With textarea" name="special_requests">{{cart.special_requests}}</textarea>
           </div>
-      </div>
     </div>
     <div class="col-lg-4 p-5 bg-white rounded shadow-sm mb-5">
-      <div class="bg-light square-pill px-4 py-3 text-uppercase font-weight-bold">Order Summary </div>
+      <div class="bg-light square-pill px-4 py-3 font-weight-bold text-center">Order from {{cart.cook.user.first_name}} {{cart.cook.user.last_name}}</div>
       <div class="p-4">
         <ul class="list-unstyled mb-4">
           <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Order Subtotal </strong><strong>${{cart.item_subtotal}}</strong></li>

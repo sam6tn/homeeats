@@ -51,16 +51,28 @@ def addresses(request):
 @login_required
 @customer_required
 def change_current_address(request, address_id):
-    customer = Customer.objects.get(user_id=request.user.id)
-    current_address = Address.objects.get(
-        customer=customer, current_customer_address=True)
-    current_address.current_customer_address = False
-    current_address.save()
-    change_address = Address.objects.get(id=address_id)
-    change_address.current_customer_address = True
-    change_address.save()
+  customer = Customer.objects.get(user_id=request.user.id)
+  cart = ShoppingCart.objects.get(customer=customer)
+  current_address = Address.objects.get(
+      customer=customer, current_customer_address=True)
+  current_address.current_customer_address = False
+  current_address.save()
+  change_address = Address.objects.get(id=address_id)
+  change_address.current_customer_address = True
+  change_address.save()
+  if cart.empty == True:
+    messages.add_message(request, messages.SUCCESS, "Current address successfully changed!")
     return HttpResponseRedirect(reverse('addresses'))
-
+  elif cart.cook in find_nearby_cooks(request):
+    messages.add_message(request, messages.SUCCESS, "Current address successfully changed!")
+    return HttpResponseRedirect(reverse('addresses'))
+  else:
+    change_address.current_customer_address = False
+    current_address.current_customer_address = True
+    current_address.save()
+    change_address.save()
+    messages.add_message(request, messages.ERROR, "The order currently in your cart cannot deliver to this address, please complete or remove that order")
+    return HttpResponseRedirect(reverse('addresses'))
 
 @login_required
 @customer_required
@@ -271,7 +283,8 @@ def cart(request):
         return HttpResponseRedirect(reverse('payment'))
     cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
     cart = customer.shoppingcart
-    return render(request, 'customer_templates/cart.html', {'cart': cart, 'cart_items': cart_items})
+    address = Address.objects.get(current_customer_address=True, customer=customer)
+    return render(request, 'customer_templates/cart.html', {'cart': cart, 'cart_items': cart_items, 'address': address})
 
 
 @login_required
