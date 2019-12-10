@@ -347,7 +347,7 @@ def requestchange(request):
   new_city = request.POST["city"]
   new_state = request.POST["state"]
   new_zipcode = request.POST["zipcode"]
-  if verify_address(new_street_address, new_city, new_zipcode):
+  if verify_address(new_street_address, new_city, new_state):
     current_change = cook.cookchangerequest_set.all()
     if current_change.count()>0:
       for c in current_change:
