@@ -94,11 +94,11 @@
 {% endif %}
 
 </br>
-<h2 style="text-align:center;">Add Address</h2>
-</br>
+
 
 <div class="d-flex justify-content-center">
-    
+<div class="col-4 p-4 bg-white rounded shadow-lg" style="display:inline-block;margin-top:1%;">
+<h2 style="text-align:center;">Add Address</h2></br>
 <form method="POST">
     {% csrf_token %}
     <div class="form-group">
@@ -121,4 +121,5 @@
     </div>
     <button style="float:right;" type="submit" class="btn btn-primary">Add Address</button>
   </form>
+  </div>
   </div>

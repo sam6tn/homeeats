@@ -72,7 +72,13 @@
 </nav>
 
 {% if cart.empty %}
-<h2>Please add items to cart to see them here!</h2>
+<div class="container mt-2">
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container text-center">
+            <h1>Your cart is empty...<h1>
+            <p class="lead">Add dishes you want to order and come back here to checkout!</p>
+        </div>
+    </div>
 {% else %}
 
 <script>

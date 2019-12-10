@@ -24,7 +24,7 @@
 
 </br>
   <div class="d-flex justify-content-center">
-    
+      <div class="col-4 p-4 bg-white rounded shadow-lg" style="display:inline-block;margin-top:1%;">
     <form enctype="multipart/form-data" method="post">
       {% csrf_token %}
       
@@ -34,7 +34,7 @@
           {{ form.title }}
         </div>
       </div> -->
-      <h2 style="text-align: center;">Create Dish</h2>
+      <h2 style="text-align: center;">Create Dish</h2></br>
     <div class="form-row">
       <div class="form-group col-md-6">
           <label for="inputTitle4">Title</label>
@@ -92,6 +92,7 @@
 
       <input type="submit" style="float:right;" value="Create" class="btn btn-primary">
     </form>
+  </div>
   </div>
   {% endblock %}
   
