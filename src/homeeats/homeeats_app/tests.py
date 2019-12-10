@@ -28,11 +28,6 @@ class CookHomeTest(TestCase):
        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
        response = self.client.get(reverse('cook_home'))
        self.assertEquals(response.status_code, 200)
-    def test_correct_pending_order_renders(self):
-       self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
-       response = self.client.get(reverse('cook_home'))
-       self.assertEquals(response.context['pending_orders'][0]['id'], 1)
-       self.assertEquals(response.context['pending_orders'][0]['status'], 'p')
     def test_correct_in_progress_order_renders(self):
        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
        response = self.client.get(reverse('cook_home'))
