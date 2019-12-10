@@ -141,6 +141,7 @@ def home(request):
     customer = Customer.objects.get(user_id=request.user.id)
     shopping_cart = ShoppingCart.objects.get(customer=customer)
     cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
+    address = Address.objects.get(customer=customer,current_customer_address=True)
     if request.method == 'POST':
         form = forms.DishSearchForm(request.POST)
         if form.is_valid():
@@ -168,10 +169,10 @@ def home(request):
             elif (sort == 'reverse_price'):
                 dishes = dishes.order_by('-price')
 
-            return render(request, 'customer_templates/customer_home.html', {'dishes': dishes, 'form': form, 'customer': customer, 'cart_items': cart_items})
-        else:
-            dishes = find_nearby_dishes(request)
-            return render(request, 'customer_templates/customer_home.html', {'dishes': dishes, 'form': form, 'customer': customer, 'cart_items': cart_items})
+            return render(request, 'customer_templates/customer_home.html', {'dishes': dishes, 'form': form, 'customer': customer, 'cart_items': cart_items, 'address':address})
+        # else:
+        #     dishes = find_nearby_dishes(request)
+        #     return render(request, 'customer_templates/customer_home.html', {'dishes': dishes, 'form': form, 'customer': customer, 'cart_items': cart_items, 'address':address})
 
     else:
         form = forms.DishSearchForm()
@@ -182,7 +183,7 @@ def home(request):
             dishes = dishes.filter(cook=customer.shoppingcart.cook)
         dishes = dishes.order_by('-rating')
 
-        return render(request, 'customer_templates/customer_home.html', {'dishes': dishes, 'form': form, 'customer': customer, 'cart_items': cart_items})
+        return render(request, 'customer_templates/customer_home.html', {'dishes': dishes, 'form': form, 'customer': customer, 'cart_items': cart_items, 'address':address})
 
 
 @login_required
