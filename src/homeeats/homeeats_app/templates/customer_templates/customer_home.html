@@ -123,12 +123,16 @@
     </div>
 </div>
 
-{% endif %}
+{% else %}
 
 {% if not customer.shoppingcart.empty%}
     <div class="container">
         <h2 style="color:red;">{{customer.shoppingcart.cook.user.first_name}} {{customer.shoppingcart.cook.user.last_name}}</h2>
         <h6>Other dishes you may order from this cook</h6>
+    </div>
+{% else %}
+    <div class="container">
+        <h2>Showing dishes near {{address.city}}, {{address.state}}</h2>
     </div>
 {% endif %}
 
@@ -182,6 +186,7 @@
     {% endfor %}
     </div>
 </div>
+
 
 <!-- covers screen with div to prevent clicking -->
 <div id="overlay" class="overlay" style="display:none">
@@ -238,3 +243,4 @@
     }
 
 </script>
+{% endif %}

@@ -35,18 +35,17 @@ def manage(request):
 def home(request):
   orders = get_orders_by_cook(request)
   cook = model_to_dict(get_object_or_404(Cook, user_id=request.user.id))
-  pending_orders = []
+  # pending_orders = []
+  pending_orders = Order.objects.filter(cook=cook["id"]).filter(status='p')
   in_progress_orders = []
   deadlines = {}
   for order in orders:
     if order['status'] == 'p':
-      pending_orders.append(order)
+      # pending_orders.append(order)
       deadlines[order['id']] = order['pending_deadline']
     elif order['status'] == 'o' or order['status'] == 'c':
       in_progress_orders.append(order)
 
-  #test timer crap
-  # deadline = datetime.datetime.now() + datetime.timedelta(minutes=5)
   reject_reasons = RejectReason.objects.all()
   context = {
     'reject_reasons': reject_reasons,

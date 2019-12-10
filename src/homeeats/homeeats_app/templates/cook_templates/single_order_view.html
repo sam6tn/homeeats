@@ -36,7 +36,8 @@
     </div>
 </div>
 <div class="container" style="margin-top:1em;">
-    <p><span class="order-field">Cook: </span>{{ order.cook.user.first_name }} {{ order.cook.user.last_name }}</p>
+    <p><span class="order-field">Customer: </span>{{ order.customer.user.first_name }} {{ order.customer.user.last_name }}</p>
+    <p><span class="order-field">Phone: </span>{{ order.customer.phone_number }}</p>
     <p><span class="order-field">Total: </span>${{ order.total }}</p>
     <p><span class="order-field">Status: </span>{{ order.get_status_display }}</p>
     <p>
@@ -47,7 +48,7 @@
         None
       {% endif %}
     </p>
-    <span class="order-field">Delivery Address: {{order.street_name}} {{order.city}}, {{order.state}} {{order.zipcode}}</span>
+    <p><span class="order-field">Delivery Address: </span>{{order.street_name}} {{order.city}}, {{order.state}} {{order.zipcode}}</p>
 </div>
 
 {% endblock %}

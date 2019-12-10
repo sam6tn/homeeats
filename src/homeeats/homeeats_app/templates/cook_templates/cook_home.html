@@ -44,6 +44,7 @@
             </h5>
             <div class="card-body">
                 <h5 class="card-title">Order #{{order.id}}</h5>
+                <p class="card-text font-weight-bold text-secondary">Phone: {{order.customer.phone_number}}</p>
                 <p class="card-text font-weight-bold text-secondary">Total: ${{order.total}}</p>
                 <p class="card-text font-weight-bold text-secondary">Payment Option: {% if order.payment_option == "a" %} Cash {% else %} Card {% endif %}</p>
             </div>
