@@ -6,6 +6,30 @@
   
     </style>
   </head>
+
+  {% if messages %}
+  <ul class="messages">
+      {% for message in messages %}
+      {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <strong>{{message}}</strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+      {% endif %}
+      {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <strong>{{message}}</strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+      {% endif %}
+      {% endfor %}
+  </ul>
+  {% endif %}   
+
   <div style="text-align: center;width:27%;margin: 20px auto;">
     <h2>My Account</h2>
     <form method="post">
@@ -35,7 +59,7 @@
           {{ user.customer.phone_number }}
         </div>
       </div>
-      <input type="submit" value="Edit Profile" class="btn btn-primary">
+      <input type="submit" value="Edit" class="btn btn-primary">
     </form>
   </div>
 
