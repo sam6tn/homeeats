@@ -1,5 +1,16 @@
 {% extends 'none_base.html' %}
+{% load staticfiles %}
+
+<style>
+.first-info{
+    width: 100%;
+    height: 300px;
+    background-image: url( "{% static 'salad.jpeg' %}");
+}
+</style>
 {% block pagecontent %}
+
+  <div style="background: url('{% static 'salad.jpeg' %}');background-size:100%;background-repeat:no-repeat;height:900px">
 
 {% if messages %}
 <ul class="messages" style="padding-right:40px;">
@@ -24,7 +35,7 @@
     {% endfor %}
 </ul>
 {% endif %}
-<div style="text-align:center;">
+<div class="first-info" style="text-align:center;">
   <div class="col-4 p-4 bg-white rounded shadow-lg" style="display:inline-block;margin-top:8%;width:25%">
   <h2 style="margin-bottom:20px;">Login</h2>
   <form method="post">
@@ -45,5 +56,7 @@
     <a href="/password_reset"><strong>Forgot password?</strong></a>
   
   </div>
+</div>
+
 </div>
 {% endblock %}
