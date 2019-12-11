@@ -57,7 +57,10 @@ def cookcreate(request):
     cook_create_form = forms.CookCreateForm(request.POST, request.FILES)
     if cook_create_form.is_valid():
       data = cook_create_form.cleaned_data
-      if verify_address(data['street'], data['town'], data['state']):
+      if User.objects.filter(username=data['email']).exists():
+        messages.add_message(request, messages.ERROR, 'An account with this email already exists, go to login page or use a different email')
+        return render(request, 'cook_create.html', {'cook_create_form': cook_create_form})
+      elif verify_address(data['street'], data['town'], data['state']):
         user = User.objects.create_user(username=data['email'], password=data['password'], first_name=data['first_name'], last_name=data['last_name'])
         cook = models.Cook.objects.create(
           kitchen_license=data['kitchen_license'],
