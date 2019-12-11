@@ -127,23 +127,23 @@
 
 {% if not customer.shoppingcart.empty%}
     <div class="container">
-        <h2 style="color:red;">{{customer.shoppingcart.cook.user.first_name}} {{customer.shoppingcart.cook.user.last_name}}</h2>
+        <h2 style="color:red;">{{customer.shoppingcart.cook.user.first_name}} {{customer.shoppingcart.cook.user.last_name}}'s Kitchen</h2>
         <h6>Other dishes you may order from this cook</h6>
     </div>
 {% else %}
     <div class="container">
-        <h2>Showing dishes near {{address.city}}, {{address.state}}</h2>
+        <h2 style="margin-bottom:0%">Dishes near {{address.city}}, {{address.state}}</h2>
     </div>
 {% endif %}
 
 <div class="container" style="margin-top:15px;">
     <div class="row">
-            <div class="card-deck">
-    {% for dish in dishes %}
-                <div class="card" style="width:17.5rem;height:310px">
-                <img src="{{ dish.dish_image.url }}" class="dish-image" alt="...">
-                <div class="card-body">
-                        <a href="{% url 'customer_dish' dish.id %}">  <h5 class="card-title" style="color:black;">{{dish.title}} {% if dish.vegan %}<img src="/media/vegan.png" width=20px>{% endif %}</h5></a>
+                    {% for dish in dishes %} 
+                    <div class="col-lg-3 mt-3">
+                      <div class="card">
+                        <img src="{{ dish.dish_image.url }}" height="180" class="card-img-top" alt="...">
+                        <div class="card-body">
+                                <a href="{% url 'customer_dish' dish.id %}">  <h5 class="card-title" style="color:black;">{{dish.title}} {% if dish.vegan %}<img src="/media/vegan.png" width=20px>{% endif %}</h5></a>
                         
                     {% if dish.rating > 0 %}
                         <span class="fa fa-star {% if dish.rating >= 1 %}checked{% endif %} fa-sm"></span>
@@ -175,12 +175,10 @@
                                 {% endfor %}
                             </span> 
                         </h5>
-                </div>
-            </div>
-
-        
-    {% endfor %}
-</div>
+                        </div>
+                      </div>
+                    </div>
+                    {% endfor %}
     </div>
 </div>
 

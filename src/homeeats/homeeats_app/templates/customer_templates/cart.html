@@ -73,6 +73,7 @@
 
 {% if cart.empty %}
 <div class="container mt-2">
+    <a href="{% url 'customer_home' %}"><button type="button" class="btn btn-secondary">&lt; Add to Order</button></a>
     <div class="jumbotron jumbotron-fluid">
         <div class="container text-center">
             <h1>Your cart is empty...<h1>
@@ -108,6 +109,7 @@
 {% endfor %}
 -->
 <div class="container">
+    <a href="{% url 'customer_home' %}"><button type="button" class="btn btn-secondary">&lt; Add to Order</button></a>
   <div class="row">
     <div class="col-lg-8 p-4 bg-white rounded shadow-sm mb-5">
       <h1 class="text-center">Review Order</h1>

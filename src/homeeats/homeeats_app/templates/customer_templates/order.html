@@ -8,95 +8,134 @@
     crossorigin="anonymous">
 </script>
 
-<div class="container" style="margin-top:2em;margin-bottom:3em;">
-    <h1>Order #{{order.id}}</h1>
-    <h4 style="font-weight:normal;font-size:1.3em;">{{order.date}}</h4>
-</div>
-<div class="container" style="overflow-x:scroll;margin-top:20px;">
-    <div class="row flex-row flex-nowrap">
-    {% for item in order.item_set.all %}
-        <div class="col-3" style="margin-bottom:20px;display:inline-block;display:flex">
-            <div class="card">
-                <h5 class="card-header">
-                    <span style="float:left">{{item.dish.title}}</span>
-                    <span style="float:right">{{item.quantity}}</span>
-                </h5>
-                <div class="card-body">
-                    <img src="{{ item.dish.dish_image.url }}" width="100%" style="max-height: 200px;">
-                    <p class="card-text font-weight-bold text-secondary">Subtotal: ${{item.subtotal}}</p>
-                </div>
-                <div class="card-footer">
-                    {% if order.status != 'd' %}
-                        {% if order.status == 'r' %}
-                            <span>Order rejected by cook.</span>
+<div class="container mt-4">
+       <a href="{% url 'orders' %}"><button type="button" class="btn btn-secondary">&lt; Back to Orders</button></a>
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="row">
+                {% for item in order.item_set.all %}
+                <div class="col-lg-6">
+                  <div class="card mt-3">
+                    <img src="{{ item.dish.dish_image.url }}" height="180" class="card-img-top" alt="...">
+                    <div class="card-body">
+                            <h5>{{item.dish.title}}</h5>
+                            {% if order.status != 'd' %}
+                            {% if order.status == 'r' %}
+                                <span>Order rejected by cook.</span>
+                            {% else %}
+                                <span>Not yet delivered.</span>
+                            {% endif %}
+                        {% elif item in reviewed_items %}
+                            <span class="fa fa-star {% if item.review.dish_rating >= 1 %}checked{% endif %} fa-sm"></span>
+                            <span class="fa fa-star {% if item.review.dish_rating >= 2 %}checked{% endif %} fa-sm"></span>
+                            <span class="fa fa-star {% if item.review.dish_rating >= 3 %}checked{% endif %} fa-sm"></span>
+                            <span class="fa fa-star {% if item.review.dish_rating >= 4 %}checked{% endif %} fa-sm"></span>
+                            <span class="fa fa-star {% if item.review.dish_rating >= 5 %}checked{% endif %} fa-sm"></span>
                         {% else %}
-                            <span>Not yet delivered.</span>
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#reviewModal{{item.dish.id}}">Review</button>
                         {% endif %}
-                    {% elif item in reviewed_items %}
-                        <span class="fa fa-star {% if item.review.dish_rating >= 1 %}checked{% endif %} fa-sm"></span>
-                        <span class="fa fa-star {% if item.review.dish_rating >= 2 %}checked{% endif %} fa-sm"></span>
-                        <span class="fa fa-star {% if item.review.dish_rating >= 3 %}checked{% endif %} fa-sm"></span>
-                        <span class="fa fa-star {% if item.review.dish_rating >= 4 %}checked{% endif %} fa-sm"></span>
-                        <span class="fa fa-star {% if item.review.dish_rating >= 5 %}checked{% endif %} fa-sm"></span>
-                    {% else %}
-                        <button class="btn btn-primary" data-toggle="modal" data-target="#reviewModal{{item.dish.id}}">Review</button>
-                    {% endif %}
-                    
-                    {% if item.dish in customer.favorites.all %}
-                    <i class="fa fa-heart" id="heart{{item.dish.id}}" style="color:red;font-size:20pt;cursor:pointer;" onclick="toggleHeart('{{item.dish.id}}')"></i>
-                    {% else %}
-                    <i class="fa fa-heart-o" id="heart{{item.dish.id}}" style="color:red;font-size:20pt;cursor:pointer;" onclick="toggleHeart('{{item.dish.id}}')"></i>
-                    {%endif%}
+                        
+                        {% if item.dish in customer.favorites.all %}
+                        <i class="fa fa-heart" id="heart{{item.dish.id}}" style="color:red;font-size:20pt;cursor:pointer;float:right;" onclick="toggleHeart('{{item.dish.id}}')"></i>
+                        {% else %}
+                        <i class="fa fa-heart-o" id="heart{{item.dish.id}}" style="color:red;font-size:20pt;cursor:pointer;float:right;" onclick="toggleHeart('{{item.dish.id}}')"></i>
+                        {%endif%}
+                    </div>
+                    <div class="card-footer">
+                            <span class="font-weight-bold text-muted" style="float:left;">x{{item.quantity}}</span>
+                            <span class="font-weight-bold text-muted" style="float:right;">Subtotal: ${{item.subtotal}}</span>
+                        </div>
+                  </div>
                 </div>
-            </div>
+                <div class="modal fade" name="modal{{item.dish.id}}" id="reviewModal{{item.dish.id}}" tabindex="-1" role="dialog" aria-labelledby="reviewModal" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Review for {{item.dish.title}}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            </div>
+            
+                            <form method="POST">
+                            {% csrf_token %}
+                            <div class="modal-body" style="cursor:default">
+                                <span id="{{item.dish.id}}star1" style="cursor:pointer" class="fa fa-star fa-sm" onclick="colorStars({{item.dish.id}},1)"></span>
+                                <span id="{{item.dish.id}}star2" style="cursor:pointer" class="fa fa-star fa-sm" onclick="colorStars({{item.dish.id}},2)"></span>
+                                <span id="{{item.dish.id}}star3" style="cursor:pointer" class="fa fa-star fa-sm" onclick="colorStars({{item.dish.id}},3)"></span>
+                                <span id="{{item.dish.id}}star4" style="cursor:pointer" class="fa fa-star fa-sm" onclick="colorStars({{item.dish.id}},4)"></span>
+                                <span id="{{item.dish.id}}star5" style="cursor:pointer" class="fa fa-star fa-sm" onclick="colorStars({{item.dish.id}},5)"></span>
+                                {{form.dish_rating}}
+                                {{form.description}}
+                                <input name="rating{{item.dish.id}}" id="rating{{item.dish.id}}" type="hidden" value="0">
+                                <input name="dish_id" id="dish_id" type="hidden" value="{{item.dish.id}}">
+                            </div>
+                            <div class="modal-footer">
+                                <button name="submit{{item.dish.id}}" type="submit" class="btn btn-success">Submit</button>
+                            </div>
+                            </form>
+                        </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+        </div>  
+    
+        <div class="col-lg-4 p-4 bg-white rounded shadow-sm mb-5">
+            <h3 class="text-center">
+            Order #{{order.id}}
+            </h3>
+            <ul class="list-group list-group-flush">
+                {% if order.status == 'd' %}
+                <li class="list-group-item text-center">
+                    <p><span class="text-success font-weight-bold">Successfully Delivered </br> {{order.actual_arrival_time}}</p>
+                </li>
+                {% elif order.status == 'p' %}
+                <li class="list-group-item text-center">
+                    <p><span class="text-muted font-weight-bold">Order Pending</p>
+                </li>
+                {% elif order.status == 'o' %}
+                <li class="list-group-item text-center">
+                    <p><span class="text-secondary font-weight-bold">Pending your Delivery </br> Expected {{order.estimated_arrival_time}}</p>
+                </li>
+                {% elif order.status == 'c' %}
+                <li class="list-group-item text-center">
+                    <p><span class="text-secondary font-weight-bold">Order Cooking</p>
+                </li>
+                {% elif order.status == 'r' %}
+                <li class="list-group-item text-center">
+                    <p><span class="text-danger font-weight-bold">Order Rejected</p>
+                </li>
+                {% elif order.status == 'x' %}
+                <li class="list-group-item text-center">
+                    <p><span class="text-danger font-weight-bold">Customer Canceled Order</p>
+                </li>
+                {% endif %}
+                <li class="list-group-item">
+                    <p class="card-text"><span class="font-weight-bold"> Cook:</span> {{ order.cook.user.first_name }} {{ order.cook.user.last_name }}</p>
+                </li>
+                <li class="list-group-item">
+                    <p class="card-text">{{order.street_name}} </br> {{order.city}}, {{order.state}} {{order.zipcode}} </br><span class="font-weight-bold"> Phone:</span> {{ order.customer.phone_number }}</p>
+                </li>
+                <li class="list-group-item"><p class="card-text"><span class="font-weight-bold">Special requests:</span>
+                    {% if order.special_requests %}
+                    {{ order.special_requests }}
+                  {% else %}
+                    None
+                  {% endif %}</p></li>
+                  <li class="list-group-item">
+                    <p><span class="font-weight-bold">Item Subtotal: </span> <span style="float:right;"> ${{ order.item_subtotal }}</span></p>
+                    <p><span class="font-weight-bold">Tax: </span><span style="float:right;">${{ order.tax}}</span></p>
+                    <p><span class="font-weight-bold">Tip: </span><span style="float:right;">${{ order.tip }}</span></p>
+                    <p><span class="font-weight-bold">Delivery: </span><span style="float:right;">${{ order.delivery_fee }}</span></p>
+                    <h4><span class="font-weight-bold">Total: </span><span style="float:right;">${{ order.total }}</span></h4>
+                  </li>
+            </ul>
         </div>
-        <div class="modal fade" name="modal{{item.dish.id}}" id="reviewModal{{item.dish.id}}" tabindex="-1" role="dialog" aria-labelledby="reviewModal" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Review for {{item.dish.title}}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                </div>
-
-                <form method="POST">
-                {% csrf_token %}
-                <div class="modal-body" style="cursor:default">
-                    <span id="{{item.dish.id}}star1" style="cursor:pointer" class="fa fa-star fa-sm" onclick="colorStars({{item.dish.id}},1)"></span>
-                    <span id="{{item.dish.id}}star2" style="cursor:pointer" class="fa fa-star fa-sm" onclick="colorStars({{item.dish.id}},2)"></span>
-                    <span id="{{item.dish.id}}star3" style="cursor:pointer" class="fa fa-star fa-sm" onclick="colorStars({{item.dish.id}},3)"></span>
-                    <span id="{{item.dish.id}}star4" style="cursor:pointer" class="fa fa-star fa-sm" onclick="colorStars({{item.dish.id}},4)"></span>
-                    <span id="{{item.dish.id}}star5" style="cursor:pointer" class="fa fa-star fa-sm" onclick="colorStars({{item.dish.id}},5)"></span>
-                    {{form.dish_rating}}
-                    {{form.description}}
-                    <input name="rating{{item.dish.id}}" id="rating{{item.dish.id}}" type="hidden" value="0">
-                    <input name="dish_id" id="dish_id" type="hidden" value="{{item.dish.id}}">
-                </div>
-                <div class="modal-footer">
-                    <button name="submit{{item.dish.id}}" type="submit" class="btn btn-success">Submit</button>
-                </div>
-                </form>
-            </div>
-            </div>
+        
         </div>
     
-    {% endfor %}
     </div>
-</div>
-<div class="container" style="margin-top:2.5em;">
-    <p><span class="order-field">Cook: </span>{{ order.cook.user.first_name }} {{ order.cook.user.last_name }}</p>
-    <p><span class="order-field">Total: </span>${{ order.total }}</p>
-    <p><span class="order-field">Status: </span>{{ order.get_status_display }}</p>
-    <p>
-      <span class="order-field">Special requests: </span>
-      {% if order.special_requests %}
-        {{ order.special_requests }}
-      {% else %}
-        None
-      {% endif %}
-    </p>
-</div>
 
 <script>
     function colorStars(dish,num){

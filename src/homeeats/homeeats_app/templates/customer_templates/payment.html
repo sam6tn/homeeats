@@ -135,7 +135,9 @@
     <h4>{{item.dish.title}} - {{item.quantity}} - ${{item.subtotal}}</h4></h3>
 {% endfor %}
 -->
+
 <div class="container-fluid">
+        <a href="{% url 'cart' %}"><button type="button" class="btn btn-secondary">&lt; Edit Order</button></a>
     <div class="row">
         <div class="col-lg-8 p-5 bg-white rounded shadow-sm mb-5">
             <div class="text-center mb-5">
