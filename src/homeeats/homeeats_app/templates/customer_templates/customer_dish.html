@@ -76,12 +76,13 @@
                         <p><span class="font-weight-bold">Allergies: {{dish.allergies}}</span></p>
                         {% endif %}
                       <p class="card-text text-muted">Chef {{dish.cook.user.first_name}} {{dish.cook.user.last_name}} </p>
+                      <h4 class="float:left;">${{dish.price}}
                       <form method="POST" action="{% url 'addtocart' %}" style="display:inline">
                             {% csrf_token %}  
                             <input name="dish_id" type="hidden" value="{{dish.id}}">
-                            <button name="dishbtn" style="float:right;" class='btn btn-success' type="submit">Add to order</button>
+                            <button name="dishbtn" style="float:right;position:relative;" class='btn btn-success' type="submit">Add to order</button>
                         </form>
-                      
+                    </h4>
                     </div>
                   </div>
 
