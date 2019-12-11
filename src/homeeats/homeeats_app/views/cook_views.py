@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from .. import models
 from ..models import User
 from .. import forms
-from ..models import Cook, Cuisine, Dish, Order, Customer, Item, Dish_Review, Address, RejectReason, CookChangeRequest, ShoppingCart
+from ..models import Cook, Cuisine, Dish, Order, Customer, Item, Dish_Review, Address, RejectReason, CookChangeRequest, ShoppingCart, CartItem
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.forms import model_to_dict
@@ -12,6 +12,7 @@ from django.contrib import messages
 import datetime
 from django.template.defaulttags import register
 from django.utils import timezone
+from decimal import Decimal
 import urllib.request
 import urllib.parse
 import json
@@ -271,6 +272,21 @@ def cook_disable_dish(request, dish_id):
   dish = Dish.objects.get(id=dish_id)
   cook = Cook.objects.get(user_id=request.user.id)
   if dish.cook == cook:
+    items = CartItem.objects.filter(dish=dish)
+    for item in items:
+      cart = item.shopping_cart
+      cart.total_before_tip = cart.total_before_tip - item.subtotal
+      cart.item_subtotal = cart.item_subtotal - item.subtotal
+      cart.total_before_tip -= cart.tax
+      cart.tax = Decimal(round((.06 * float(cart.item_subtotal)), 2))
+      cart.total_before_tip += cart.tax
+      if cart.total_before_tip == cart.cook.delivery_fee:
+          cart.cook_id = None
+          cart.empty = True
+          cart.total_before_tip = 0
+          cart.tax = 0
+      item.delete()
+      cart.save()
     dish.cook_disabled = True
     dish.save()
   return HttpResponseRedirect(reverse('cook_cuisine_dishes', args=[dish.cuisine_id]))

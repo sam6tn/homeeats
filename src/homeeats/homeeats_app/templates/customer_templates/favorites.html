@@ -79,10 +79,21 @@
 
 
     <div class="col-lg-3 mt-3">
-            <div class="card" {% if not customer.shoppingcart.empty and customer.shoppingcart.cook != dish.cook or not dish.cook.online or dish.cook_disabled %}disabled style="opacity: 0.3;" title="Current cart has different cook"{% endif %}>
-              <img src="{{ dish.dish_image.url }}" height="180" class="card-img-top" alt="...">
+            <div class="card">
+              <img src="{{ dish.dish_image.url }}" {% if not customer.shoppingcart.empty and customer.shoppingcart.cook != dish.cook or not dish.cook.online or dish.cook_disabled %} style="opacity: 0.3;"{% endif %} height="180" class="card-img-top" alt="...">
+              <div class="card-img-overlay">
+                    {% if not customer.shoppingcart.empty and customer.shoppingcart.cook != dish.cook or not dish.cook.online or dish.cook_disabled %}
+                    
+                    <h5><span class="badge badge-danger" style="float:right;">DISABLED</span></h5>
+                    {% else %}
+                        {% if dish.vegan %}
+                        <img style="float:left" src="/media/vegan.png" width=35px>
+                        {% endif %}
+                        <h5><span class="badge badge-primary" style="float:right;">{{dish.cuisine}}</span></h5>
+                    {% endif %}
+                    </div>
               <div class="card-body">
-                      <a href="{% url 'customer_dish' dish.id %}">  <h5 class="card-title" style="color:black;">{{dish.title}} {% if dish.vegan %}<img src="/media/vegan.png" width=20px>{% endif %}</h5></a>
+                      <a href="{% url 'customer_dish' dish.id %}">  <h5 class="card-title" {% if not customer.shoppingcart.empty and customer.shoppingcart.cook != dish.cook or not dish.cook.online or dish.cook_disabled %} style="opacity: 0.3;" {% endif %} style="color:black;">{{dish.title}} {% if dish.vegan %}<img src="/media/vegan.png" width=20px>{% endif %}</h5></a>
               
           {% if dish.rating > 0 %}
               <span class="fa fa-star {% if dish.rating >= 1 %}checked{% endif %} fa-sm"></span>
@@ -98,14 +109,14 @@
       </br></br>
       
               {% if dish in customer.favorites.all %}
-              <i class="fa fa-heart" id="heart{{dish.id}}" style="color:red;font-size:20pt;cursor:pointer;float:left;" onclick="toggleHeart('{{dish.id}}')"></i>
+              <i class="fa fa-heart" id="heart{{dish.id}}" style="color:red;font-size:20pt;cursor:pointer;float:left;position:relative;" onclick="toggleHeart('{{dish.id}}')"></i>
               {% else %}
-              <i class="fa fa-heart-o" id="heart{{dish.id}}" style="color:red;font-size:20pt;cursor:pointer;float:left;" onclick="toggleHeart('{{dish.id}}')"></i>
+              <i class="fa fa-heart-o" id="heart{{dish.id}}" style="color:red;font-size:20pt;cursor:pointer;float:left;position:relative;" onclick="toggleHeart('{{dish.id}}')"></i>
               {%endif%}
           <h5>
               <button 
               onclick="addtocart('{{dish.id}}')" 
-              style="padding:0;background:none;border:none;outline:none;margin-top:3px;float:right"
+              style="padding:0;background:none;border:none;outline:none;margin-top:3px;float:right;position:relative;"
               {% if not customer.shoppingcart.empty and customer.shoppingcart.cook != dish.cook or not dish.cook.online or dish.cook_disabled %}
                             disabled
                         {% endif %} 

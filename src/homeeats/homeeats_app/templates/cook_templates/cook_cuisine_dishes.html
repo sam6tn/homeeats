@@ -11,15 +11,20 @@
         {% for dish in dishes  %}
         <div class="col-lg-3 mt-3">
             <div class="card">
-              <img src="{{ dish.dish_image.url }}" height="180" class="card-img-top" alt="...">
+              <img src="{{ dish.dish_image.url }}" height="180" {% if dish.cook_disabled %}style="opacity: 0.3;"{% endif %} class="card-img-top" alt="...">
               <div class="card-img-overlay">
+                  {% if dish.cook_disabled %}
+                  
+                  <h5><span class="badge badge-danger" style="float:right;">DISABLED</span></h5>
+                  {% else %}
                       {% if dish.vegan %}
                       <img style="float:left" src="/media/vegan.png" width=35px>
                       {% endif %}
                       <h5><span class="badge badge-primary" style="float:right;">{{dish.cuisine}}</span></h5>
+                  {% endif %}
                   </div>
               <div class="card-body">
-                      <a href="{% url 'customer_dish' dish.id %}">  <h5 class="card-title" style="color:black;position:relative;">{{dish.title}} </h5></a>
+                      <a href="{% url 'reviews_for_dish' dish.id %}">  <h5 class="card-title" {% if dish.cook_disabled %}style="opacity: 0.3;"{% endif %} style="color:black;position:relative;">{{dish.title}} </h5></a>
               
           {% if dish.rating > 0 %}
               <span class="fa fa-star {% if dish.rating >= 1 %}checked{% endif %} fa-sm"></span>

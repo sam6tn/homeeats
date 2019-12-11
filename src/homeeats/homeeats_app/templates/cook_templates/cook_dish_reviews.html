@@ -25,14 +25,19 @@
         <div class="col-6">
 
             <div class="card mb-3">
-                    <img src="{{ dish.dish_image.url }}" height="400px" class="card-img-top" alt="...">
+                    <img src="{{ dish.dish_image.url }}" {% if dish.cook_disabled %}style="opacity:0.3;"{% endif %} height="400px" class="card-img-top" alt="...">
                     
                     <div class="card-img-overlay">
-                        {% if dish.vegan %}
-                        <img style="float:left" src="/media/vegan.png" width=50px>
+                        {% if dish.cook_disabled %}
+                        
+                        <h5><span class="badge badge-danger" style="float:right;">DISABLED</span></h5>
+                        {% else %}
+                            {% if dish.vegan %}
+                            <img style="float:left" src="/media/vegan.png" width=50px>
+                            {% endif %}
+                            <h3><span class="badge badge-primary" style="float:right;">{{dish.cuisine}}</span></h3>
                         {% endif %}
-                        <h3><span class="badge badge-primary" style="float:right;">{{dish.cuisine}}</span></h3>
-                    </div>
+                        </div>
                     
                     <div class="card-body">
                       <h3 class="card-title">{{dish.title}}
@@ -58,11 +63,37 @@
                         {% if allergies %}
                         <p><span class="font-weight-bold">Allergies: {{dish.allergies}}</span></p>
                         {% endif %}
-                      <p class="card-text text-muted">Chef {{dish.cook.user.first_name}} {{dish.cook.user.last_name}} </p>
                       <h4 class="float:left;">${{dish.price}}
+                          <small class="text-muted"><button type="button" class="btn btn-danger btn-sm" data-toggle="modal"  style="position:relative;float:right;" data-target="#exampleModalCenter">Delete</button></small>
+                          {% if dish.cook_disabled %}
+                            <a href="{% url 'cook_enable_dish' dish.id %}"><small class="text-muted"><button type="button" style="position:relative;float:right;" class="btn btn-success btn-sm">Enable</button></small></a>
+                          {% else %}
+                            <a href="{% url 'cook_disable_dish' dish.id %}"><small class="text-muted"><button type="button"  style="position:relative;float:right;" class="btn btn-warning btn-sm">Disable</button></small></a>
+                          {% endif %}
+                          <a href="{% url 'cook_edit_dish' dish.id %}"><small class="text-muted"><button type="button" style="position:relative;float:right;" class="btn btn-success btn-sm">Edit</button></small></a>
                     </h4>
                     </div>
                   </div>
+                  <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Remove {{dish.title}}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            Are you sure you want to remove this dish?
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <a href="{% url 'delete_dish' dish.id %}"><button type="button" class="btn btn-danger">Delete</button></a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
 
         </div>
         <div class="col-6">

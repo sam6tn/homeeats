@@ -124,8 +124,6 @@ def dish(request, dish_id):
     customer = Customer.objects.get(user_id=request.user.id)
     shopping_cart = ShoppingCart.objects.get(customer=customer)
     cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
-    if(dish.cook_disabled or dish.cook.online == False or (not customer.shoppingcart.empty and customer.shoppingcart.cook != dish.cook)):
-        raise Http404()
     reviews = dish.dish_review_set.filter(report_flag=False).order_by(
         'date')  # get all reviews for that Dish
     form = DishReviewForm()
