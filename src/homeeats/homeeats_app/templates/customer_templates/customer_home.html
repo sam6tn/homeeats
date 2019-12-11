@@ -142,7 +142,6 @@
                     <div class="col-lg-3 mt-3">
                       <div class="card">
                         <img src="{{ dish.dish_image.url }}" height="180" class="card-img-top" alt="...">
-
                         <div class="card-body">
                                 <a href="{% url 'customer_dish' dish.id %}">  <h5 class="card-title" style="color:black;">{{dish.title}} {% if dish.vegan %}<img src="/media/vegan.png" width=20px>{% endif %}</h5></a>
                         
@@ -152,7 +151,7 @@
                         <span class="fa fa-star {% if dish.rating >= 3 %}checked{% endif %} fa-sm"></span>
                         <span class="fa fa-star {% if dish.rating >= 4 %}checked{% endif %} fa-sm"></span>
                         <span class="fa fa-star {% if dish.rating >= 5 %}checked{% endif %} fa-sm"></span>
-                        <p style="float:right;">  {{dish.dish_review_set.count}} rating{% if dish.dish_review_set.count > 1 %}s{% endif %}</p>
+                        <p style="float:right;" class="text-muted">  {{dish.dish_review_set.count}} rating{% if dish.dish_review_set.count > 1 %}s{% endif %}</p>
                     {% else %}
                         NO RATING
                     {% endif %}</p>

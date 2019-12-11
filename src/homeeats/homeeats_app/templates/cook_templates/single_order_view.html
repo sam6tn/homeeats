@@ -19,6 +19,12 @@
             <div class="col-lg-6">
               <div class="card mt-3">
                 <img src="{{ item.dish.dish_image.url }}" height="180" class="card-img-top" alt="...">
+                <div class="card-img-overlay">
+                        {% if dish.vegan %}
+                        <img style="float:left" src="/media/vegan.png" width=50px>
+                        {% endif %}
+                        <h3><span class="badge badge-primary" style="float:right;">{{dish.cuisine}}</span></h3>
+                    </div>
                 <div class="card-body">
                         <h5>{{item.dish.title}}</h5>
                 </div>

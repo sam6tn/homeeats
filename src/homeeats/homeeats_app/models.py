@@ -35,7 +35,7 @@ class Cuisine(models.Model):
   cooks = models.ManyToManyField(Cook, blank=True, related_name="cooks")
   flag = models.ImageField(default="", upload_to='flags')
   def __str__(self):
-    return self.name + " cuisine (" + str(self.id) + ")"
+    return self.name
 
 class Dish(models.Model):
   title = models.CharField(default="", max_length=30)
