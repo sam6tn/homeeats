@@ -1,6 +1,8 @@
 {% extends 'none_base.html' %}
 {% block pagecontent %}
 {% load staticfiles %}
+<div style="background: url('{% static 'salad.jpeg' %}');background-size:100%;background-repeat:no-repeat;height:900px">
+
 {% if messages %}
 <ul class="messages" style="padding-right:40px;">
     {% for message in messages %}
@@ -22,9 +24,6 @@
 
   </style>
 </head>
-
-<div style="background: url('{% static 'salad.jpeg' %}');background-size:100%;background-repeat:no-repeat;height:900px">
-
 <div class="d-flex justify-content-center">
     <div class="col-4 p-4 bg-white rounded shadow-lg" style="display:inline-block;margin-top:1%;">
         <h2 style="text-align:center;">Cook Signup</h2></br>
