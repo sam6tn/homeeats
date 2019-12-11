@@ -169,4 +169,27 @@
             }
         });
     }
+    function toggleHeart(id){
+        let heartid = "heart"+id;
+        if (document.getElementById(heartid).classList.contains('fa-heart')){
+            document.getElementById(heartid).classList.add("fa-heart-o");
+            document.getElementById(heartid).classList.remove("fa-heart");
+        }
+        else if (document.getElementById(heartid).classList.contains('fa-heart-o')){
+            document.getElementById(heartid).classList.add("fa-heart");
+            document.getElementById(heartid).classList.remove("fa-heart-o");
+        }
+        $.ajax({
+            type: "POST",
+            url: "{% url 'togglefav' %}",
+            data: {
+            'dish_id': id,
+            'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            dataType: 'json',
+            success: function (data) {
+                console.log(data.status);
+            }
+        });
+    }
 </script>

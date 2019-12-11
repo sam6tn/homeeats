@@ -78,9 +78,8 @@
 
 {% load tz %}
 <div class="container mt-2" style="overflow-x:scroll;">
-<h2 style="margin-left:60px">Current Orders</h2>
+<h2>Current Orders</h2>
 {% if current_orders%}
-
 
     <div class="row flex-row flex-nowrap">
         {% for order in current_orders%}
@@ -178,15 +177,17 @@
     </div>
 </div>
 {% else %}
+</div>
 <div class="container mt-2">
         <div class="jumbotron jumbotron-fluid">
             <div class="container text-center">
                 <p class="lead">No Current Orders</p>
             </div>
+        </div>
 </div>
 {% endif %}
 <div class="container" style="overflow-x:scroll;">
-<h2 style="margin-left:60px">Past Orders</h2>
+<h2>Past Orders</h2>
 {% if past_orders %}
     <div class="row flex-row flex-nowrap">
         {% for order in past_orders%}
