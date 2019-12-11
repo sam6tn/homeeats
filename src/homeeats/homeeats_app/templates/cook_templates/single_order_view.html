@@ -55,7 +55,7 @@
             </li>
             {% elif order.status == 'r' %}
             <li class="list-group-item text-center">
-                <p><span class="text-danger font-weight-bold">Order Rejected</p>
+                <p><span class="text-danger font-weight-bold">Order Rejected: {{order.reject_reason}}</p>
             </li>
             {% endif %}
             <li class="list-group-item">
