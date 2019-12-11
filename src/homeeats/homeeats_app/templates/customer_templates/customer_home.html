@@ -142,6 +142,7 @@
                     <div class="col-lg-3 mt-3">
                       <div class="card">
                         <img src="{{ dish.dish_image.url }}" height="180" class="card-img-top" alt="...">
+
                         <div class="card-body">
                                 <a href="{% url 'customer_dish' dish.id %}">  <h5 class="card-title" style="color:black;">{{dish.title}} {% if dish.vegan %}<img src="/media/vegan.png" width=20px>{% endif %}</h5></a>
                         
@@ -151,13 +152,12 @@
                         <span class="fa fa-star {% if dish.rating >= 3 %}checked{% endif %} fa-sm"></span>
                         <span class="fa fa-star {% if dish.rating >= 4 %}checked{% endif %} fa-sm"></span>
                         <span class="fa fa-star {% if dish.rating >= 5 %}checked{% endif %} fa-sm"></span>
-                        <p class="text-muted" style="float:right;">  {{dish.dish_review_set.count}} rating{% if dish.dish_review_set.count > 1 %}s{% endif %}</p>
+                        <p style="float:right;">  {{dish.dish_review_set.count}} rating{% if dish.dish_review_set.count > 1 %}s{% endif %}</p>
                     {% else %}
                         NO RATING
-                    {% endif %}
+                    {% endif %}</p>
                     
-                </br></br>
-                
+                    <p>
                         {% if dish in customer.favorites.all %}
                         <i class="fa fa-heart" id="heart{{dish.id}}" style="color:red;font-size:20pt;cursor:pointer;float:left;" onclick="toggleHeart('{{dish.id}}')"></i>
                         {% else %}
@@ -175,6 +175,7 @@
                                 {% endfor %}
                             </span> 
                         </h5>
+                    </p>
                         </div>
                       </div>
                     </div>
