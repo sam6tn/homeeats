@@ -180,6 +180,18 @@ def available(request):
         return HttpResponseRedirect(reverse('cook_home')) 
     cook.online = False
     cook.save()
+    shopping_carts = ShoppingCart.objects.filter(cook=cook)
+    for cart in shopping_carts:
+      for item in cart.cartitem_set.all():
+        item.delete()
+      cart.total_before_tip = 0
+      cart.item_subtotal = 0
+      cart.tax = 0
+      cart.cook_id = None
+      cart.empty = True
+      cart.total_after_tip = 0
+      cart.special_requests = ""
+      cart.save()
   else:
     cook.online = True
     cook.save()

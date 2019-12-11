@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from .. import forms
 from .. import models
-from ..models import User, Cook, Order, Customer, RejectReason
+from ..models import User, Cook, Order, Customer, RejectReason, ShoppingCart
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.template import loader
@@ -98,6 +98,18 @@ def logout_view(request):
           return HttpResponseRedirect(reverse('cook_home'))   
       cook.online = False
       cook.save()
+      shopping_carts = ShoppingCart.objects.filter(cook=cook)
+      for cart in shopping_carts:
+        for item in cart.cartitem_set.all():
+          item.delete()
+        cart.total_before_tip = 0
+        cart.item_subtotal = 0
+        cart.tax = 0
+        cart.cook_id = None
+        cart.empty = True
+        cart.total_after_tip = 0
+        cart.special_requests = ""
+        cart.save()
   logout(request)
   return redirect('/')
 
