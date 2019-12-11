@@ -106,7 +106,21 @@
 {% endfor %}
 -->
 <div class="container">
-    <a href="{% url 'customer_home' %}"><button type="button" class="btn btn-secondary">&lt; Add to Order</button></a>
+    {% if messages %}
+    <ul class="messages" style="padding-right:40px;">
+        {% for message in messages %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>{{message}}</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </ul>
+    {% endif %}
+  <a href="{% url 'customer_home' %}"><button type="button" class="btn btn-secondary">&lt; Add to Order</button></a>
   <div class="row">
     <div class="col-lg-8 p-4 bg-white rounded shadow-sm mb-5">
       <h1 class="text-center">Review Order</h1>
@@ -156,14 +170,19 @@
           <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Total (before tip)</strong>
             <h5 class="font-weight-bold">${{cart.total_before_tip}}</h5>
           </li>
-          <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Add a Tip</strong>
-            <div class="input-group mb-3" style="width:7rem;">
-              <div class="input-group-prepend">
-                <span class="input-group-text">$</span>
-              </div>
-              <input type="text" class="form-control" aria-label="Amount" name="tip" value="{{cart.tip}}">
-            </div>
-          </li>
+	  <li>
+	    <strong class="text-muted">Add a tip</strong>
+	    {% for tip_option in cart.tip_options %}
+	      <div class="d-flex justify-content-between py-3 ">
+	        <label>{{ tip_option.label }}</label>
+		<input type="radio" name="tip" value="{{ tip_option.amount }}" {% if tip_option.label == "15 %" %} checked {% endif %} ><strong>${{ tip_option.amount }}</strong></input>
+	      </div>
+	    {% endfor %}
+	    <div class="d-flex justify-content-between py-3 ">
+	      <label>Other:</label>
+	      <input type="radio" name="tip">$<input style="width:3em;"type="text" aria-label="Amount" name="tip" /> </input>
+	    </div>
+	  </li>
         </ul>
         <input type=submit class="btn btn-primary btn-block" value="Proceed to Payment">
         </form>

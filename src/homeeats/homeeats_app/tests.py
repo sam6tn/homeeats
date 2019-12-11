@@ -4,7 +4,7 @@ import json
 from django.shortcuts import render, get_object_or_404
 from django.test import RequestFactory
 from . import views
-from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address, User, Customer, Order, ShoppingCart, CartItem
+from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address, User, Customer, Order, ShoppingCart, CartItem, CookChangeRequest
 from .forms import DishSearchForm, DishCreateForm, CustomerCreateForm, DishReviewForm, UserEditForm, PhoneEditForm
 
 class CookHomeTest(TestCase):
@@ -590,6 +590,37 @@ class AddressCreateFormTest(TestCase):
     def test_missing_state(self):
         form = UserEditForm({'street': "street",'town': "cville", 'state':'', 'zipcode':22903})
         self.assertFalse(form.is_valid())
+
+class CookChangeRequestTest(TestCase):
+    def test_cook_request_relationship(self):
+        cook_user= User.objects.create(username="cook_user", is_cook=True)
+        cook = Cook.objects.create(user=cook_user)
+        cook_change_request = CookChangeRequest(cook=cook)
+        self.assertEqual(cook.id, cook_change_request.cook_id)
+
+    def test_kitchen_license(self):
+        cook_user= User.objects.create(username="cook_user", is_cook=True)
+        cook = Cook.objects.create(user=cook_user)
+        cook_change_request = CookChangeRequest(cook=cook, kitchen_license='123456')
+        self.assertEqual(cook_change_request.kitchen_license, '123456')
+
+    def test_phone_number(self):
+        cook_user= User.objects.create(username="cook_user", is_cook=True)
+        cook = Cook.objects.create(user=cook_user)
+        cook_change_request = CookChangeRequest(cook=cook, phone_number='703909061')
+        self.assertEqual(cook_change_request.phone_number, '703909061')
+
+    def test_street_name(self):
+        cook_user= User.objects.create(username="cook_user", is_cook=True)
+        cook = Cook.objects.create(user=cook_user)
+        cook_change_request = CookChangeRequest(cook=cook, street_name='Jefferson Park')
+        self.assertEqual(cook_change_request.street_name, 'Jefferson Park')
+
+    def test_city(self):
+        cook_user= User.objects.create(username="cook_user", is_cook=True)
+        cook = Cook.objects.create(user=cook_user)
+        cook_change_request = CookChangeRequest(cook=cook, city='Ashburn')
+        self.assertEqual(cook_change_request.city, 'Ashburn')
+
+
     
-
-
