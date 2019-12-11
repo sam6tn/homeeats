@@ -17,6 +17,14 @@
                 <div class="col-lg-6">
                   <div class="card mt-3">
                     <img src="{{ item.dish.dish_image.url }}" height="180" class="card-img-top" alt="...">
+
+                    <div class="card-img-overlay">
+                            {% if item.dish.vegan %}
+                            <img style="float:left" src="/media/vegan.png" width=35px>
+                            {% endif %}
+                            <h5><span class="badge badge-primary" style="float:right;">{{item.dish.cuisine}}</span></h5>
+                        </div>
+
                     <div class="card-body">
                             <h5>{{item.dish.title}}</h5>
                             {% if order.status != 'd' %}
@@ -32,13 +40,13 @@
                             <span class="fa fa-star {% if item.review.dish_rating >= 4 %}checked{% endif %} fa-sm"></span>
                             <span class="fa fa-star {% if item.review.dish_rating >= 5 %}checked{% endif %} fa-sm"></span>
                         {% else %}
-                            <button class="btn btn-primary" data-toggle="modal" data-target="#reviewModal{{item.dish.id}}">Review</button>
+                            <button class="btn btn-primary" data-toggle="modal" style="position:relative;" data-target="#reviewModal{{item.dish.id}}">Review</button>
                         {% endif %}
                         
                         {% if item.dish in customer.favorites.all %}
-                        <i class="fa fa-heart" id="heart{{item.dish.id}}" style="color:red;font-size:20pt;cursor:pointer;float:right;" onclick="toggleHeart('{{item.dish.id}}')"></i>
+                        <i class="fa fa-heart" id="heart{{item.dish.id}}" style="color:red;font-size:20pt;cursor:pointer;float:right;position:relative;" onclick="toggleHeart('{{item.dish.id}}')"></i>
                         {% else %}
-                        <i class="fa fa-heart-o" id="heart{{item.dish.id}}" style="color:red;font-size:20pt;cursor:pointer;float:right;" onclick="toggleHeart('{{item.dish.id}}')"></i>
+                        <i class="fa fa-heart-o" id="heart{{item.dish.id}}" style="color:red;font-size:20pt;cursor:pointer;float:right;position:relative;" onclick="toggleHeart('{{item.dish.id}}')"></i>
                         {%endif%}
                     </div>
                     <div class="card-footer">

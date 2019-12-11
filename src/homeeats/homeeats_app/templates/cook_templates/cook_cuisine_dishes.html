@@ -9,45 +9,39 @@
     <div class="container">
       <div class="row">
         {% for dish in dishes  %}
-        <div class="col-4" style="margin-bottom:20px;display:flex">
-          <div class="card">
-              <h5 class="card-header">
-                <a href="{% url 'reviews_for_dish' dish.id %}">{{dish.title}}</a>
+        <div class="col-lg-3 mt-3">
+            <div class="card">
+              <img src="{{ dish.dish_image.url }}" height="180" class="card-img-top" alt="...">
+              <div class="card-img-overlay">
+                      {% if dish.vegan %}
+                      <img style="float:left" src="/media/vegan.png" width=35px>
+                      {% endif %}
+                      <h5><span class="badge badge-primary" style="float:right;">{{dish.cuisine}}</span></h5>
+                  </div>
+              <div class="card-body">
+                      <a href="{% url 'customer_dish' dish.id %}">  <h5 class="card-title" style="color:black;position:relative;">{{dish.title}} </h5></a>
+              
+          {% if dish.rating > 0 %}
+              <span class="fa fa-star {% if dish.rating >= 1 %}checked{% endif %} fa-sm"></span>
+              <span class="fa fa-star {% if dish.rating >= 2 %}checked{% endif %} fa-sm"></span>
+              <span class="fa fa-star {% if dish.rating >= 3 %}checked{% endif %} fa-sm"></span>
+              <span class="fa fa-star {% if dish.rating >= 4 %}checked{% endif %} fa-sm"></span>
+              <span class="fa fa-star {% if dish.rating >= 5 %}checked{% endif %} fa-sm"></span>
+              <p style="float:right;" class="text-muted">  {{dish.dish_review_set.count}} rating{% if dish.dish_review_set.count > 1 %}s{% endif %}</p>
+          {% else %}
+              NO RATING
+          {% endif %}</p>
+          <a href="{% url 'cook_edit_dish' dish.id %}"><small class="text-muted"><button type="button" style="position:relative;" class="btn btn-success btn-sm">Edit</button></small></a>
                 {% if dish.cook_disabled %}
-                  <div class="badge badge-danger text-wrap" style="width: 5rem;">
-                        Disabled
-                </div>
-                {% endif %}
-                <span style="float:right;">
-                  {% if dish.rating > 0 %}
-                      <span class="fa fa-star {% if dish.rating >= 1 %}checked{% endif %} fa-sm"></span>
-                      <span class="fa fa-star {% if dish.rating >= 2 %}checked{% endif %} fa-sm"></span>
-                      <span class="fa fa-star {% if dish.rating >= 3 %}checked{% endif %} fa-sm"></span>
-                      <span class="fa fa-star {% if dish.rating >= 4 %}checked{% endif %} fa-sm"></span>
-                      <span class="fa fa-star {% if dish.rating >= 5 %}checked{% endif %} fa-sm"></span>
-                  {% else %}
-                      NO RATING
-                  {% endif %}
-                </span>
-              </h5>
-              <div class="card-body ">
-                  <p class="card-text">{{dish.description}}</p>
-                  <img src="{{ dish.dish_image.url }}" width="100%" style="max-height: 200px;">
-                  <p class="card-text">Allergies: {{dish.allergies}}</p>
-                  <p class="card-text font-weight-bold text-secondary">Price: ${{dish.price}}</p>
-              </div>
-              <div class="card-footer text-right">
-                  {% if dish.vegan %}<img style="float:left" src="/media/vegan.png" width=30px>{% endif %}
-                  <a href="{% url 'cook_edit_dish' dish.id %}"><small class="text-muted"><button type="button" class="btn btn-success btn-sm">Edit</button></small></a>
-                {% if dish.cook_disabled %}
-                  <a href="{% url 'cook_enable_dish' dish.id %}"><small class="text-muted"><button type="button" class="btn btn-success btn-sm">Enable</button></small></a>
+                  <a href="{% url 'cook_enable_dish' dish.id %}"><small class="text-muted"><button type="button" style="position:relative;" class="btn btn-success btn-sm">Enable</button></small></a>
                 {% else %}
-                  <a href="{% url 'cook_disable_dish' dish.id %}"><small class="text-muted"><button type="button" class="btn btn-warning btn-sm">Disable</button></small></a>
+                  <a href="{% url 'cook_disable_dish' dish.id %}"><small class="text-muted"><button type="button"  style="position:relative;" class="btn btn-warning btn-sm">Disable</button></small></a>
                 {% endif %}
-                  <small class="text-muted"><button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModalCenter{{dish.id}}">Delete</button></small>
+                  <small class="text-muted"><button type="button" class="btn btn-danger btn-sm" data-toggle="modal"  style="position:relative;" data-target="#exampleModalCenter{{dish.id}}">Delete</button></small>
               </div>
+            </div>
           </div>
-        </div>
+              
 
 
         <div class="modal fade" id="exampleModalCenter{{dish.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

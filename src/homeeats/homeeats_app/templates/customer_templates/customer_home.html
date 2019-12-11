@@ -149,7 +149,7 @@
                                 <h5><span class="badge badge-primary" style="float:right;">{{dish.cuisine}}</span></h5>
                             </div>
                         <div class="card-body">
-                                <a href="{% url 'customer_dish' dish.id %}">  <h5 class="card-title" style="color:black;">{{dish.title}} </h5></a>
+                                <a href="{% url 'customer_dish' dish.id %}">  <h5 class="card-title" style="color:black;position:relative;">{{dish.title}} </h5></a>
                         
                     {% if dish.rating > 0 %}
                         <span class="fa fa-star {% if dish.rating >= 1 %}checked{% endif %} fa-sm"></span>

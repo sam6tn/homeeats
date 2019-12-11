@@ -156,14 +156,11 @@ def get_cuisines_by_cook(request):
 def cook_cuisine_dishes(request, cuisine_id):
   cook = get_object_or_404(Cook, user_id=request.user.id)
   cuisine = get_object_or_404(Cuisine, id=cuisine_id)
-  objs = Dish.objects.filter(cook=cook, cuisine=cuisine)
-  dishes = []
-  for obj in objs:
-    dishes.append(model_to_dict(obj))
+  dishes = Dish.objects.filter(cook=cook, cuisine=cuisine)
   context = {  #pass in context
     'cook': model_to_dict(cook),
     'dishes': dishes,
-    'cuisine': cuisine.name
+    'cuisine': cuisine
   }
   return render(request, 'cook_templates/cook_cuisine_dishes.html', context)
 
@@ -253,7 +250,7 @@ def reviews_for_dish(request, dish_id):
     user = User.objects.get(id=customer.user_id)
     review['user'] = model_to_dict(user)
   context = {
-    'dish': model_to_dict(dish),
+    'dish': dish,
     'reviews': reviews
   }
   return render(request, 'cook_templates/cook_dish_reviews.html', context)

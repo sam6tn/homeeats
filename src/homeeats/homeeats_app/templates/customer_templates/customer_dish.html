@@ -7,39 +7,6 @@
 <div class="container mt-5">
     <div class="row">
         <div class="col-6">
-            <!-- <ul class="list-group" style="margin-top:10px;">
-            <li class="list-group-item" style="width:100%">
-            <h2>
-                {{dish.title}}
-                {% if dish.rating > 0 %}
-                    <span class="fa fa-star {% if dish.rating >= 1 %}checked{% endif %} fa-sm"></span>
-                    <span class="fa fa-star {% if dish.rating >= 2 %}checked{% endif %} fa-sm"></span>
-                    <span class="fa fa-star {% if dish.rating >= 3 %}checked{% endif %} fa-sm"></span>
-                    <span class="fa fa-star {% if dish.rating >= 4 %}checked{% endif %} fa-sm"></span>
-                    <span class="fa fa-star {% if dish.rating >= 5 %}checked{% endif %} fa-sm"></span>
-                {% else %}
-                    <span style="font-weight:normal;font-size:16pt;">NO RATING</span>
-                {% endif %}
-            </h2>
-            <h4>${{dish.price}}</h4>
-            <h6>{{dish.description}} </h6>
-            <img src="{{ dish.dish_image.url }}" width=300px height=220px>
-            <h5>Cook time: {{dish.cook_time}} min </h5>
-            <h5>Cook: {{dish.cook.user.first_name}} {{dish.cook.user.last_name}}</h5>
-            <h5>Cuisine: {{dish.cuisine.name}}</h5>
-            <p>Ingredients: 
-            {% for ingredient in dish.ingredients %}
-                <span>{{ingredient}}, </span>
-            {% endfor %}
-            </p>
-            <p>Allergies: {{dish.allergies}}</p>
-            <form method="POST" action="{% url 'addtocart' %}" style="display:inline">
-                {% csrf_token %}  
-                <input name="dish_id" type="hidden" value="{{dish.id}}">
-                <button name="dishbtn" style="float:right;" class='btn btn-success' type="submit">Add to order</button>
-            </form>
-            </li>
-            </ul> -->
 
             <div class="card mb-3">
                     <img src="{{ dish.dish_image.url }}" height="400px" class="card-img-top" alt="...">
