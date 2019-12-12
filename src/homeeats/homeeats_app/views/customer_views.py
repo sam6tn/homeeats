@@ -74,7 +74,7 @@ def dish(request, dish_id):
     reviews = dish.dish_review_set.filter(report_flag=False).order_by(
         'date')  # get all reviews for that Dish
     form = DishReviewForm()
-    return render(request, 'customer_templates/customer_dish.html', {'dish': dish, 'reviews': reviews, 'form': form, 'cart_items': cart_items})
+    return render(request, 'customer_templates/customer_dish.html', {'dish': dish, 'reviews': reviews, 'form': form, 'cart_items': cart_items, 'customer':customer})
 
 
 def verify_address(street, town, state):
