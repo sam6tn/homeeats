@@ -61,18 +61,16 @@ def change_current_address(request, address_id):
   change_address.current_customer_address = True
   change_address.save()
   if cart.empty == True:
-    messages.add_message(request, messages.SUCCESS, "Current address successfully changed!")
-    return HttpResponseRedirect(reverse('addresses'))
+    return HttpResponseRedirect(reverse('customer_home'))
   elif cart.cook in find_nearby_cooks(request):
-    messages.add_message(request, messages.SUCCESS, "Current address successfully changed!")
-    return HttpResponseRedirect(reverse('addresses'))
+    return HttpResponseRedirect(reverse('customer_home'))
   else:
     change_address.current_customer_address = False
     current_address.current_customer_address = True
     current_address.save()
     change_address.save()
     messages.add_message(request, messages.ERROR, "The order currently in your cart cannot deliver to this address, please complete or remove that order")
-    return HttpResponseRedirect(reverse('addresses'))
+    return HttpResponseRedirect(reverse('customer_home'))
 
 @login_required
 @customer_required
@@ -81,7 +79,7 @@ def delete_address(request, address_id):
     address = Address.objects.get(id=address_id)
     if address.customer == customer:
         address.delete()
-    return HttpResponseRedirect(reverse('addresses'))
+    return HttpResponseRedirect(reverse('customer_home'))
 
 
 @login_required
@@ -103,7 +101,7 @@ def add_address(request):
                     customer=customer
                 )
                 address.save()
-                return HttpResponseRedirect(reverse('addresses'))
+                return HttpResponseRedirect(reverse('customer_home'))
             else:
                 messages.add_message(
                     request, messages.ERROR, 'Address not valid, please try again')
@@ -152,6 +150,7 @@ def home(request):
     shopping_cart = ShoppingCart.objects.get(customer=customer)
     cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
     address = Address.objects.get(customer=customer,current_customer_address=True)
+    other_addresses = Address.objects.filter(customer=customer,current_customer_address=False)
     if request.method == 'POST':
         form = forms.DishSearchForm(request.POST)
         if form.is_valid():
@@ -178,7 +177,7 @@ def home(request):
             elif (sort == 'reverse_price'):
                 dishes = dishes.order_by('-price')
 
-            return render(request, 'customer_templates/customer_home.html', {'dishes': dishes, 'form': form, 'customer': customer, 'cart_items': cart_items, 'address':address})
+            return render(request, 'customer_templates/customer_home.html', {'dishes': dishes, 'form': form, 'customer': customer, 'cart_items': cart_items, 'address':address, 'other_addresses':other_addresses})
         # else:
         #     dishes = find_nearby_dishes(request)
         #     return render(request, 'customer_templates/customer_home.html', {'dishes': dishes, 'form': form, 'customer': customer, 'cart_items': cart_items, 'address':address})
@@ -190,7 +189,7 @@ def home(request):
             dishes = dishes.filter(cook=customer.shoppingcart.cook)
         dishes = dishes.order_by('-rating')
 
-        return render(request, 'customer_templates/customer_home.html', {'dishes': dishes, 'form': form, 'customer': customer, 'cart_items': cart_items, 'address':address})
+        return render(request, 'customer_templates/customer_home.html', {'dishes': dishes, 'form': form, 'customer': customer, 'cart_items': cart_items, 'address':address, 'other_addresses':other_addresses})
 
 
 @login_required
