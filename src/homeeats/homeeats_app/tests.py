@@ -590,30 +590,6 @@ class AddressCreateFormTest(TestCase):
     def test_missing_state(self):
         form = UserEditForm({'street': "street",'town': "cville", 'state':'', 'zipcode':22903})
         self.assertFalse(form.is_valid())
-
-class CustomerAddressManageTest(TestCase):
-    def setUp(self):
-        self.client.post(reverse('customercreate'), {'first_name': 'Dave', 'last_name': 'Chapelle', 'street': '221 Baker Street', 'town': 'Fairfax', 'state': 'VA', 'zipcode': '22000', 'email': 'dave@dave.com', 'password': 'chapchap', 'phone_number': '8888888888'})
-        self.client.login(username='dave@dave.com', password='chapchap')
-        self.client.post(reverse('add_address'), {'street': '111 X Street', 'town': 'Harrisonburg', 'state': 'CA', 'zipcode': '33333'})
-    def test_current_address_set_upon_customer_creation(self):
-        add = Address.objects.get(street_name='221 Baker Street')
-        self.assertTrue(add.current_customer_address)
-    def test_add_address_pass(self):
-        cust = Customer.objects.get(phone_number='8888888888')
-        add = Address.objects.get(street_name='111 X Street')
-        self.assertEqual(cust, add.customer)
-    def test_change_current_address(self):
-        add = Address.objects.get(street_name='111 X Street')
-        self.client.get(reverse('change_current_address', args=[add.id]))
-        add = Address.objects.get(street_name='111 X Street')
-        self.assertTrue(add.current_customer_address)
-    def test_remove_address(self):
-        add = Address.objects.get(street_name='111 X Street')
-        self.client.get(reverse('delete_address', args=[add.id]))
-        customer = Customer.objects.get(phone_number='8888888888')
-        addresses = Address.objects.filter(customer=customer)
-        self.assertEqual(len(addresses), 1)
     
 
 
