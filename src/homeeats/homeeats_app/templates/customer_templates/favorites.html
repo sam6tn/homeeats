@@ -94,7 +94,7 @@
                     </div>
               <div class="card-body">
                     {% if not customer.shoppingcart.empty and customer.shoppingcart.cook != dish.cook or not dish.cook.online or dish.cook_disabled %}
-                    <a href="{% url 'customer_dish' dish.id %}"><h5 class="card-title" style="opacity:0.3;position:relative">{{dish.title}}</h5></a>
+                    <a href="{% url 'customer_dish' dish.id %}"><h5 class="card-title" style="opacity:0.3;color:black;position:relative">{{dish.title}}</h5></a>
                   {% else %}
                   <a href="{% url 'customer_dish' dish.id %}"><h5 class="card-title" style="color:black;position:relative">{{dish.title}}</h5></a>
                   {% endif %}
