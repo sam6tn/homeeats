@@ -32,24 +32,6 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 @login_required
 @customer_required
-def addresses(request):
-    customer = Customer.objects.get(user_id=request.user.id)
-    shopping_cart = ShoppingCart.objects.get(customer=customer)
-    cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
-    current_address = Address.objects.get(
-        customer=customer, current_customer_address=True)
-    other_addresses = Address.objects.filter(
-        customer=customer, current_customer_address=False)
-    context = {
-        'current_address': current_address,
-        'other_addresses': other_addresses,
-        'cart_items': cart_items
-    }
-    return render(request, 'customer_templates/addresses.html', context)
-
-
-@login_required
-@customer_required
 def change_current_address(request, address_id):
   customer = Customer.objects.get(user_id=request.user.id)
   cart = ShoppingCart.objects.get(customer=customer)
@@ -80,39 +62,6 @@ def delete_address(request, address_id):
     if address.customer == customer:
         address.delete()
     return HttpResponseRedirect(reverse('customer_home'))
-
-
-@login_required
-@customer_required
-def add_address(request):
-    customer = Customer.objects.get(user_id=request.user.id)
-    shopping_cart = ShoppingCart.objects.get(customer=customer)
-    cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
-    if request.method == 'POST':
-        form = forms.AddressCreateForm(request.POST)
-        if form.is_valid():
-            data = form.cleaned_data
-            if verify_address(data['street'], data['town'], data['state']):
-                address = Address.objects.create(
-                    street_name=data['street'],
-                    city=data['town'],
-                    state=data['state'],
-                    zipcode=data['zipcode'],
-                    customer=customer
-                )
-                address.save()
-                return HttpResponseRedirect(reverse('customer_home'))
-            else:
-                messages.add_message(
-                    request, messages.ERROR, 'Address not valid, please try again')
-                return render(request, 'customer_templates/add_address.html', {'form': form, 'cart_items': cart_items})
-        else:
-            messages.add_message(
-                    request, messages.ERROR, 'One or more of the fields is missing or incomplete, please try again!')
-            return render(request, 'customer_templates/add_address.html', {'form': form, 'cart_items': cart_items})
-    else:
-        form = forms.AddressCreateForm()
-        return render(request, 'customer_templates/add_address.html', {'form': form})
 
 
 @login_required
@@ -151,7 +100,7 @@ def home(request):
     cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
     address = Address.objects.get(customer=customer,current_customer_address=True)
     other_addresses = Address.objects.filter(customer=customer,current_customer_address=False)
-    if request.method == 'POST':
+    if request.method == 'POST' and 'cuisine' in request.POST:
         form = forms.DishSearchForm(request.POST)
         if form.is_valid():
             dishes = find_nearby_dishes(request)
@@ -181,7 +130,28 @@ def home(request):
         # else:
         #     dishes = find_nearby_dishes(request)
         #     return render(request, 'customer_templates/customer_home.html', {'dishes': dishes, 'form': form, 'customer': customer, 'cart_items': cart_items, 'address':address})
-
+    elif request.method == 'POST' and 'town' in request.POST:
+        form = forms.AddressCreateForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            if verify_address(data['street'], data['town'], data['state']):
+                address = Address.objects.create(
+                    street_name=data['street'],
+                    city=data['town'],
+                    state=data['state'],
+                    zipcode=data['zipcode'],
+                    customer=customer
+                )
+                address.save()
+                return HttpResponseRedirect(reverse('change_current_address', args=[address.id]))
+            else:
+                messages.add_message(
+                    request, messages.ERROR, 'Address not valid, please try again')
+                return HttpResponseRedirect(reverse('customer_home'))
+        else:
+            messages.add_message(
+                    request, messages.ERROR, 'One or more of the fields is missing or incomplete, please try again!')
+            return HttpResponseRedirect(reverse('customer_home'))
     else:
         form = forms.DishSearchForm()
         dishes = find_nearby_dishes(request)
