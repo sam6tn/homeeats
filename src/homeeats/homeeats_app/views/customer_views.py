@@ -164,7 +164,6 @@ def home(request):
                 search = request.POST["search"]
 
             dishes = dishes.filter(title__icontains=search)
-            dishes = dishes.filter(cook_disabled=False)
 
             if (not customer.shoppingcart.empty):
                 dishes = dishes.filter(cook=customer.shoppingcart.cook)
@@ -187,8 +186,6 @@ def home(request):
     else:
         form = forms.DishSearchForm()
         dishes = find_nearby_dishes(request)
-        dishes = dishes.filter(cook_disabled=False)
-        dishes = dishes.filter(cook__online=True)
         if (not customer.shoppingcart.empty):
             dishes = dishes.filter(cook=customer.shoppingcart.cook)
         dishes = dishes.order_by('-rating')

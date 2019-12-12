@@ -140,50 +140,62 @@
     <div class="row">
                     {% for dish in dishes %} 
                     <div class="col-lg-3 mt-3">
-                      <div class="card">
-                        <img src="{{ dish.dish_image.url }}" height="180" class="card-img-top" alt="...">
-                        <div class="card-img-overlay">
-                                {% if dish.vegan %}
-                                <img style="float:left" src="/media/vegan.png" width=35px>
-                                {% endif %}
-                                <h5><span class="badge badge-primary" style="float:right;">{{dish.cuisine}}</span></h5>
-                            </div>
-                        <div class="card-body">
-                                <a href="{% url 'customer_dish' dish.id %}">  <h5 class="card-title" style="color:black;position:relative;">{{dish.title}} </h5></a>
-                        
-                    {% if dish.rating > 0 %}
-                        <span class="fa fa-star {% if dish.rating >= 1 %}checked{% endif %} fa-sm"></span>
-                        <span class="fa fa-star {% if dish.rating >= 2 %}checked{% endif %} fa-sm"></span>
-                        <span class="fa fa-star {% if dish.rating >= 3 %}checked{% endif %} fa-sm"></span>
-                        <span class="fa fa-star {% if dish.rating >= 4 %}checked{% endif %} fa-sm"></span>
-                        <span class="fa fa-star {% if dish.rating >= 5 %}checked{% endif %} fa-sm"></span>
-                        <p style="float:right;" class="text-muted">  {{dish.dish_review_set.count}} rating{% if dish.dish_review_set.count > 1 %}s{% endif %}</p>
-                    {% else %}
-                        NO RATING
-                    {% endif %}</p>
-                    
-                    <p>
-                        {% if dish in customer.favorites.all %}
-                        <i class="fa fa-heart" id="heart{{dish.id}}" style="color:red;font-size:20pt;cursor:pointer;float:left;position:relative;" onclick="toggleHeart('{{dish.id}}')"></i>
-                        {% else %}
-                        <i class="fa fa-heart-o" id="heart{{dish.id}}" style="color:red;font-size:20pt;cursor:pointer;float:left;position:relative;" onclick="toggleHeart('{{dish.id}}')"></i>
-                        {%endif%}
-                    <h5>
-                        <button onclick="addtocart('{{dish.id}}')" style="padding:0;background:none;border:none;outline:none;margin-top:3px;float:right">
-                                <i class="fa fa-plus text-success" style="position:relative"></i>
-                            </button>
-                            <span id="quantity{{dish.id}}" style="float:right;">
-                                {% for item in customer.shoppingcart.cartitem_set.all %}
-                                    {% if item.dish == dish %}
-                                        {{item.quantity}}
+                            <div class="card">
+                              <img src="{{ dish.dish_image.url }}" {% if not customer.shoppingcart.empty and customer.shoppingcart.cook != dish.cook or not dish.cook.online or dish.cook_disabled %} style="opacity: 0.3;"{% endif %} height="180" class="card-img-top" alt="...">
+                              <div class="card-img-overlay">
+                                    {% if not customer.shoppingcart.empty and customer.shoppingcart.cook != dish.cook or not dish.cook.online or dish.cook_disabled %}
+                                    
+                                    <h5><span class="badge badge-danger" style="float:right;">Not Currently Available</span></h5>
+                                    {% else %}
+                                        {% if dish.vegan %}
+                                        <img style="float:left" src="/media/vegan.png" width=35px>
+                                        {% endif %}
+                                        <h5><span class="badge badge-primary" style="float:right;">{{dish.cuisine}}</span></h5>
                                     {% endif %}
-                                {% endfor %}
-                            </span> 
-                        </h5>
-                    </p>
-                        </div>
-                      </div>
-                    </div>
+                                    </div>
+                              <div class="card-body">
+                                      <a href="{% url 'customer_dish' dish.id %}">  <h5 class="card-title" {% if not customer.shoppingcart.empty and customer.shoppingcart.cook != dish.cook or not dish.cook.online or dish.cook_disabled %} style="opacity: 0.3;" {% endif %} style="color:black;">{{dish.title}} {% if dish.vegan %}<img src="/media/vegan.png" width=20px>{% endif %}</h5></a>
+                              
+                          {% if dish.rating > 0 %}
+                              <span class="fa fa-star {% if dish.rating >= 1 %}checked{% endif %} fa-sm"></span>
+                              <span class="fa fa-star {% if dish.rating >= 2 %}checked{% endif %} fa-sm"></span>
+                              <span class="fa fa-star {% if dish.rating >= 3 %}checked{% endif %} fa-sm"></span>
+                              <span class="fa fa-star {% if dish.rating >= 4 %}checked{% endif %} fa-sm"></span>
+                              <span class="fa fa-star {% if dish.rating >= 5 %}checked{% endif %} fa-sm"></span>
+                              <p class="text-muted" style="float:right;">  {{dish.dish_review_set.count}} rating{% if dish.dish_review_set.count > 1 %}s{% endif %}</p>
+                          {% else %}
+                              NO RATING
+                          {% endif %}
+                          
+                      </br></br>
+                      
+                              {% if dish in customer.favorites.all %}
+                              <i class="fa fa-heart" id="heart{{dish.id}}" style="color:red;font-size:20pt;cursor:pointer;float:left;position:relative;" onclick="toggleHeart('{{dish.id}}')"></i>
+                              {% else %}
+                              <i class="fa fa-heart-o" id="heart{{dish.id}}" style="color:red;font-size:20pt;cursor:pointer;float:left;position:relative;" onclick="toggleHeart('{{dish.id}}')"></i>
+                              {%endif%}
+                          <h5>
+                                {% if not customer.shoppingcart.empty and customer.shoppingcart.cook != dish.cook or not dish.cook.online or dish.cook_disabled %}
+                                {% else %}
+                              <button 
+                              onclick="addtocart('{{dish.id}}')" 
+                              style="padding:0;background:none;border:none;outline:none;margin-top:3px;float:right;position:relative;"
+                              >
+                                      <i class="fa fa-plus text-success"></i>
+                                  </button>
+                                  {% endif %}
+                                  <span id="quantity{{dish.id}}" style="float:right;">
+                                      {% for item in customer.shoppingcart.cartitem_set.all %}
+                                          {% if item.dish == dish %}
+                                              {{item.quantity}}
+                                          {% endif %}
+                                      {% endfor %}
+                                  </span> 
+                              </h5>
+                              </div>
+                            </div>
+                          </div>
+                
                     {% endfor %}
     </div>
 </div>

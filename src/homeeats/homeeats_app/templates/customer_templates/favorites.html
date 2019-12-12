@@ -84,7 +84,7 @@
               <div class="card-img-overlay">
                     {% if not customer.shoppingcart.empty and customer.shoppingcart.cook != dish.cook or not dish.cook.online or dish.cook_disabled %}
                     
-                    <h5><span class="badge badge-danger" style="float:right;">DISABLED</span></h5>
+                    <h5><span class="badge badge-danger" style="float:right;">Not Currently Available</span></h5>
                     {% else %}
                         {% if dish.vegan %}
                         <img style="float:left" src="/media/vegan.png" width=35px>
@@ -114,15 +114,15 @@
               <i class="fa fa-heart-o" id="heart{{dish.id}}" style="color:red;font-size:20pt;cursor:pointer;float:left;position:relative;" onclick="toggleHeart('{{dish.id}}')"></i>
               {%endif%}
           <h5>
+                {% if not customer.shoppingcart.empty and customer.shoppingcart.cook != dish.cook or not dish.cook.online or dish.cook_disabled %}
+                {% else %}
               <button 
               onclick="addtocart('{{dish.id}}')" 
               style="padding:0;background:none;border:none;outline:none;margin-top:3px;float:right;position:relative;"
-              {% if not customer.shoppingcart.empty and customer.shoppingcart.cook != dish.cook or not dish.cook.online or dish.cook_disabled %}
-                            disabled
-                        {% endif %} 
               >
                       <i class="fa fa-plus text-success"></i>
                   </button>
+                  {% endif %}
                   <span id="quantity{{dish.id}}" style="float:right;">
                       {% for item in customer.shoppingcart.cartitem_set.all %}
                           {% if item.dish == dish %}
