@@ -25,7 +25,7 @@
                         {% endif %}
                     </div>
                 <div class="card-body">
-                       <a href="{% url '' %}" <h5>{{item.dish.title}}</h5>
+                       <a href="{% url 'reviews_for_dish' item.dish.id %}"> <h5 class="text-dark" style="position:relative;">{{item.dish.title}}</h5></a>
                 </div>
                 <div class="card-footer">
                         <span class="font-weight-bold text-muted" style="float:left;">x{{item.quantity}}</span>

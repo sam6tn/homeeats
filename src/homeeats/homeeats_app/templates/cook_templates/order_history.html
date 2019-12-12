@@ -10,11 +10,7 @@
 <ul class="list-group">
 
     {% for order in completed_orders %}
-    <a href="{% url 'single_order_view' order.id%}" class="list-group-item list-group-item-action">
-            <!-- <h4>Order #{{order.id}}</h4>
-            <p class="font-weight-normal" style="float: right">{{order.name}}</p>
-            <p class="card-text font-weight-bold text-secondary">Total: ${{order.total}}</p>
-            <p class="text-muted" style="float: middle;">Posted: {{order.date}}</p> -->
+    <a href="{% url 'single_order_view' order.id %}" class="list-group-item list-group-item-action">
 
             <table style="width:100%">
                 <tr>
@@ -43,12 +39,7 @@
 <ul class="list-group">
 
         {% for order in rejected_orders %}
-        <a href="{% url 'single_order_view' order.id%}" class="list-group-item list-group-item-action">
-            <!-- <h4>Order #{{order.id}}</h4>
-            <p class="font-weight-normal" style="float: right">{{order.name}}</p>
-            <p class="card-text font-weight-bold text-secondary">Total: ${{order.total}}</p>
-            <p class="text-muted" style="float: middle;">Posted: {{order.date}}</p> -->
-
+        <a href="{% url 'single_order_view' order.id %}" class="list-group-item list-group-item-action">
             <table style="width:100%">
                 <tr>
                     <td><h4>Order #{{order.id}}</h4></td>

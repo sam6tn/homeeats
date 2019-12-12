@@ -200,7 +200,8 @@ def addtocart(request):
     return_quantity = -1
     if request.method == "POST":
         if(dish.cook_disabled or dish.cook.online == False):
-            raise Http404()
+            messages.add_message(request, messages.ERROR, 'Unauthorized to perform this action')
+            return HttpResponseRedirect(reverse('customer_home'))
         customer = Customer.objects.get(user_id=request.user.id)
         shopping_cart = customer.shoppingcart
         shopping_cart.total_before_tip += dish.price
