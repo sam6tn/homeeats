@@ -146,6 +146,13 @@
             <div class="container">
               <h3 class="display-4">{{customer.shoppingcart.cook.user.first_name}} {{customer.shoppingcart.cook.user.last_name}}'s Kitchen</h3>
               <p class="lead">Other dishes you may order from this cook</p>
+              <form method="POST" class="form-inline my-2 my-lg-0" id="searchForm">
+                    {% csrf_token %}
+                    {{form.cuisine}}
+                    {{form.sort}}
+                    {{form.search}}
+                    <button id="searchBtn" name="filters" class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </form>
             </div>
           </div>
 {% else %}
