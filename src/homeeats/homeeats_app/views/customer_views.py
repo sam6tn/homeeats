@@ -240,17 +240,26 @@ def cart(request):
     customer = Customer.objects.get(user_id=request.user.id)
     shopping_cart = ShoppingCart.objects.get(customer=customer)
     if request.method == "POST":
-        shopping_cart.tip = round(float(request.POST["tip"]), 2)
-        shopping_cart.special_requests = request.POST["special_requests"]
-        shopping_cart.total_after_tip = float(
+        try:
+          tip = round(float(request.POST.getlist("tip")[1]), 2) if request.POST.getlist("tip")[0] == "on" else round(float(request.POST.getlist("tip")[0]), 2)
+          if tip < 0:
+              messages.add_message(request, messages.ERROR, "The tip amount is invalid, please enter a correct amount")
+              return HttpResponseRedirect(reverse('cart'))
+          shopping_cart.tip = tip
+          shopping_cart.special_requests = request.POST["special_requests"]
+          shopping_cart.total_after_tip = float(
             shopping_cart.total_before_tip) + shopping_cart.tip
-        shopping_cart.save()
-        return HttpResponseRedirect(reverse('payment'))
+          shopping_cart.save()
+          return HttpResponseRedirect(reverse('payment'))
+        except Exception as e:
+          messages.add_message(request, messages.ERROR, "The tip amount is invalid, please enter a correct amount")
+          return HttpResponseRedirect(reverse('cart'))
+
     cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
     cart = customer.shoppingcart
+    cart.tip_options = calculate_tip_amounts(cart.total_before_tip)
     address = Address.objects.get(current_customer_address=True, customer=customer)
     return render(request, 'customer_templates/cart.html', {'cart': cart, 'cart_items': cart_items, 'address': address})
-
 
 @login_required
 @customer_required
@@ -540,7 +549,18 @@ def find_nearby_dishes(request):
     dishes = Dish.objects.filter(cook__in=cooks)
     return dishes  # returning a queryset of dishes
 
+def calculate_tip_amounts(total):
+    PERCENTS = [.15, .20, .30]
+    LABELS = ["15 %", "20 %", "30 %"]
+    tip_amounts = []
+    for index in range(len(PERCENTS)):
+        tip_option = {
+          "amount": round(float(total)*PERCENTS[index], 2),
+          "label": LABELS[index]
+        }
+        tip_amounts.append(tip_option)
 
+    return tip_amounts
 '''
 Allows the customer to edit their username, password, and phone number.
 The form will show the customer their username, but they will not be allowed to edit it.
