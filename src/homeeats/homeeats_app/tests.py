@@ -111,6 +111,7 @@ class CustomerCheckoutTest(TestCase):
         }
         response = self.client.post(reverse('checkout'), data, content_type='application/x-www-form-urlencoded')
         self.assertEquals(response.status_code, 302)
+    
     def test_invalid_payment(self):
         self.client.login(username='anki@anki.com', password='ankith')
         self.client.post(reverse('addtocart'), {'quantity': 1, 'dish_id': 1}, content_type='application/x-www-form-urlencoded')
@@ -157,6 +158,14 @@ class CustomerCheckoutTest(TestCase):
         self.client.post(reverse('addtocart'), {'quantity': 1, 'dish_id': 1}, content_type='application/x-www-form-urlencoded')
         response = self.client.get(reverse('checkout'), follow=True)
         self.assertEquals(response.status_code, 200)
+    def test_checkout_post_response(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        response = self.client.post(reverse('checkout'))
+        self.assertEquals(response.status_code, 302)
+    def test_checkout_post_url(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        response = self.client.post(reverse('checkout'))
+        self.assertEquals(response.url, "/?next=/customer/checkout/")
 
 class CustomerCartTest(TestCase):
     def test_cart_access(self):
