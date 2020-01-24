@@ -158,6 +158,16 @@
             </div>
             <textarea class="form-control" aria-label="With textarea" name="special_requests">{{cart.special_requests}}</textarea>
           </div>
+
+          <div class="input-group" style="margin-top: 20px;">
+            <label for="orderTime">Order Time: </label>
+            <select class="form-control" id="orderTime" name="orderTime">
+              <option>Now</option>
+              <option>In 30 min</option>
+              <option>In one hour</option>
+              <option>In two hours</option>
+            </select>
+          </div>      
     </div>
     <div class="col-lg-4 p-5 bg-white rounded shadow-sm mb-5">
       <div class="bg-light square-pill px-4 py-3 font-weight-bold text-center">Order from {{cart.cook.user.first_name}} {{cart.cook.user.last_name}}</div>

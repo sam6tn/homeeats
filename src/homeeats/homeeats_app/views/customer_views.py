@@ -26,6 +26,9 @@ import ssl
 from django.http import Http404
 from django.template.defaulttags import register
 import stripe
+import datetime
+from django.utils import timezone
+import pytz
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -249,9 +252,20 @@ def cart(request):
           shopping_cart.special_requests = request.POST["special_requests"]
           shopping_cart.total_after_tip = float(
             shopping_cart.total_before_tip) + shopping_cart.tip
+
+          order_time = request.POST["orderTime"]
+          shopping_cart.requested_delivery_time = timezone.localtime(timezone.now())
+          if(order_time=="In 30 min"):
+            shopping_cart.requested_delivery_time += datetime.timedelta(minutes=30)
+          elif(order_time=="In one hour"):
+            shopping_cart.requested_delivery_time += datetime.timedelta(minutes=60)
+          elif(order_time=="In two hours"):
+            shopping_cart.requested_delivery_time += datetime.timedelta(minutes=120)
+
           shopping_cart.save()
           return HttpResponseRedirect(reverse('payment'))
         except Exception as e:
+          print(e)
           messages.add_message(request, messages.ERROR, "The tip amount is invalid, please enter a correct amount")
           return HttpResponseRedirect(reverse('cart'))
 
@@ -430,7 +444,8 @@ def checkout(request):
             city=address.city,
             state=address.state,
             zipcode=address.zipcode,
-            payment_option="b"
+            payment_option="b",
+            requested_delivery_time=shopping_cart.requested_delivery_time
         )
 
         if request.POST['payment_option'] == 'cash':
@@ -456,6 +471,9 @@ def checkout(request):
         time = 5 + max_cook_time + \
             round(int(get_delivery_time(cook_address, customer_address)) / 60)
         order.estimated_arrival_time = order.date + timedelta(minutes=time)
+        order.pending_deadline = order.requested_delivery_time - timedelta(minutes=time)
+        if (order.pending_deadline < timezone.localtime(timezone.now())):
+            order.pending_deadline = timezone.localtime(timezone.now()) + datetime.timedelta(minutes=5)
         order.save()
         shopping_cart.empty = True  # set shopping cart back to empty
         shopping_cart.total_before_tip = 0  # clear total for shopping cart

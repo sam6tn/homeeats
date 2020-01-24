@@ -74,12 +74,16 @@
             <li class="list-group-item">
                 <p class="card-text">{{order.street_name}} </br> {{order.city}}, {{order.state}} {{order.zipcode}} </br><span class="font-weight-bold"> Phone:</span> {{ order.customer.phone_number }}</p>
             </li>
-            <li class="list-group-item"><p class="card-text"><span class="font-weight-bold">Special requests:</span>
+            <li class="list-group-item">
+                <p><span class="font-weight-bold">Requested Delivery: </span>{{order.requested_delivery_time|date:'H:i'}}</p>
+                <p class="card-text"><span class="font-weight-bold">Special requests:</span>
                 {% if order.special_requests %}
                 {{ order.special_requests }}
               {% else %}
                 None
-              {% endif %}</p></li>
+              {% endif %}</p>
+            </li>
+
               <li class="list-group-item">
                 <p><span class="font-weight-bold">Item Subtotal: </span> <span style="float:right;"> ${{ order.item_subtotal }}</span></p>
                 <p><span class="font-weight-bold">Tax: </span><span style="float:right;">${{ order.tax}}</span></p>

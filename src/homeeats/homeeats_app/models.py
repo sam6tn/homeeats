@@ -141,6 +141,7 @@ class Order(models.Model):
         ('b', 'Card')
     ]
   payment_option = models.CharField(max_length=1, choices=payment_choices, default='a')
+  requested_delivery_time = models.DateTimeField(null=True, blank=True)
 
 class Item(models.Model):
   dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
@@ -165,6 +166,7 @@ class ShoppingCart(models.Model):
         ('b', 'Card')
     ]
   payment_option = models.CharField(max_length=1, choices=payment_choices, default='a') 
+  requested_delivery_time = models.DateTimeField(null=True, blank=True)
 
 class CartItem(models.Model):
   dish = models.ForeignKey(Dish, on_delete=models.CASCADE)

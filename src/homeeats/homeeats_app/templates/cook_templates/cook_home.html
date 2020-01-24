@@ -50,13 +50,14 @@
             <div class="card-body">
                 <h5 class="card-title">Order #{{order.id}}</h5>
                 <p class="card-text">Phone: {{order.customer.phone_number}}</p>
+                <p class="card-text">Requested Delivery: {{order.requested_delivery_time|date:'H:i' }}</p>
                 <p class="card-text">Total: ${{order.total}}</p>
             </div>
             <div class="card-footer text-center">
                     <span id="timer{{order.id}}"><span id="hours{{order.id}}"></span><span id="hoursColon{{order.id}}">:</span><span id="minutes{{order.id}}"></span>:<span id="seconds{{order.id}}"></span></span>
                     <a href="{% url 'accept_order' order.id %}"><button type="button" class="btn btn-success btn-sm">Accept</button></a>
                     <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModalCenter{{order.id}}">Reject</button>
-
+            </div>
                     <div class="modal fade" id="exampleModalCenter{{order.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
@@ -80,11 +81,6 @@
                             </div>
                         </div>
                     </div>
-
-
-
-
-            </div>
         </div>
         <script>
             {% with id=order.id %}
