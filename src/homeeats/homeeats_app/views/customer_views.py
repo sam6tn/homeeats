@@ -473,9 +473,12 @@ def checkout(request):
         time = 5 + max_cook_time + \
             round(int(get_delivery_time(cook_address, customer_address)) / 60)
         order.estimated_arrival_time = order.date + timedelta(minutes=time)
+
+        #sets deadline for cook to accept order before it expires
         order.pending_deadline = order.requested_delivery_time - timedelta(minutes=time)
-        if (order.pending_deadline < timezone.localtime(timezone.now())):
+        if (order.pending_deadline < timezone.localtime(timezone.now()) + datetime.timedelta(minutes=5)):
             order.pending_deadline = timezone.localtime(timezone.now()) + datetime.timedelta(minutes=5)
+        
         order.save()
         shopping_cart.empty = True  # set shopping cart back to empty
         shopping_cart.total_before_tip = 0  # clear total for shopping cart
