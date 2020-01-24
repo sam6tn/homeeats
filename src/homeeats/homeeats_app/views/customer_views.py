@@ -261,6 +261,8 @@ def cart(request):
             shopping_cart.requested_delivery_time += datetime.timedelta(minutes=60)
           elif(order_time=="In two hours"):
             shopping_cart.requested_delivery_time += datetime.timedelta(minutes=120)
+          elif(order_time=="In three hours"):
+            shopping_cart.requested_delivery_time += datetime.timedelta(minutes=180)
 
           shopping_cart.save()
           return HttpResponseRedirect(reverse('payment'))
