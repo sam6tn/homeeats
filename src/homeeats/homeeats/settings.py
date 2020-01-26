@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'homeeats_app',
+    'phonenumber_field',
 ]
 
 MIDDLEWARE = [

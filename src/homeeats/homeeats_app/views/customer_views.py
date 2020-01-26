@@ -609,19 +609,21 @@ def customer_edit_profile(request):
             messages.add_message(request, messages.SUCCESS, "Information saved successfully!")
             return HttpResponseRedirect(reverse('myaccount'))
         else:
-          messages.add_message(request, messages.ERROR, "One or more of the fields is missing or invalid, please try again!")
-          customer = Customer.objects.get(user_id=request.user.id)
-          shopping_cart = ShoppingCart.objects.get(customer=customer)
-          cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
-          current_user.email = request.user.username
-          form = UserEditForm(instance=request.user)
-          phone_form = PhoneEditForm(instance=request.user.customer)
-          context = {
-            'cart_items': cart_items,
-            'phone_form': phone_form,
-            'form': form,
-          }
-          return render(request, 'customer_templates/customer_edit_profile.html', context)
+            if not phone_form.is_valid():
+                messages.add_message(request, messages.ERROR, "Enter a valid phone number, e.g. 0123456789")
+            messages.add_message(request, messages.ERROR, "One or more of the fields is missing or invalid, please try again!")
+            customer = Customer.objects.get(user_id=request.user.id)
+            shopping_cart = ShoppingCart.objects.get(customer=customer)
+            cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
+            current_user.email = request.user.username
+            form = UserEditForm(instance=request.user)
+            phone_form = PhoneEditForm(instance=request.user.customer)
+            context = {
+                'cart_items': cart_items,
+                'phone_form': phone_form,
+                'form': form,
+            }
+            return render(request, 'customer_templates/customer_edit_profile.html', context)
     else:
         customer = Customer.objects.get(user_id=request.user.id)
         shopping_cart = ShoppingCart.objects.get(customer=customer)

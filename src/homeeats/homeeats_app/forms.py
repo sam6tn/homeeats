@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django import forms
 from .models import User, Cuisine, Customer, Cook, Dish, Dish_Review, Address
+from phonenumber_field.modelfields import PhoneNumberField
+
 
 
 
@@ -59,10 +61,18 @@ class UserEditForm(forms.ModelForm):
         fields = ('first_name', 'last_name', 'username')
 
 class PhoneEditForm(forms.ModelForm):
-    phone_number = forms.CharField(label='Phone Number')
+    #phone_number = forms.CharField(label='Phone Number')
+    phone_number = PhoneNumberField(help_text='Please enter a valid phone number')
     class Meta:
         model = Customer
         fields = ('phone_number',)
+    
+    def clean_phone_number(self):
+        data = self.cleaned_data['phone_number']
+        if not data.isdigit():
+            raise forms.ValidationError('Enter a valid phone number, e.g. 0123456789')
+            
+        return data
 
 class UserForm(forms.ModelForm):
     class Meta:
