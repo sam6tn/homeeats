@@ -158,6 +158,11 @@ def userLogin(request):
           messages.add_message(request, messages.ERROR, 'Invalid Login Credentials. Please Try Again.')
 
 
+    if request.user.is_authenticated and request.user.is_cook:
+      return redirect('/cook/home')
+
+    if request.user.is_authenticated and request.user.is_customer:
+      return redirect('/customer/home')
 
     form = AuthenticationForm()
     return render(request = request, template_name = "../templates/login.html", context={"form":form})
