@@ -105,10 +105,10 @@
     <tr>
       <form action="{% url 'cookeditprofile' %}" method="POST">
         {% csrf_token %}
-        <input type="submit" value="Edit Profile" class="btn btn-primary">
+        <td colspan = "2"> <div align="center"> <input type="submit" value="Edit Profile" class="btn btn-primary"> </div> </td>
       </form>
     </tr>
-  </tbody>
+</tbody>
   </div>
 
   {% endblock %}
