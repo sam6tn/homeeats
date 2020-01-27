@@ -65,21 +65,21 @@
       <div class="form-row">
           <div class="form-group col-md-6">
             <label for="inputfirst">First Name</label>
-            <input type="text" name="first_name" class="form-control" id="inputfirst" value="{{form.first_name.value}}">
+            <input type="text" name="first_name" class="form-control" id="inputfirst" value="{{form.first_name.value}}" required>
           </div>
           <div class="form-group col-md-6">
             <label for="inputlast">Last Name</label>
-            <input type="text" name="last_name" class="form-control" id="inputlast" value="{{form.last_name.value}}">
+            <input type="text" name="last_name" class="form-control" id="inputlast" value="{{form.last_name.value}}" required>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group col-md-6">
             <label for="inputEmail4">Email (username)</label>
-            <input type="email" name="username" class="form-control" id="inputEmail4" value="{{form.username.value}}">
+            <input  type="email" name="username" class="form-control" id="inputEmail4" value="{{form.username.value}}" readonly>
           </div>
           <div class="form-group col-md-6">
-            <label for="inputPassword4">Phone Number</label>
-            <input type="text" name="phone_number" class="form-control" id="inputPassword4" value="{{phone_form.phone_number.value}}">
+            <label for="phone_number">Phone Number</label>
+            <input type="tel" name="phone_number" class="form-control" id="phone_number" value="{{phone_form.phone_number.value}}" required>
           </div>
         </div>
       <input type="submit" style="float:right;" value="Save Changes" class="btn btn-primary">

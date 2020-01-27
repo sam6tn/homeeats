@@ -4,3 +4,5 @@ pytz==2019.2
 sqlparse==0.3.0
 Pillow
 stripe
+phonenumbers==8.11.2
+django-phonenumber-field==4.0.0

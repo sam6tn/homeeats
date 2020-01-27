@@ -488,6 +488,17 @@ class CustomerEditProfileTest(TestCase):
     def test_change_phonenumber(self):
         form = PhoneEditForm({'phone_number':'0123456789'})
         self.assertTrue(form.is_valid())
+    
+    def test_change_phonenumber_fail(self):
+        form = PhoneEditForm({'phone_number':'ksflsejf'})
+        self.assertFalse(form.is_valid())
+
+    def test_toolong_phonenumber(self):
+        form = PhoneEditForm({'phone_number':'(1234567890123)'})
+        self.assertFalse(form.is_valid())
+        self.assertEquals(form.errors['phone_number'][0],'Ensure this value has at most 10 characters (it has 15).')
+        #print(form.errors['phone_number'][0])
+
 
 class DishRestrictionsTest(TestCase):
     def test_vegan_true(self):

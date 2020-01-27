@@ -9,6 +9,7 @@ from django.contrib.postgres.fields import ArrayField
 import datetime
 from django.utils import timezone
 import pytz
+from phonenumber_field.modelfields import PhoneNumberField
 
 class User(AbstractUser):
   is_cook = models.BooleanField(default=False)
@@ -58,7 +59,7 @@ class Dish(models.Model):
 
 class Customer(models.Model):
   banned = models.BooleanField(default=False)
-  phone_number = models.CharField(max_length=30, default="")
+  phone_number = models.CharField(null=False,max_length=10, default="")
   user = models.OneToOneField(User, on_delete=models.CASCADE)
   favorites = models.ManyToManyField(Dish, blank=True)
   def __str__(self):
