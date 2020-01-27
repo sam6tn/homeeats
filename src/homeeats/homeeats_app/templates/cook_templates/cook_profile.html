@@ -25,54 +25,90 @@
   <div style="text-align: center;width:27%;margin: 20px auto;">
     <h2>My Account</h2>
       <img src="{{ user.cook.government_id.url }}">
+      <table class="table">
+      <tbody>
+      <tr>
 
       <div style="margin:10px;text-align: left;">
-       First Name
+       <td>First Name</td>
         <div style="float:right;">
-          {{ user.first_name }}
-        </div>
-      </div>
-      <div style="margin:10px;text-align: left;">
-        Last Name
-        <div style="float:right;">
-          {{ user.last_name }}
-        </div>
-      </div>
-      <div style="margin:10px;text-align: left;">
-        Kitchen License
-        <div style="float:right;">
-          {{ cook.kitchen_license }}
-        </div>
-      </div>
-      <div style="margin:10px;text-align: left;">
-        Email
-        <div style="float:right;">
-          {{ user.username }}
-        </div>
-      </div>
-      <div style="margin:10px;text-align: left;">
-        Phone Number
-        <div style="float:right;">
-          {{ cook.phone_number }}
-        </div>
-      </div>
-      <div style="margin:10px;text-align: left;">
-        Street Name
-        <div style="float:right;">
-          {{ address.street_name }}
-        </div>
-      </div>
-      <div style="margin:10px;text-align: left;">
-        City, State, Zip
-        <div style="float:right;">
-          {{ address.city }}, {{address.state}}, {{address.zipcode}}
+          <td>{{ user.first_name }}</td>
         </div>
       </div>
 
+    </tr>
+    <tr>
+
+      <div style="margin:10px;text-align: left;">
+        <td>Last Name</td>
+        <div style="float:right;">
+          <td>{{ user.last_name }}</td>
+        </div>
+      </div>
+    </tr>
+    <tr>
+      <div style="margin:10px;text-align: left;">
+        <td>Kitchen License</td>
+        <div style="float:right;">
+          <td>{{ cook.kitchen_license }}</td>
+        </div>
+      </div>
+    </tr>
+    <tr>
+      <div style="margin:10px;text-align: left;">
+        <td>Email</td>
+        <div style="float:right;">
+          <td>{{ user.username }}</td>
+        </div>
+      </div>
+
+    </tr>
+    <tr>
+      
+      <div style="margin:10px;text-align: left;">
+        <td>Phone Number</td>
+        <div style="float:right;">
+          <td>{{ cook.phone_number }}</td>
+        </div>
+      </div>
+
+    </tr>
+    <tr>
+
+      <div style="margin:10px;text-align: left;">
+        <td>Street Name</td>
+        <div style="float:right;">
+          <td>{{ address.street_name }}</td>
+        </div>
+      </div>
+
+    </tr>
+    <tr>
+
+      <div style="margin:10px;text-align: left;">
+        <td>City, State, Zip</td>
+        <div style="float:right;">
+         <td> {{ address.city }}, {{address.state}}, {{address.zipcode}}</td>
+        </div>
+      </div>
+
+    </tr>
+    <tr>
+
+      <div style="margin:10px;text-align: left;">
+        <td>Bulk Ordering</td>
+        <div style="float:right;">
+          <td>Available</td>
+        </div>
+      </div>
+    </tr>
+    <tr>
       <form action="{% url 'cookeditprofile' %}" method="POST">
         {% csrf_token %}
         <input type="submit" value="Edit Profile" class="btn btn-primary">
       </form>
+    </tr>
+  </tbody>
   </div>
 
   {% endblock %}
