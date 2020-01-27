@@ -371,6 +371,7 @@ def requestchange(request):
   new_city = request.POST["city"]
   new_state = request.POST["state"]
   new_zipcode = request.POST["zipcode"]
+  new_bulk = request.POST["bulk"]
   if verify_address(new_street_address, new_city, new_state):
     current_change = cook.cookchangerequest_set.all()
     if current_change.count()>0:
@@ -383,7 +384,8 @@ def requestchange(request):
       street_name = new_street_address,
       city = new_city,
       state = new_state,
-      zipcode = new_zipcode
+      zipcode = new_zipcode,
+      bulk = new_bulk
     )
     change.save()
     messages.success(request, 'Change Request Sent To Admin!')
