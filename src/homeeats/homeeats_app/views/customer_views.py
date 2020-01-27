@@ -29,6 +29,7 @@ import stripe
 import datetime
 from django.utils import timezone
 import pytz
+from django.core.mail import send_mail
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -428,6 +429,7 @@ def checkout(request):
         shopping_cart = ShoppingCart.objects.get(customer=customer)
         order_name = request.user.first_name + " " + request.user.last_name
         order_cook = Cook.objects.get(id=shopping_cart.cook_id)
+        order_cook_user = models.User.objects.get(id=order_cook.user_id)
         cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
         address = Address.objects.get(
             customer=customer, current_customer_address=True)
@@ -493,6 +495,13 @@ def checkout(request):
 
         messages.add_message(
           request, messages.SUCCESS, 'Your order has been submitted, go to the orders section to view order status!')
+        send_mail(
+            'New Order',
+            'A new order has been placed you have 5 minutes to accept.',
+            'capstonecustomer2020@gmail.com',
+            [order_cook_user.email],
+            fail_silently=False,
+        )
         return HttpResponseRedirect(reverse('customer_home'))
     else:
         return HttpResponseRedirect(reverse('customer_home'))

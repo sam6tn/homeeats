@@ -17,7 +17,7 @@ import urllib.request
 import urllib.parse
 import json
 import ssl
-
+from django.core.mail import send_mail
 
 #cook home page after login
 @login_required
@@ -200,6 +200,16 @@ def available(request):
 @cook_required
 def accept_order(request, order_id):
   change_order_status('p', 'c', request, order_id)
+  customer_order = Order.objects.get(id=order_id)
+  customer = Customer.objects.get(id=customer_order.customer_id)
+  customer_user = models.User.objects.get(id=customer.user_id)
+  send_mail(
+      'Thank You',
+      'Your order has been confirmed.',
+      'homeeatscapstone@gmail.com',
+      [customer_user.email],
+      fail_silently=False,
+  )
   return HttpResponseRedirect(reverse('cook_home'))
 
 @login_required
@@ -210,12 +220,32 @@ def reject_order(request, order_id, reason_id):
   reject_reason = RejectReason.objects.get(id=reason_id)
   order.reject_reason = reject_reason
   order.save()
+  customer_order = Order.objects.get(id=order_id)
+  customer = Customer.objects.get(id=customer_order.customer_id)
+  customer_user = models.User.objects.get(id=customer.user_id)
+  send_mail(
+      'Order Update',
+      'Your order has been rejected.',
+      'homeeatscapstone@gmail.com',
+      [customer_user.email],
+      fail_silently=False,
+  )
   return HttpResponseRedirect(reverse('cook_home'))
 
 @login_required
 @cook_required
 def cooking_to_delivery(request, order_id):
   change_order_status('c', 'o', request, order_id)
+  customer_order = Order.objects.get(id=order_id)
+  customer = Customer.objects.get(id=customer_order.customer_id)
+  customer_user = models.User.objects.get(id=customer.user_id)
+  send_mail(
+      'Order Update',
+      'Your order is out for delivery.',
+      'homeeatscapstone@gmail.com',
+      [customer_user.email],
+      fail_silently=False,
+  )
   return HttpResponseRedirect(reverse('cook_home'))
 
 @login_required
