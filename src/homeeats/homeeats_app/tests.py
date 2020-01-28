@@ -5,7 +5,7 @@ from django.shortcuts import render, get_object_or_404
 from django.test import RequestFactory
 from . import views
 from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address, User, Customer, Order, ShoppingCart, CartItem, CookChangeRequest
-from .forms import DishSearchForm, DishCreateForm, CustomerCreateForm, DishReviewForm, UserEditForm, PhoneEditForm
+from .forms import DishSearchForm, DishCreateForm, CustomerCreateForm, DishReviewForm, UserEditForm, PhoneEditForm, AddressEditForm
 
 class CookHomeTest(TestCase):
     fixtures = ['test_data.json']
@@ -642,5 +642,23 @@ class CookChangeRequestTest(TestCase):
         cook_change_request = CookChangeRequest(cook=cook, city='Ashburn')
         self.assertEqual(cook_change_request.city, 'Ashburn')
 
+class InvalidDishCreateFormTest(TestCase):
+    def test_invalid_vegan(self):
+        form = DishCreateForm({'vegan': '123'})
+        self.assertFalse(form.is_valid())
 
-    
+    def test_invalid_allergies(self):
+        form = DishCreateForm({'allergies': False})
+        self.assertFalse(form.is_valid())
+
+    def test_invalid_title(self):
+        form = DishCreateForm({'title': 123})
+        self.assertFalse(form.is_valid())
+
+    def test_invalid_description(self):
+        form = DishCreateForm({'description': False})
+        self.assertFalse(form.is_valid())
+
+    def test_invalid_ingredients(self):
+        form = DishCreateForm({'ingredients': 'testing'})
+        self.assertFalse(form.is_valid())
