@@ -47,6 +47,7 @@
                                         <span style="float:right;" class="badge badge-primary">Card</span>
                                     {% endif %}
             </h5>
+            <!-- order information for the cook -->
             <div class="card-body">
                 <h5 class="card-title">Order #{{order.id}}</h5>
                 <p class="card-text">Phone: {{order.customer.phone_number}}</p>
@@ -82,7 +83,9 @@
                         </div>
                     </div>
         </div>
-        <script>
+
+<!--time calculation for remaining cook time-->
+<script>
             {% with id=order.id %}
             deadlines["{{order.id}}"] = new Date({{ deadlines|getvalue:id|date:"U" }} * 1000);
             console.log("Deadline:",deadlines["{{order.id}}"]);
