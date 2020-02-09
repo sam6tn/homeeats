@@ -17,10 +17,10 @@ class CustomerCreateForm(forms.ModelForm):
     last_name = forms.CharField(label='Last Name', required=True,error_messages={'required':'Please enter your last name.'})
     password = forms.CharField(widget=forms.PasswordInput())
     email = forms.EmailField(required=True,)
-    street = forms.CharField(required=True,label='Street Address')
-    town = forms.CharField(required=True,label='City/Town')
-    state = forms.CharField(required=True,)
-    zipcode = forms.CharField(required=True,)
+    #street = forms.CharField(required=True,label='Street Address')
+    #town = forms.CharField(required=True,label='City/Town')
+    #state = forms.CharField(required=True,)
+    #zipcode = forms.CharField(required=True,)
     phone_number = forms.CharField(label='Phone Number')
     
     class Meta:
@@ -38,6 +38,10 @@ class AddressCreateForm(forms.ModelForm):
     class Meta:
         model = Address
         fields = ('street', 'town', 'state', 'zipcode',)
+
+        def clean_zipcoade(self):
+            if not zipcode.isdigit():
+                raise forms.ValidationError('Zipcode must be all digits.')
 
 class AddressEditForm(forms.ModelForm):
     street = forms.CharField(required=True,label='Street Address')

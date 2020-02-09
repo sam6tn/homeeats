@@ -27,19 +27,21 @@ View of the customer creation form with form validation.
 def customercreate(request):
   if request.method == 'POST':
     form = forms.CustomerCreateForm(request.POST)
-    if form.is_valid():
+    address_form = forms.AddressCreateForm(request.POST)
+    if form.is_valid() and address_form.is_valid():
       data = form.cleaned_data
+      address_data = address_form.cleaned_data
       if User.objects.filter(username=data['email']).exists():
         messages.add_message(request, messages.ERROR, 'An account with this email already exists, go to login page or use a different email')
         return render(request, 'customer_create.html', {'form': form})
-      elif verify_address(data['street'], data['town'], data['state']):
+      elif verify_address(address_data['street'], address_data['town'], address_data['state']):
         user = User.objects.create_user(username=data['email'], email=data['email'], password=data['password'], first_name=data['first_name'], last_name=data['last_name'])
         customer = models.Customer.objects.create(phone_number=data['phone_number'], user_id=user.id)
         user.is_customer = True
         user.save()
         customer.save()
         customer = models.Customer.objects.get(user_id=user.id)
-        address = models.Address.objects.create(customer=customer, street_name=data['street'], city=data['town'], state=data['state'], zipcode=data['zipcode'], current_customer_address=True)
+        address = models.Address.objects.create(customer=customer, street_name=address_data['street'], city=address_data['town'], state=address_data['state'], zipcode=address_data['zipcode'], current_customer_address=True)
         address.save()
         shopping_cart = models.ShoppingCart.objects.create(customer=customer)
         shopping_cart.save()
@@ -47,12 +49,13 @@ def customercreate(request):
         return HttpResponseRedirect(reverse('login'))
       else:
         messages.add_message(request, messages.ERROR, 'Address not valid, please try again')
-        return render(request, 'customer_create.html', {'form': form})
+        return render(request, 'customer_create.html', {'form': form, 'address_form': address_form})
     else:
-      return render(request, 'customer_create.html', {'form': form})
+      return render(request, 'customer_create.html', {'form': form, 'address_form': address_form})
   else:
     form = forms.CustomerCreateForm()
-    return render(request, 'customer_create.html', {'form': form})
+    address_form = forms.AddressCreateForm()
+    return render(request, 'customer_create.html', {'form': form,'address_form': address_form})
 
 
 def cookcreate(request):

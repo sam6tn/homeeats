@@ -30,7 +30,18 @@
   </br>
   <form method="POST">
       {% csrf_token %}
-      <div class="form-row">
+      {{form.as_p}}
+      {{address_form.as_p}}
+      <button style="float:center;" type="submit" class="btn btn-primary">Sign up</button>
+    <div>
+      Already have an account? <a href="/"><strong>Login</strong></a>
+    </div>
+      
+      
+    
+  {% endblock %}
+
+  <!--<div class="form-row">
         <div class="form-group col-md-6">
           <label for="inputfirst">First Name</label>
           <input type="text" name="first_name" class="form-control" id="inputfirst" placeholder="Joe">
@@ -72,10 +83,8 @@
           <label for="inputphone">Phone Number</label>
           <input type="text" name="phone_number" class="form-control" id="inputphone" placeholder="9999999999">
         </div>
-        Already have an account? <a href="/"><strong>Login</strong></a>
-      <button style="float:right;" type="submit" class="btn btn-primary">Sign up</button>
+        
     </form>
     </div>
     </div>
-    </div>
-  {% endblock %}
+    </div>-->
