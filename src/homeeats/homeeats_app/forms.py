@@ -29,6 +29,13 @@ class CustomerCreateForm(forms.ModelForm):
          #   'zipcode','phone_number',)
         fields = ('first_name','last_name','password','phone_number',)
     
+    def clean_phone_number(self):
+        data = self.cleaned_data['phone_number']
+        if not data.isdigit():
+            raise forms.ValidationError('Enter a valid phone number, e.g. 0123456789')
+            
+        return data
+    
 class AddressCreateForm(forms.ModelForm):
     street = forms.CharField(required=True,label='Street Address')
     town = forms.CharField(required=True,label='City/Town')
@@ -39,9 +46,14 @@ class AddressCreateForm(forms.ModelForm):
         model = Address
         fields = ('street', 'town', 'state', 'zipcode',)
 
-        def clean_zipcoade(self):
-            if not zipcode.isdigit():
-                raise forms.ValidationError('Zipcode must be all digits.')
+    def clean_zipcode(self):
+        zipcode = self.cleaned_data.get('zipcode')
+        if not zipcode.isdigit():
+            raise forms.ValidationError("Zipcode must be all digits.")
+        return zipcode
+    
+    def __init__(self, *args, **kwargs):
+        super(AddressCreateForm, self).__init__(*args, **kwargs)
 
 class AddressEditForm(forms.ModelForm):
     street = forms.CharField(required=True,label='Street Address')

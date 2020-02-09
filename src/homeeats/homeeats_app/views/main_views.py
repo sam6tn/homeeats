@@ -47,15 +47,18 @@ def customercreate(request):
         shopping_cart.save()
         messages.add_message(request, messages.SUCCESS, 'Your account has been successfully created, login to start ordering now!')
         return HttpResponseRedirect(reverse('login'))
+      '''
       else:
-        messages.add_message(request, messages.ERROR, 'Address not valid, please try again')
+        messages.add_message(request, messages.ERROR, form.errors.as_json())
         return render(request, 'customer_create.html', {'form': form, 'address_form': address_form})
+      
     else:
       return render(request, 'customer_create.html', {'form': form, 'address_form': address_form})
+    '''
   else:
     form = forms.CustomerCreateForm()
     address_form = forms.AddressCreateForm()
-    return render(request, 'customer_create.html', {'form': form,'address_form': address_form})
+  return render(request, 'customer_create.html', {'form': form,'address_form': address_form})
 
 
 def cookcreate(request):
