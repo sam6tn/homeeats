@@ -11,7 +11,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 Information the customer needs to enter to create an account
 '''
 class CustomerCreateForm(forms.ModelForm):
-    
+    error_css_class = 'error'
     first_name = forms.CharField(label='First Name',required=True,
     error_messages={'required':'Please enter your first name.'},)
     last_name = forms.CharField(label='Last Name', required=True,error_messages={'required':'Please enter your last name.'})
@@ -36,6 +36,14 @@ class CustomerCreateForm(forms.ModelForm):
             
         return data
     
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(username=email).exists():
+            #messages.add_message(request, messages.ERROR, 'An account with this email already exists, go to login page or use a different email')
+            #return render(request, 'customer_create.html', {'form': form})
+            raise forms.ValidationError("An account with this email already exists, go to login page or use a different email")
+        return email    
+
 class AddressCreateForm(forms.ModelForm):
     street = forms.CharField(required=True,label='Street Address')
     town = forms.CharField(required=True,label='City/Town')
@@ -89,6 +97,7 @@ class PhoneEditForm(forms.ModelForm):
             raise forms.ValidationError('Enter a valid phone number, e.g. 0123456789')
             
         return data
+
 
 class UserForm(forms.ModelForm):
     class Meta:

@@ -19,7 +19,22 @@
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <style>
-  
+  ul.errorlist {
+    margin: 0;
+    padding: 0;
+}
+.errorlist li {
+    /*border: 1px solid red;*/
+    color: red;
+    background: rgba(255, 0, 0, 0.15);
+    list-style-position: inside;
+    /*display: block;*/
+    font-size: 1em;
+    margin: 0 0 3px;
+    padding: 4px 5px;
+    text-align: center;    
+    /*border-radius: 3px;*/
+}
     </style>
   </head>
   
@@ -32,6 +47,7 @@
       {% csrf_token %}
       {{form.as_p}}
       {{address_form.as_p}}
+
       <button style="float:center;" type="submit" class="btn btn-primary">Sign up</button>
     <div>
       Already have an account? <a href="/"><strong>Login</strong></a>
