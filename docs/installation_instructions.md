@@ -1,4 +1,4 @@
-##AWS Database Setup
+## AWS Database Setup
 
 1. Create AWS account if necessary and launch AWS console
 2. Go to RDS (Relational Database Service) 
@@ -17,7 +17,7 @@
 
 
 
-##Installing Python3 on Linux
+## Installing Python3 on Linux
 1. Open the Terminal, type “python3 --version” to see if you have Python3 installed. If python3 has been installed, then there is no need to reinstall python3.
 2. If you are using Ubuntu 16.10 or newer, then you can easily install Python 3.6 with the following commands:
 sudo apt-get update
@@ -29,12 +29,12 @@ $ sudo apt-get update
 $ sudo apt-get install python3.6
 4. Check if pip3 has been installed by entering “command -v pip3” into the command line
 
-##Clone the HomeEats repository
+## Clone the HomeEats repository
 1. Open the Command Prompt application on Windows or the Terminal application on Mac.
 2. Move to the directory where you would like the HomeEats repository to be installed.
 3. Enter into the command line: $ git clone https://github.com/uva-cp-1920/HomeEats.git
 
-##Database Configuration in HomeEats Repo
+## Database Configuration in HomeEats Repo
 
 1. Go to the AWS console and to the RDS service
 2. Click on the RDS instance you created to open a page looking like this: 
@@ -55,12 +55,12 @@ DATABASES = {
 4. Replace the NAME, USER and PASSWORD with the credentials you wrote down from the first part of these installation instructions when you provisioned your RDS instance
 5. Replace HOST and PORT with the Endpoint & Port shown in the screenshot from step 2
 
-##Install HomeEats dependencies
+## Install HomeEats dependencies
 1. On the command line, from the HomeEats root folder, “cd src/homeeats”
 2. Type “ls” to ensure that you are in the right location. You should see requirements.txt listed as a file in that directory.
 3. Then enter into the command line, pip3 install --upgrade -r requirements.txt.
 
-##Deploying to AWS:
+## Deploying to AWS:
 1. In a terminal install awsebcli
 `pip3 install awsebcli`
 2. CD into the HomeEats root folder
