@@ -219,6 +219,18 @@ class CustomerCartTest(TestCase):
         self.client.post(reverse('addtocart'), {'quantity': 1, 'dish_id': 1})
         response = self.client.get(reverse('payment'))
         self.assertEquals(response.status_code, 302)
+    def test_addtocart_redirects(self):
+        response = self.client.post(reverse('addtocart'), {})
+        self.assertEquals(response.status_code, 302)
+    def test_addtocart_returns(self):
+        response = self.client.post(reverse('addtocart'), {'dish_id':1})
+        self.assertEqual(str(response.content, encoding='utf8'),'')
+    def test_removefromcart_redirects(self):
+        response = self.client.post(reverse('removefromcart'), {})
+        self.assertEquals(response.status_code, 302)
+    def test_removefromcart_returns(self):
+        response = self.client.post(reverse('removefromcart'), {'dish_id':1})
+        self.assertEqual(str(response.content, encoding='utf8'),'')
 
 class CustomerHomeTest(TestCase):
     def test_not_logged_in_causes_redirect_to_login_for_cook_home(self):

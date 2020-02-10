@@ -215,6 +215,49 @@ def addtocart(request):
     else:
         return JsonResponse(data)
 
+@login_required
+@customer_required
+def removefromcart(request):
+    dish = Dish.objects.get(id=request.POST["dish_id"])
+    return_quantity = -1
+    if request.method == "POST":
+        if(dish.cook_disabled or dish.cook.online == False):
+            messages.add_message(request, messages.ERROR, 'Unauthorized to perform this action')
+            return HttpResponseRedirect(reverse('customer_home'))
+        customer = Customer.objects.get(user_id=request.user.id)
+        shopping_cart = customer.shoppingcart
+        shopping_cart.total_before_tip -= dish.price
+        shopping_cart.item_subtotal -= dish.price
+        shopping_cart.total_before_tip -= shopping_cart.tax
+        shopping_cart.tax = Decimal(
+            round((.06 * float(shopping_cart.item_subtotal)), 2))
+        shopping_cart.total_before_tip += shopping_cart.tax
+        existing_already = False
+        for existing_item in shopping_cart.cartitem_set.all():
+            if (existing_item.dish == dish):  # dish already in cart so add to existing cart item
+                existing_item.quantity -= 1
+                existing_item.subtotal -= dish.price
+                existing_item.save()
+                existing_already = True
+                return_quantity = existing_item.quantity
+                if (existing_item.quantity < 1):
+                    existing_item.delete()
+                break
+
+        if shopping_cart.total_before_tip == shopping_cart.cook.delivery_fee:
+            shopping_cart.cook_id = None
+            shopping_cart.empty = True
+            shopping_cart.total_before_tip = 0
+            shopping_cart.tax = 0
+
+        shopping_cart.save()
+    data = {
+        'quantity': return_quantity,
+        'dish_id': request.POST["dish_id"]
+    }
+
+    return JsonResponse(data)
+
 
 @login_required
 @customer_required
@@ -272,7 +315,7 @@ def cart(request):
           messages.add_message(request, messages.ERROR, "The tip amount is invalid, please enter a correct amount")
           return HttpResponseRedirect(reverse('cart'))
 
-    cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
+    cart_items = CartItem.objects.filter(shopping_cart=shopping_cart).order_by('dish__title')
     cart = customer.shoppingcart
     cart.tip_options = calculate_tip_amounts(cart.total_before_tip)
     address = Address.objects.get(current_customer_address=True, customer=customer)
@@ -312,7 +355,6 @@ def removeItem(request):
 @register.filter
 def getvalue(d, key):
     return d.get(key)
-
 
 @login_required
 @customer_required

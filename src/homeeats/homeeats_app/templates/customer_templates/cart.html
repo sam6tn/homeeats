@@ -94,7 +94,43 @@
         }
     });
   }
+  function addtocart(id){
+    // document.getElementById("overlay").style.display = 'block';
+    $.ajax({
+      type: "POST",
+      url: "{% url 'addtocart' %}",
+      data: {
+      'dish_id': id,
+      'csrfmiddlewaretoken': '{{ csrf_token }}'
+      },
+      dataType: 'json',
+
+      // Upon adding to cart successfully
+      success: function (data) {
+          location.reload();
+      }
+    });
+  }
+
+  function removefromcart(id){
+    $.ajax({
+      type: "POST",
+      url: "{% url 'removefromcart' %}",
+      data: {
+      'dish_id': id,
+      'csrfmiddlewaretoken': '{{ csrf_token }}'
+      },
+      dataType: 'json',
+
+      // Upon removing from cart successfully
+      success: function (data) {
+          location.reload();
+      }
+    });
+  }
 </script>
+
+<div id="overlay" class="overlay" style="display:none"></div>
 
 <!--
 <h1>{{user.first_name}}'s Cart</h1>
@@ -136,14 +172,22 @@
 
       <div class="table-responsive">
           <ul class="list-group list-group-flush">
-            {% for item in cart_items%}
+            {% for item in cart_items %}
               <li class="list-group-item">
                 <table class="table">
                   <tr>
                     <td class="border-0 align-middle" style="width:25%"><strong>{{item.dish.title}}</strong></td>
                     <td class="border-0 align-middle" style="width:25%"><strong>x{{item.quantity}}</strong></td>
                     <td class="border-0 align-middle" style="width:25%"><strong>${{item.subtotal}}</strong></td>
-                    <td onclick="removeItem('{{item.id}}', '{{cart.id}}')" class="border-0 align-middle" style="width:25%"><a href="#" class="text-dark"><i class="fa fa-trash"></i></a></td>
+                    <!-- <td onclick="removeItem('{{item.id}}', '{{cart.id}}')" class="border-0 align-middle" style="width:25%"><a href="#" class="text-dark"><i class="fa fa-trash"></i></a></td> -->
+                    <td class="border-0 align-middle" >
+                      <button onclick="addtocart('{{item.dish.id}}')" style="padding:0;background:none;border:none;outline:none;margin-top:3px;float:right;position:relative;">
+                        <i class="fa fa-plus text-success"></i>
+                      </button>
+                      <button onclick="removefromcart('{{item.dish.id}}')" style="padding:0;background:none;border:none;outline:none;margin-top:3px;float:right;position:relative;">
+                        <i class="fa fa-minus text-danger"></i>
+                      </button>
+                    </td>
                   </tr>
                 </table>
               </li>   
