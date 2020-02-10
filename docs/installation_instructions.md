@@ -19,9 +19,9 @@
 
 ## Installing Python3 on Linux
 1. Open the Terminal, type “python3 --version” to see if you have Python3 installed. If python3 has been installed, then there is no need to reinstall python3.
-2. If you are using Ubuntu 16.10 or newer, then you can easily install Python 3.6 with the following commands:
-sudo apt-get update
-sudo apt-get install python3.6
+2. If you are using Ubuntu 16.10 or newer, then you can easily install Python 3.6 with the following commands:  
+`sudo apt-get update`  
+`sudo apt-get install python3.6`  
 3. If you’re using another version of Ubuntu  
 `sudo apt-get install software-properties-common`  
 `$ sudo add-apt-repository ppa:deadsnakes/ppa`  
