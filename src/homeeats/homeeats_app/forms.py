@@ -79,24 +79,26 @@ class UserEditForm(forms.ModelForm):
     error_messages={'required':'Please enter your first name.'},)
     last_name = forms.CharField(label='Last Name', required=True,error_messages={'required':'Please enter your last name.'})
     username = forms.CharField(label='Email',widget=forms.TextInput(attrs={'readonly':'readonly'}))
-    
+
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'username')
 
+
 class PhoneEditForm(forms.ModelForm):
-    #phone_number = forms.CharField(label='Phone Number')
+    
     phone_number = PhoneNumberField(help_text='Please enter a valid phone number')
+
     class Meta:
         model = Customer
         fields = ('phone_number',)
     
     def clean_phone_number(self):
-        data = self.cleaned_data['phone_number']
-        if not data.isdigit():
-            raise forms.ValidationError('Enter a valid phone number, e.g. 0123456789')
+        phone_number = self.cleaned_data.get('phone_number')
+        if not phone_number.isdigit() or len(str(phone_number)) != 10:
+            raise forms.ValidationError('Enter a valid 10-digit phone number, e.g. 0123456789')
             
-        return data
+        return phone_number
 
 
 class UserForm(forms.ModelForm):
@@ -105,20 +107,34 @@ class UserForm(forms.ModelForm):
         fields = ('username', 'password')
 
 class CookCreateForm(forms.ModelForm):
-    kitchen_license = forms.CharField(label='Kitchen License')
-    phone_number = forms.CharField(label='Phone Number')
-    delivery_distance_miles = forms.IntegerField(label='Maximum Delivery Distance (miles)')
-    delivery_fee = forms.DecimalField(label='Delivery Fee', decimal_places=2, max_digits=6)
-    street = forms.CharField(required=True,label='Street Address')
+    kitchen_license = forms.CharField(required=True, label='Kitchen License')
+    phone_number = forms.CharField(required=True, label='Phone Number')
+    delivery_distance_miles = forms.IntegerField(required=True, label='Maximum Delivery Distance (miles)')
+    delivery_fee = forms.DecimalField(required=True, label='Delivery Fee', decimal_places=2, max_digits=6)
+    street = forms.CharField(required=True, label='Street Address')
     town = forms.CharField(required=True,label='City/Town')
     state = forms.CharField(required=True,)
     zipcode = forms.CharField(required=True,)
-    government_id = forms.ImageField()
+    government_id = forms.ImageField(required=True,)
     password = forms.CharField(widget=forms.PasswordInput())
     class Meta:
       model = User
       fields = ['first_name', 'last_name', 'email', 'password']
     
+    def clean_phone_number(self):
+        phone_number = self.cleaned_data.get('phone_number')
+        if not phone_number.isdigit() or len(str(phone_number)) != 10:
+            raise forms.ValidationError('Enter a valid 10-digit phone number, e.g. 0123456789')
+            
+        return phone_number
+
+    def clean_zipcode(self):
+        zipcode = self.cleaned_data.get('zipcode')
+        if not zipcode.isdigit():
+            raise forms.ValidationError("Zipcode must be all digits.")
+        return zipcode
+    
+
 class DishCreateForm(forms.Form):
     title = forms.CharField(required=True,)
     #cuisine = forms.ModelChoiceField(queryset=Cuisine.objects.all())

@@ -607,26 +607,28 @@ def customer_edit_profile(request):
                             instance=request.user)
         if request.POST['first_name'] == "":
             request.POST['first_name'] = request.user.first_name
+        
         phone_form = PhoneEditForm(request.POST,
                                    request.FILES,
                                    instance=request.user.customer)
+        
         if form.is_valid() and phone_form.is_valid():
             data = form.cleaned_data
-            phone_data = form.cleaned_data
+            phone_data = phone_form.cleaned_data
             form.save()
             phone_form.save()
             messages.add_message(request, messages.SUCCESS, "Information saved successfully!")
             return HttpResponseRedirect(reverse('myaccount'))
         else:
             if not phone_form.is_valid():
-                messages.add_message(request, messages.ERROR, "Enter a valid phone number, e.g. 0123456789")
-            messages.add_message(request, messages.ERROR, "One or more of the fields is missing or invalid, please try again!")
+                messages.add_message(request, messages.ERROR, "Enter a valid phone number. Must be 10 digits long, e.g. 0123456789")
+            #messages.add_message(request, messages.ERROR, "One or more of the fields is missing or invalid, please try again!")
             customer = Customer.objects.get(user_id=request.user.id)
             shopping_cart = ShoppingCart.objects.get(customer=customer)
             cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
             current_user.email = request.user.username
-            form = UserEditForm(instance=request.user)
-            phone_form = PhoneEditForm(instance=request.user.customer)
+            form = UserEditForm(instance=current_user)
+            phone_form = PhoneEditForm(instance=customer)
             context = {
                 'cart_items': cart_items,
                 'phone_form': phone_form,
@@ -640,12 +642,14 @@ def customer_edit_profile(request):
         current_user.email = request.user.username
         form = UserEditForm(instance=request.user)
         phone_form = PhoneEditForm(instance=request.user.customer)
+        #phone_form = PhoneEditForm()
         context = {
             'cart_items': cart_items,
             'phone_form': phone_form,
             'form': form,
         }
         return render(request, 'customer_templates/customer_edit_profile.html', context)
+    
 
 
 @login_required
