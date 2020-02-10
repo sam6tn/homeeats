@@ -35,12 +35,25 @@
             right: 0;
             top: 0;
         }
+        #customer-heading {
+            font-size: 3.5em;
+            font-weight: 400;
+        }
+        @media only screen and (max-width: 500px) {
+            #customer-heading {
+                font-size: 2em;
+                font-weight: 400;
+            }
+            .search-button {
+                width: 100%;
+            }
+        }
+
         .dish-image-container {
             background: #cccccc45;
             display: flex;
             justify-content: center;
         }
-
         .dish-image {
         max-width: 100%;
         height: 10em;
@@ -158,13 +171,13 @@
 {% else %}
     <div class="jumbotron jumbotron-fluid">
             <div class="container">
-              <h1 class="display-4">Dishes near {{address.city}}, {{address.state}}</h1>
+              <h1 id="customer-heading">Dishes near {{address.city}}, {{address.state}}</h1>
               <form method="POST" class="form-inline my-2 my-lg-0" id="searchForm">
                     {% csrf_token %}
-                    {{form.cuisine}}
-                    {{form.sort}}
-                    {{form.search}}
-                    <button id="searchBtn" name="filters" class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                          {{form.cuisine}}
+                          {{form.sort}}
+                          {{form.search}}
+                    <button id="searchBtn" name="filters" class="btn btn-outline-success my-2 my-sm-0 search-button" type="submit">Search</button>
                 </form>
             </div>
           </div>
