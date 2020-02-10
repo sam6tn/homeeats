@@ -22,12 +22,12 @@
 2. If you are using Ubuntu 16.10 or newer, then you can easily install Python 3.6 with the following commands:
 sudo apt-get update
 sudo apt-get install python3.6
-3. If you’re using another version of Ubuntu
-sudo apt-get install software-properties-common
-$ sudo add-apt-repository ppa:deadsnakes/ppa
-$ sudo apt-get update
-$ sudo apt-get install python3.6
-4. Check if pip3 has been installed by entering “command -v pip3” into the command line
+3. If you’re using another version of Ubuntu  
+`sudo apt-get install software-properties-common`  
+`$ sudo add-apt-repository ppa:deadsnakes/ppa`  
+`$ sudo apt-get update`  
+`$ sudo apt-get install python3.6`  
+4. Check if pip3 has been installed by entering `command -v pip3` into the command line
 
 ## Clone the HomeEats repository
 1. Open the Command Prompt application on Windows or the Terminal application on Mac.
