@@ -18,7 +18,7 @@
 
 
 ## Installing Python3 on Linux
-1. Open the Terminal, type “python3 --version” to see if you have Python3 installed. If python3 has been installed, then there is no need to reinstall python3.
+1. Open the Terminal, type `python3 --version` to see if you have Python3 installed. If python3 has been installed, then there is no need to reinstall python3.
 2. If you are using Ubuntu 16.10 or newer, then you can easily install Python 3.6 with the following commands:  
 `sudo apt-get update`  
 `sudo apt-get install python3.6`  
@@ -32,7 +32,7 @@
 ## Clone the HomeEats repository
 1. Open the Command Prompt application on Windows or the Terminal application on Mac.
 2. Move to the directory where you would like the HomeEats repository to be installed.
-3. Enter into the command line: $ git clone https://github.com/uva-cp-1920/HomeEats.git
+3. Enter into the command line: `$ git clone https://github.com/uva-cp-1920/HomeEats.git`
 
 ## Database Configuration in HomeEats Repo
 
@@ -56,9 +56,9 @@ DATABASES = {
 5. Replace HOST and PORT with the Endpoint & Port shown in the screenshot from step 2
 
 ## Install HomeEats dependencies
-1. On the command line, from the HomeEats root folder, “cd src/homeeats”
+1. On the command line, from the HomeEats root folder, `cd src/homeeats`
 2. Type “ls” to ensure that you are in the right location. You should see requirements.txt listed as a file in that directory.
-3. Then enter into the command line, pip3 install --upgrade -r requirements.txt.
+3. Then enter into the command line, `pip3 install --upgrade -r requirements.txt`
 
 ## Deploying to AWS:
 1. In a terminal install awsebcli
