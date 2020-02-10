@@ -121,6 +121,9 @@ class CookCreateForm(forms.ModelForm):
       model = User
       fields = ['first_name', 'last_name', 'email', 'password']
     
+    '''
+    Raising validation errors if a phone number is the incorrect length or contains letters
+    '''
     def clean_phone_number(self):
         phone_number = self.cleaned_data.get('phone_number')
         if not phone_number.isdigit() or len(str(phone_number)) != 10:
@@ -128,6 +131,9 @@ class CookCreateForm(forms.ModelForm):
             
         return phone_number
 
+    '''
+    Raising validation errors if a zipcode is invalid
+    '''
     def clean_zipcode(self):
         zipcode = self.cleaned_data.get('zipcode')
         if not zipcode.isdigit():

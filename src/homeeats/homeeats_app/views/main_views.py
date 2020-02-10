@@ -28,6 +28,10 @@ def customercreate(request):
   if request.method == 'POST':
     form = forms.CustomerCreateForm(request.POST)
     address_form = forms.AddressCreateForm(request.POST)
+
+    '''
+    If any of the customer information is incorrect, keep form filled out but display error messages
+    '''
     if form.is_valid() and address_form.is_valid():
       data = form.cleaned_data
       address_data = address_form.cleaned_data
@@ -47,14 +51,6 @@ def customercreate(request):
         shopping_cart.save()
         messages.add_message(request, messages.SUCCESS, 'Your account has been successfully created, login to start ordering now!')
         return HttpResponseRedirect(reverse('login'))
-      '''
-      else:
-        messages.add_message(request, messages.ERROR, form.errors.as_json())
-        return render(request, 'customer_create.html', {'form': form, 'address_form': address_form})
-      
-    else:
-      return render(request, 'customer_create.html', {'form': form, 'address_form': address_form})
-    '''
   else:
     form = forms.CustomerCreateForm()
     address_form = forms.AddressCreateForm()
@@ -64,12 +60,20 @@ def customercreate(request):
 def cookcreate(request):
   if request.method == 'POST':
     cook_create_form = forms.CookCreateForm(request.POST, request.FILES)
+
+    '''
+    If any of the cook information is incorrect, keep form filled out but display error messages
+    '''
     if cook_create_form.is_valid():
       data = cook_create_form.cleaned_data
       if User.objects.filter(username=data['email']).exists():
         messages.add_message(request, messages.ERROR, 'An account with this email already exists, go to login page or use a different email')
         return render(request, 'cook_create.html', {'cook_create_form': cook_create_form})
       elif verify_address(data['street'], data['town'], data['state']):
+
+        '''
+        If all information is valid, create user, cook, address objects and save to database
+        '''
         user = User.objects.create_user(username=data['email'], password=data['password'], first_name=data['first_name'], last_name=data['last_name'])
         cook = models.Cook.objects.create(
           kitchen_license=data['kitchen_license'],
