@@ -21,7 +21,11 @@
       {% endfor %}
   </ul>
   {% endif %}
+  <!-- 
+  New Table format for cook profile page
 
+
+  --> 
   <div style="text-align: center;width:27%;margin: 20px auto;">
     <h2>My Account</h2>
       <img src="{{ user.cook.government_id.url }}">
@@ -30,9 +34,10 @@
       <tr>
 
       <div style="margin:10px;text-align: left;">
-       <td>First Name</td>
+       
+       <td><img src="/media/profile.png" width="60" height="60"></td>
         <div style="float:right;">
-          <td>{{ user.first_name }}</td>
+          <td>{{ user.first_name }} {{ user.last_name }}</td>
         </div>
       </div>
 
@@ -48,15 +53,8 @@
     </tr>
     <tr>
       <div style="margin:10px;text-align: left;">
-        <td>Kitchen License</td>
-        <div style="float:right;">
-          <td>{{ cook.kitchen_license }}</td>
-        </div>
-      </div>
-    </tr>
-    <tr>
-      <div style="margin:10px;text-align: left;">
-        <td>Email</td>
+        
+        <td><img src="/media/email.png" width="60" height="60"></td>
         <div style="float:right;">
           <td>{{ user.username }}</td>
         </div>
@@ -66,7 +64,8 @@
     <tr>
       
       <div style="margin:10px;text-align: left;">
-        <td>Phone Number</td>
+        
+        <td><img src="/media/phone_icon.png" width="60" height="60"></td>
         <div style="float:right;">
           <td>{{ cook.phone_number }}</td>
         </div>
@@ -76,7 +75,7 @@
     <tr>
 
       <div style="margin:10px;text-align: left;">
-        <td>Street Name</td>
+        <td><img src="/media/location.png" width="70" height="70"></td>
         <div style="float:right;">
           <td>{{ address.street_name }}</td>
         </div>
@@ -92,6 +91,14 @@
         </div>
       </div>
 
+    </tr>
+    <tr>
+      <div style="margin:10px;text-align: left;">
+        <td>Kitchen License</td>
+        <div style="float:right;">
+          <td>{{ cook.kitchen_license }}</td>
+        </div>
+      </div>
     </tr>
     <tr>
 
