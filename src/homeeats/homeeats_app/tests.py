@@ -66,10 +66,6 @@ class CookHomeTest(TestCase):
        self.client.get(reverse('cooking_to_delivery', args=[2]))
        order = Order.objects.get(id=2)
        self.assertEquals(order.status, 'o')
-    def test_cook_edit_profile(self):
-        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
-        response = self.client.get(reverse('test_cook_edit_profile'))
-        self.assertEquals(response.status_code, 302)
 
 class CookManageTest(TestCase):
     fixtures = ['test_data.json']
