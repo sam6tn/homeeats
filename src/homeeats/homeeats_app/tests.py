@@ -625,6 +625,16 @@ class AddressCreateFormTest(TestCase):
         form = UserEditForm({'street': "street",'town': "cville", 'state':'', 'zipcode':22903})
         self.assertFalse(form.is_valid())
 
+class CustomerChangeCurrentAddressTest(TestCase):
+    def test_change_current_address(self):
+        self.client.post(reverse('customercreate'), {'first_name': 'Dave', 'last_name': 'Chapelle', 'street': '221 Baker Street', 'town': 'Fairfax', 'state': 'VA', 'zipcode': '22000', 'email': 'dave@dave.com', 'password': 'chapchap', 'phone_number': '8888888888'})
+        self.client.login(username='dave@dave.com', password='chapchap')
+        self.client.post(reverse('customer_home'), {'street': '1815 Jefferson Park Avenue', 'town': 'Charlottesville', 'state': 'VA', 'zipcode': '22903'})
+        self.client.get(reverse('change_current_address', args=[6]))
+        customer = Customer.objects.get(phone_number='8888888888')
+        add = Address.objects.get(customer=customer, current_customer_address=True)
+        self.assertEqual(add.street_name, '1815 Jefferson Park Avenue')
+
 class CookChangeRequestTest(TestCase):
     def test_cook_request_relationship(self):
         cook_user= User.objects.create(username="cook_user", is_cook=True)

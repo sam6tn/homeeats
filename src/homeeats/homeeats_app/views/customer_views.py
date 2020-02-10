@@ -41,20 +41,21 @@ def change_current_address(request, address_id):
   cart = ShoppingCart.objects.get(customer=customer)
   current_address = Address.objects.get(
       customer=customer, current_customer_address=True)
-  current_address.current_customer_address = False
+  current_address.current_customer_address = False #changing the current address of the customer and reload the page to show items in new area
   current_address.save()
   change_address = Address.objects.get(id=address_id)
   change_address.current_customer_address = True
   change_address.save()
   if cart.empty == True:
-    return HttpResponseRedirect(reverse('customer_home'))
+    return HttpResponseRedirect(reverse('customer_home')) #no order currently in cart so its safe to change address (success)
   elif cart.cook in find_nearby_cooks(request):
-    return HttpResponseRedirect(reverse('customer_home'))
+    return HttpResponseRedirect(reverse('customer_home')) #there is an order in the cart but the chef of that order is able to deliver to the new address (success)
   else:
     change_address.current_customer_address = False
     current_address.current_customer_address = True
     current_address.save()
     change_address.save()
+    #the order currently in the cart cannot be delivered to the new address so let the user know
     messages.add_message(request, messages.ERROR, "The order currently in your cart cannot deliver to this address, please complete or remove that order")
     return HttpResponseRedirect(reverse('customer_home'))
 
