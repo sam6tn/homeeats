@@ -702,3 +702,23 @@ class CookCreateAccountTest(TestCase):
         })
         self.assertFalse(form.is_valid())
 
+class InvalidDishFormFields(TestCase):
+    def test_missing_vegan_field(self):
+        dishForm = DishCreateForm({'allergies': 'Peanuts'})
+        self.assertFalse(dishForm.is_valid())
+
+    def test_missing_allergies_field(self):
+        dishForm = DishCreateForm({'vegan': True})
+        self.assertFalse(dishForm.is_valid())
+
+    def test_missing_fields(self):
+        dishForm = DishCreateForm({})
+        self.assertFalse(dishForm.is_valid())
+
+    def test_invalid_field(self):
+        dishForm = DishCreateForm({'something': False})
+        self.assertFalse(dishForm.is_valid())
+
+    def test_invalid_vegan(self):
+        dishForm = DishCreateForm({'vegan': 123})
+        self.assertFalse(dishForm.is_valid())
