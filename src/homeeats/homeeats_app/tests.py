@@ -631,5 +631,11 @@ class CookChangeRequestTest(TestCase):
         cook_change_request = CookChangeRequest(cook=cook, city='Ashburn')
         self.assertEqual(cook_change_request.city, 'Ashburn')
 
+    def test_zip(self):
+        cook_user= User.objects.create(username="cook_user", is_cook=True)
+        cook = Cook.objects.create(user=cook_user)
+        cook_change_request = CookChangeRequest(cook=cook, zipcode='22903')
+        self.assertEqual(cook_change_request.zipcode, '22903')
+
 
     
