@@ -5,7 +5,9 @@ from django.shortcuts import render, get_object_or_404
 from django.test import RequestFactory
 from . import views
 from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address, User, Customer, Order, ShoppingCart, CartItem, CookChangeRequest
-from .forms import DishSearchForm, DishCreateForm, CustomerCreateForm, DishReviewForm, UserEditForm, PhoneEditForm, AddressEditForm
+from .forms import DishSearchForm, DishCreateForm, CustomerCreateForm, DishReviewForm, UserEditForm, PhoneEditForm, AddressEditForm, CookCreateForm
+
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 class CookHomeTest(TestCase):
     fixtures = ['test_data.json']
@@ -674,3 +676,29 @@ class InvalidDishCreateFormTest(TestCase):
     def test_invalid_ingredients(self):
         form = DishCreateForm({'ingredients': 'testing'})
         self.assertFalse(form.is_valid())
+
+import tempfile
+class CookCreateAccountTest(TestCase):
+    '''
+    Checking that an invalid phone number marks form as invalid
+    '''
+    def test_short_phone(self):
+        
+        '''
+        Creates a mock temporary image
+        '''
+        avatar = tempfile.NamedTemporaryFile(suffix=".jpg").name
+        
+        form = CookCreateForm({
+            'phone_number' : '1234',
+            'delivery_distance_miles': '10',
+            'delivery_free': '3.00',
+            'street': '1 University Court',
+            'town': 'Charlottesville',
+            'state': 'VA',
+            'zipcode': '07739',
+            'government_id': 'avatar',
+            'password': 'avatar'
+        })
+        self.assertFalse(form.is_valid())
+

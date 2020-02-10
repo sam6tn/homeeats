@@ -11,16 +11,16 @@ from phonenumber_field.modelfields import PhoneNumberField
 Information the customer needs to enter to create an account
 '''
 class CustomerCreateForm(forms.ModelForm):
-    
+    error_css_class = 'error'
     first_name = forms.CharField(label='First Name',required=True,
     error_messages={'required':'Please enter your first name.'},)
     last_name = forms.CharField(label='Last Name', required=True,error_messages={'required':'Please enter your last name.'})
     password = forms.CharField(widget=forms.PasswordInput())
     email = forms.EmailField(required=True,)
-    street = forms.CharField(required=True,label='Street Address')
-    town = forms.CharField(required=True,label='City/Town')
-    state = forms.CharField(required=True,)
-    zipcode = forms.CharField(required=True,)
+    #street = forms.CharField(required=True,label='Street Address')
+    #town = forms.CharField(required=True,label='City/Town')
+    #state = forms.CharField(required=True,)
+    #zipcode = forms.CharField(required=True,)
     phone_number = forms.CharField(label='Phone Number')
     
     class Meta:
@@ -29,6 +29,21 @@ class CustomerCreateForm(forms.ModelForm):
          #   'zipcode','phone_number',)
         fields = ('first_name','last_name','password','phone_number',)
     
+    def clean_phone_number(self):
+        data = self.cleaned_data['phone_number']
+        if not data.isdigit():
+            raise forms.ValidationError('Enter a valid phone number, e.g. 0123456789')
+            
+        return data
+    
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(username=email).exists():
+            #messages.add_message(request, messages.ERROR, 'An account with this email already exists, go to login page or use a different email')
+            #return render(request, 'customer_create.html', {'form': form})
+            raise forms.ValidationError("An account with this email already exists, go to login page or use a different email")
+        return email    
+
 class AddressCreateForm(forms.ModelForm):
     street = forms.CharField(required=True,label='Street Address')
     town = forms.CharField(required=True,label='City/Town')
@@ -38,6 +53,15 @@ class AddressCreateForm(forms.ModelForm):
     class Meta:
         model = Address
         fields = ('street', 'town', 'state', 'zipcode',)
+
+    def clean_zipcode(self):
+        zipcode = self.cleaned_data.get('zipcode')
+        if not zipcode.isdigit():
+            raise forms.ValidationError("Zipcode must be all digits.")
+        return zipcode
+    
+    def __init__(self, *args, **kwargs):
+        super(AddressCreateForm, self).__init__(*args, **kwargs)
 
 class AddressEditForm(forms.ModelForm):
     street = forms.CharField(required=True,label='Street Address')
@@ -55,24 +79,27 @@ class UserEditForm(forms.ModelForm):
     error_messages={'required':'Please enter your first name.'},)
     last_name = forms.CharField(label='Last Name', required=True,error_messages={'required':'Please enter your last name.'})
     username = forms.CharField(label='Email',widget=forms.TextInput(attrs={'readonly':'readonly'}))
-    
+
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'username')
 
+
 class PhoneEditForm(forms.ModelForm):
-    #phone_number = forms.CharField(label='Phone Number')
+    
     phone_number = PhoneNumberField(help_text='Please enter a valid phone number')
+
     class Meta:
         model = Customer
         fields = ('phone_number',)
     
     def clean_phone_number(self):
-        data = self.cleaned_data['phone_number']
-        if not data.isdigit():
-            raise forms.ValidationError('Enter a valid phone number, e.g. 0123456789')
+        phone_number = self.cleaned_data.get('phone_number')
+        if not phone_number.isdigit() or len(str(phone_number)) != 10:
+            raise forms.ValidationError('Enter a valid 10-digit phone number, e.g. 0123456789')
             
-        return data
+        return phone_number
+
 
 class UserForm(forms.ModelForm):
     class Meta:
@@ -80,20 +107,40 @@ class UserForm(forms.ModelForm):
         fields = ('username', 'password')
 
 class CookCreateForm(forms.ModelForm):
-    kitchen_license = forms.CharField(label='Kitchen License')
-    phone_number = forms.CharField(label='Phone Number')
-    delivery_distance_miles = forms.IntegerField(label='Maximum Delivery Distance (miles)')
-    delivery_fee = forms.DecimalField(label='Delivery Fee', decimal_places=2, max_digits=6)
-    street = forms.CharField(required=True,label='Street Address')
+    kitchen_license = forms.CharField(required=True, label='Kitchen License')
+    phone_number = forms.CharField(required=True, label='Phone Number')
+    delivery_distance_miles = forms.IntegerField(required=True, label='Maximum Delivery Distance (miles)')
+    delivery_fee = forms.DecimalField(required=True, label='Delivery Fee', decimal_places=2, max_digits=6)
+    street = forms.CharField(required=True, label='Street Address')
     town = forms.CharField(required=True,label='City/Town')
     state = forms.CharField(required=True,)
     zipcode = forms.CharField(required=True,)
-    government_id = forms.ImageField()
+    government_id = forms.ImageField(required=True,)
     password = forms.CharField(widget=forms.PasswordInput())
     class Meta:
       model = User
       fields = ['first_name', 'last_name', 'email', 'password']
     
+    '''
+    Raising validation errors if a phone number is the incorrect length or contains letters
+    '''
+    def clean_phone_number(self):
+        phone_number = self.cleaned_data.get('phone_number')
+        if not phone_number.isdigit() or len(str(phone_number)) != 10:
+            raise forms.ValidationError('Enter a valid 10-digit phone number, e.g. 0123456789')
+            
+        return phone_number
+
+    '''
+    Raising validation errors if a zipcode is invalid
+    '''
+    def clean_zipcode(self):
+        zipcode = self.cleaned_data.get('zipcode')
+        if not zipcode.isdigit():
+            raise forms.ValidationError("Zipcode must be all digits.")
+        return zipcode
+    
+
 class DishCreateForm(forms.Form):
     title = forms.CharField(required=True,)
     #cuisine = forms.ModelChoiceField(queryset=Cuisine.objects.all())
