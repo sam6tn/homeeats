@@ -5,6 +5,7 @@ import json
 from django.template.defaulttags import register
 from decimal import *
 from django.http import Http404, HttpResponse, HttpResponseNotFound
+from django.contrib import messages
 
 TWOPLACES = Decimal(10) ** -2  
 
@@ -18,7 +19,7 @@ def revenue(request):
             end_date = data["end_date"]
             orders = Order.objects.filter(date__range=(start_date, end_date)).order_by('-date')
         else:
-            return HttpResponseNotFound('<h1>Page not found</h1>')
+            return HttpResponseNotFound('<h1>Invalid Date Selection</h1>')
 
     else:
         orders = Order.objects.all().order_by('-date')
