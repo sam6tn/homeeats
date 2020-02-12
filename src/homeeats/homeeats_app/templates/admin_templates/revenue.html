@@ -1,0 +1,59 @@
+{% extends "admin/base_site.html" %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">Home</a>
+&rsaquo; Revenue Reports
+</div>
+{% endblock %}
+
+{% block content %}
+
+<link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet">
+
+<script>
+    var homeeats_splits = {{homeeats_splits}};
+    console.log(homeeats_splits);
+</script>
+
+<form method="POST">
+    {% csrf_token %}
+    {{dateform}}
+    <input type="submit">
+</form>
+{% if orders %}
+<table>
+<tr>
+    <th>Cook Name</th>
+    <th>Customer Name</th>
+    <th>Order Date</th>
+    <th>Total Revenue</th>
+    <th>HomeEats Revenue</th>
+</tr>
+{% for order in orders %}
+<tr>
+    <td><a href="{% url 'admin_cook' order.cook.id %}">{{order.cook.user.first_name}} {{order.cook.user.last_name}}</a></td>
+    <td><a href="{% url 'admin_customer' order.customer.id %}">{{order.name}}</a></td>
+    <td>{{order.date|date:"d M Y" }}</td>
+    <td>{{order.item_subtotal}}</td>
+    <td id="homeeats_split{{order.id}}"></td>
+</tr>
+<script>
+    document.getElementById("homeeats_split"+'{{order.id}}').innerHTML = homeeats_splits[{{order.id}}];
+</script>
+{% endfor %}
+<tr>
+    <th>Totals:</th>
+    <th></th>
+    <th></th>
+    <th>${{total_revenue}}</th>
+    <th>${{total_homeeats_revenue}}</th>
+</tr>
+</table>
+
+{% else %}
+<h2>No Orders To Display</h2>
+{% endif %}
+
+{% endblock %}

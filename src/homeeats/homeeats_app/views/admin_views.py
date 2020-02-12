@@ -1,7 +1,41 @@
 from django.shortcuts import render
 from ..models import Cook, Customer, Dish_Review, Order, CookChangeRequest, Address
+from .. import forms
 import json
 from django.template.defaulttags import register
+from decimal import *
+
+TWOPLACES = Decimal(10) ** -2  
+
+def revenue(request):
+
+    if request.method == 'POST':
+        dateform = forms.DatePickerForm(request.POST)
+        if dateform.is_valid():
+            data = dateform.cleaned_data
+            start_date = data["start_date"]
+            end_date = data["end_date"]
+            orders = Order.objects.filter(date__range=(start_date, end_date)).order_by('-date')
+    else:
+        orders = Order.objects.all().order_by('-date')
+        dateform = forms.DatePickerForm()
+
+    homeeats_splits = {}
+    total=0
+    for order in orders:
+        total += order.item_subtotal
+        # homeeats_splits[order.id] = Decimal(float(order.item_subtotal)*0.2).quantize(TWOPLACES)
+        homeeats_splits[order.id] = float("{0:.2f}".format(float(order.item_subtotal) * 0.2))
+    
+    total_homeeats_revenue = Decimal(float(total)*0.2).quantize(TWOPLACES)
+    context = {
+    'orders':orders,
+    'total_revenue':total,
+    'total_homeeats_revenue':total_homeeats_revenue,
+    'homeeats_splits':homeeats_splits,
+    'dateform':dateform
+    }
+    return render(request,'admin_templates/revenue.html', context)
 
 def cookApplications(request):
     if request.method == 'POST':

@@ -3,9 +3,22 @@ from django.contrib.postgres.fields import ArrayField
 from django import forms
 from .models import User, Cuisine, Customer, Cook, Dish, Dish_Review, Address
 from phonenumber_field.modelfields import PhoneNumberField
+from django.utils import timezone
 
+def getYear():
+    return timezone.localtime(timezone.now()).year
 
+class DatePickerForm(forms.Form):
 
+    #Calculate which years to display for date picker
+    years=[]
+    current_year = getYear()
+    num_years_passed = current_year - 2019
+    for i in range(0,num_years_passed+1):
+        years.append(2019+i)
+
+    start_date = forms.DateField(widget=forms.SelectDateWidget(years=years))
+    end_date = forms.DateField(widget=forms.SelectDateWidget(years=years))
 
 '''
 Information the customer needs to enter to create an account
