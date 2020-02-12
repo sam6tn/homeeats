@@ -4,6 +4,7 @@ from .. import forms
 import json
 from django.template.defaulttags import register
 from decimal import *
+from django.http import Http404, HttpResponse, HttpResponseNotFound
 
 TWOPLACES = Decimal(10) ** -2  
 
@@ -16,6 +17,9 @@ def revenue(request):
             start_date = data["start_date"]
             end_date = data["end_date"]
             orders = Order.objects.filter(date__range=(start_date, end_date)).order_by('-date')
+        else:
+            return HttpResponseNotFound('<h1>Page not found</h1>')
+
     else:
         orders = Order.objects.all().order_by('-date')
         dateform = forms.DatePickerForm()
