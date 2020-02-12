@@ -5,9 +5,18 @@ from django.shortcuts import render, get_object_or_404
 from django.test import RequestFactory
 from . import views
 from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address, User, Customer, Order, ShoppingCart, CartItem, CookChangeRequest
-from .forms import DishSearchForm, DishCreateForm, CustomerCreateForm, DishReviewForm, UserEditForm, PhoneEditForm, AddressEditForm, CookCreateForm
+from .forms import *
 
 from django.core.files.uploadedfile import SimpleUploadedFile
+
+class RevenueReportTest(TestCase):
+    def test_revenue_page_get_success(self):
+        response = self.client.get(reverse('admin_revenue'))
+        self.assertEquals(response.status_code,200)
+    def test_revenue_page_post_failure(self):
+        form = DatePickerForm(data={'start_date':'','end_date':''})
+        response = self.client.post(reverse('admin_revenue'))
+        self.assertEquals(response.status_code,404)
 
 class CookHomeTest(TestCase):
     fixtures = ['test_data.json']

@@ -22,11 +22,10 @@ from homeeats_app.views import admin_views
 urlpatterns = [
     path('admin/cook/applications/', admin_views.cookApplications, name='admin_applications'),
     path('admin/cook/changerequests/', admin_views.changerequests, name='admin_changerequests'),
-    # path('admin/cooks/', admin_views.cooks, name='admin_cooks'),
     path('admin/cooks/<int:cook_id>/', admin_views.cook, name='admin_cook'),
-    # path('admin/customers/', admin_views.customers, name='admin_customers'),
     path('admin/customers/<int:customer_id>', admin_views.customer, name='admin_customer'),
     path('admin/reviews/reported/', admin_views.reportedreviews, name='admin_reportedreviews'),
+    path('admin/revenue/', admin_views.revenue, name='admin_revenue'), #url for revenue reports
     path('admin/', admin.site.urls),
     path('', include('homeeats_app.urls.main_urls')),
     path('cook/', include('homeeats_app.urls.cook_urls')),

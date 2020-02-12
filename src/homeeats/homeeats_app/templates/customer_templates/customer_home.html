@@ -258,7 +258,7 @@
                                       <i class="fa fa-plus text-success"></i>
                                   </button>
                                   {% endif %}
-                                  <span id="quantity{{dish.id}}" style="float:right;">
+                                  <span id="quantity{{dish.id}}" style="float:right;margin-right:5px;">
                                       {% for item in customer.shoppingcart.cartitem_set.all %}
                                           {% if item.dish == dish %}
                                               {{item.quantity}}
