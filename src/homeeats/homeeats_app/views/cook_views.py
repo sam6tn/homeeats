@@ -352,6 +352,7 @@ def cook_edit_dish(request, dish_id):
   dish = Dish.objects.get(id=dish_id)
   cook = Cook.objects.get(user_id=request.user.id)
   if dish.cook != cook:
+    print("Wrong cook")
     return HttpResponseRedirect(reverse('cook_manage'))
   if request.method == 'POST':
     form = forms.DishEditForm(request.POST, request.FILES, instance=dish)
@@ -361,17 +362,21 @@ def cook_edit_dish(request, dish_id):
       data = form.cleaned_data
       form.save()
       cook.save()
-      #dish = form.save(commit=False)
-      #dish.cook = cook
-      #dish.save()
+      dish = form.save(commit=False)
+      dish.cook = cook
+      dish.save()
+      messages.add_message(request, messages.SUCCESS, 'Dish was successfully updated!')
       return HttpResponseRedirect(reverse('cook_cuisine_dishes', args=[dish.cuisine_id]))
     else:
-      print("Errors")
-      #messages.add_message(request, messages.ERROR, 'There are fields missing or invalid, try again please')
+      print("Price ",request.POST['price'])
+      if (float(request.POST['price']) < 0.01):
+         messages.add_message(request, messages.ERROR, 'Price must be greater than or equal to $0.01.')
+      if (int(request.POST['cook_time']) < 1):
+         messages.add_message(request, messages.ERROR, 'Cook time must be greater than or equal to 1 minute.')
       return render(request, 'cook_templates/cook_edit_dish.html', {'form': form,'cuisine_id': dish.cuisine_id, 'dish': dish})
   else:
     form = forms.DishEditForm(instance=dish)
-  return render(request, 'cook_templates/cook_edit_dish.html', {'form': form, 'cuisine_id': dish.cuisine_id, 'dish': dish})
+    return render(request, 'cook_templates/cook_edit_dish.html', {'form': form, 'cuisine_id': dish.cuisine_id, 'dish': dish})
 
 def order_history(request):
   cook = Cook.objects.get(user_id=request.user.id)
