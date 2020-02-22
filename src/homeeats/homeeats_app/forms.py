@@ -4,6 +4,7 @@ from django import forms
 from .models import User, Cuisine, Customer, Cook, Dish, Dish_Review, Address
 from phonenumber_field.modelfields import PhoneNumberField
 from django.utils import timezone
+from django.contrib.postgres.forms import SimpleArrayField
 
 def getYear():
     return timezone.localtime(timezone.now()).year
@@ -157,7 +158,8 @@ class DishCreateForm(forms.Form):
     title = forms.CharField(required=True,)
     cuisine = forms.ModelChoiceField(queryset=Cuisine.objects.all(),empty_label='Select a cuisine')
     dish_image = forms.ImageField()
-    ingredients = forms.CharField(required=True,widget=forms.Textarea(attrs={'style':'width=50%;','rows':2}))
+    #ingredients = forms.CharField(required=True,widget=forms.Textarea(attrs={'style':'width=50%;','rows':2}))
+    ingredients = SimpleArrayField(forms.CharField())
     description = forms.CharField(required=True,widget=forms.Textarea(attrs={'style':'width=50%;','rows':3}))
     cook_time = forms.IntegerField(required=True, label='Cook time (in minutes)',min_value=1)
     price = forms.FloatField(required=True,min_value=0.00, widget=forms.NumberInput(attrs={'step':0.01}))
@@ -178,9 +180,18 @@ class DishCreateForm(forms.Form):
 
 
 class DishEditForm(forms.ModelForm):
+    title = forms.CharField(required=True,)
+    cuisine = forms.ModelChoiceField(queryset=Cuisine.objects.all(),empty_label='Select a cuisine')
+    dish_image = forms.ImageField()
+    ingredients = SimpleArrayField(forms.CharField())
+    description = forms.CharField(required=True,widget=forms.Textarea(attrs={'style':'width=50%;','rows':3}))
+    cook_time = forms.IntegerField(required=True, label='Cook time (in minutes)',min_value=1)
+    price = forms.FloatField(required=True,min_value=0.00, widget=forms.NumberInput(attrs={'step':0.01}))
+    vegan = forms.BooleanField(required=False,initial=False)
+    allergies = forms.CharField(required=False)
     class Meta:
         model = Dish
-        fields = ('title', 'description','ingredients', 'dish_image', 'cook_time', 'cuisine', 'vegan', 'allergies')
+        fields = ('title', 'description','ingredients', 'dish_image', 'cook_time', 'price', 'cuisine', 'vegan', 'allergies',)
 
 class DishSearchForm(forms.Form):
     search = forms.CharField(label="Search",max_length=30, required=False, widget=forms.TextInput(attrs={'placeholder':'Search','class':'form-control mr-sm-2'}))

@@ -88,7 +88,7 @@ def create_dish(request):
     if form.is_valid():
       data = form.cleaned_data
       
-      ingredients = data['ingredients'].split(',') #Reformatting the array to work with Postgres format
+      #ingredients = data['ingredients'].split(',') #Reformatting the array to work with Postgres format
       
       #Creating a dish instance to save the form information to
       dish = models.Dish.objects.create(
@@ -96,7 +96,7 @@ def create_dish(request):
         cuisine=data['cuisine'], 
         description=data['description'],
         dish_image=data['dish_image'],
-        ingredients=ingredients,  
+        ingredients=data['ingredients'],  
         price=data['price'], 
         cook_time=data['cook_time'],
         vegan=data['vegan'],
@@ -355,13 +355,20 @@ def cook_edit_dish(request, dish_id):
     return HttpResponseRedirect(reverse('cook_manage'))
   if request.method == 'POST':
     form = forms.DishEditForm(request.POST, request.FILES, instance=dish)
+    print("POST request")
     if form.is_valid():
-      dish = form.save(commit=False)
-      dish.cook = cook
-      dish.save()
+      print("Form is valid")
+      data = form.cleaned_data
+      form.save()
+      cook.save()
+      #dish = form.save(commit=False)
+      #dish.cook = cook
+      #dish.save()
       return HttpResponseRedirect(reverse('cook_cuisine_dishes', args=[dish.cuisine_id]))
     else:
-      messages.add_message(request, messages.ERROR, 'There are fields missing or invalid, try again please')
+      print("Errors")
+      #messages.add_message(request, messages.ERROR, 'There are fields missing or invalid, try again please')
+      return render(request, 'cook_templates/cook_edit_dish.html', {'form': form,'cuisine_id': dish.cuisine_id, 'dish': dish})
   else:
     form = forms.DishEditForm(instance=dish)
   return render(request, 'cook_templates/cook_edit_dish.html', {'form': form, 'cuisine_id': dish.cuisine_id, 'dish': dish})
