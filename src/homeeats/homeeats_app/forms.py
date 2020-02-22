@@ -153,8 +153,33 @@ class CookCreateForm(forms.ModelForm):
             raise forms.ValidationError("Zipcode must be all digits.")
         return zipcode
     
-
 class DishCreateForm(forms.Form):
+    title = forms.CharField(required=True,)
+    #cuisine = forms.ModelChoiceField(queryset=Cuisine.objects.all())
+    description = forms.CharField(required=True)
+    #description = forms.CharField(required=True,widget=forms.Textarea(attrs={'style':'width=50%;','rows':4}))
+    ingredients = forms.CharField()
+    dish_image = forms.ImageField()
+    cook_time = forms.IntegerField(required=True,)
+    cuisine = forms.ModelChoiceField(queryset=Cuisine.objects.all(),empty_label='Select a cuisine')
+    #cook = forms.ModelChoiceField(queryset=Cook.objects.all())
+    allergies = forms.CharField(required=False)
+    price = forms.IntegerField(required=True,)
+    vegan = forms.BooleanField(required=False,initial=False)
+
+    class Meta:
+        model = Dish
+        fields = ['title', 'cuisine','description', 'dish_image','ingredients','price','cook_time','vegan','allergies']
+    
+    def clean_vegan(self):
+        vegan = self.cleaned_data.get('vegan')
+        if vegan == 'on':
+            vegan = True
+        else:
+            vegan = False
+        return vegan
+
+class DishCreate_Form(forms.Form):
     title = forms.CharField(required=True,)
     #cuisine = forms.ModelChoiceField(queryset=Cuisine.objects.all())
     description = forms.CharField(required=True,)
@@ -162,6 +187,7 @@ class DishCreateForm(forms.Form):
     dish_image = forms.ImageField()
     cook_time = forms.IntegerField(required=True,)
     #cook = forms.ModelChoiceField(queryset=Cook.objects.all())
+
 class DishEditForm(forms.ModelForm):
     class Meta:
         model = Dish
@@ -184,7 +210,7 @@ class DishSearchForm(forms.Form):
         required=False)
     cuisine = forms.ChoiceField(
         choices=cuisines, 
-        widget=forms.Select(attrs={'onchange':'submitForm()','class':'custom-select','style':'font-size:10pt;margin-right:10px'}), 
+        widget=forms.Select(attrs={'onchange':'submitForm()','class':'custom-select','style':'font-size:10pt;margin-right:10px',}), 
         required=False)
 
 class DishReviewForm(forms.ModelForm):
@@ -195,7 +221,9 @@ class DishReviewForm(forms.ModelForm):
         #fields = ('dish_rating', 'description')
         fields = ('description',)
 
+'''
 class DishCreateForm(forms.ModelForm):
     class Meta:
         model = Dish
         fields = ('title', 'cuisine', 'description', 'dish_image', 'ingredients', 'cook_time', 'price', 'vegan', 'allergies')
+'''

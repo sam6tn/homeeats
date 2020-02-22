@@ -83,30 +83,35 @@ def single_order_view(request, order_id):
 def create_dish(request):
   cook = get_object_or_404(Cook, user_id=request.user.id)
   if request.method == 'POST':
-      form = forms.DishCreateForm(request.POST, request.FILES)
-      if form.is_valid():
-        data = form.cleaned_data
-        dish = Dish.objects.create(
-          title=data['title'], 
-          cuisine=data['cuisine'], 
-          description=data['description'],
-          dish_image=data['dish_image'],
-          ingredients=data['ingredients'],  
-          price=data['price'], 
-          cook_time=data['cook_time'],
-          vegan=data['vegan'],
-          allergies=data['allergies'],
-          cook=cook
-          )
-        dish.save()
-        objs = Cuisine.objects.filter(cooks__in=[cook])
-        if(data['cuisine'] not in objs): #add cook to cuisine if doesn't already exist
-          data['cuisine'].cooks.add(cook)
+
+    form = forms.DishCreateForm(request.POST, request.FILES)
+    if form.is_valid():
+      data = form.cleaned_data
+      print("XXXXXXXXXXX",str(data['cuisine']))
+      dish = models.Dish.objects.create(
+        title=data['title'], 
+        cuisine=data['cuisine'], 
+        description=data['description'],
+        dish_image=data['dish_image'],
+        ingredients=data['ingredients'],  
+        price=data['price'], 
+        cook_time=data['cook_time'],
+        vegan=data['vegan'],
+        allergies=data['allergies'],
+        cook=cook
+      )
+  
+      dish.save()
+      cook.save()
+      objs = Cuisine.objects.filter(cooks__in=[cook])
+      if(data['cuisine'] not in objs): #add cook to cuisine if doesn't already exist
+        data['cuisine'].cooks.add(cook)
         return HttpResponseRedirect(reverse('cook_manage'))
       else:
         messages.add_message(request, messages.ERROR, 'There are fields missing or invalid, try again please')
         return render(request, 'cook_templates/create_dish.html', {'form': form, 'cook': model_to_dict(cook)})
   else:
+    print("In else statement")
     form = forms.DishCreateForm()
     return render(request, 'cook_templates/create_dish.html', {'form':form, 'cook': model_to_dict(cook)})
 
