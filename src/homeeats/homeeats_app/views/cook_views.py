@@ -87,13 +87,16 @@ def create_dish(request):
     form = forms.DishCreateForm(request.POST, request.FILES)
     if form.is_valid():
       data = form.cleaned_data
-      print("XXXXXXXXXXX",str(data['cuisine']))
+      
+      ingredients = data['ingredients'].split(',') #Reformatting the array to work with Postgres format
+      
+      #Creating a dish instance to save the form information to
       dish = models.Dish.objects.create(
         title=data['title'], 
         cuisine=data['cuisine'], 
         description=data['description'],
         dish_image=data['dish_image'],
-        ingredients=data['ingredients'],  
+        ingredients=ingredients,  
         price=data['price'], 
         cook_time=data['cook_time'],
         vegan=data['vegan'],
@@ -102,19 +105,26 @@ def create_dish(request):
       )
   
       dish.save()
+      
+      #Updating the cooks information to include the added dish
       cook.save()
+      
       objs = Cuisine.objects.filter(cooks__in=[cook])
       if(data['cuisine'] not in objs): #add cook to cuisine if doesn't already exist
         data['cuisine'].cooks.add(cook)
-        return HttpResponseRedirect(reverse('cook_manage'))
-      else:
-        messages.add_message(request, messages.ERROR, 'There are fields missing or invalid, try again please')
-        return render(request, 'cook_templates/create_dish.html', {'form': form, 'cook': model_to_dict(cook)})
+        
+      messages.add_message(request, messages.SUCCESS, 'Dish was successfully created!')
+      return HttpResponseRedirect(reverse('cook_manage'))
+    else:
+      
+      messages.add_message(request, messages.ERROR, 'There are fields missing or invalid, try again please')
+      return render(request, 'cook_templates/create_dish.html', {'form': form, 'cook': model_to_dict(cook)})
+      
   else:
-    print("In else statement")
+    
     form = forms.DishCreateForm()
     return render(request, 'cook_templates/create_dish.html', {'form':form, 'cook': model_to_dict(cook)})
-
+    
 @login_required
 @cook_required
 def delete_dish(request, dish_id):

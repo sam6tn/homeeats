@@ -155,22 +155,19 @@ class CookCreateForm(forms.ModelForm):
     
 class DishCreateForm(forms.Form):
     title = forms.CharField(required=True,)
-    #cuisine = forms.ModelChoiceField(queryset=Cuisine.objects.all())
-    description = forms.CharField(required=True)
-    #description = forms.CharField(required=True,widget=forms.Textarea(attrs={'style':'width=50%;','rows':4}))
-    ingredients = forms.CharField()
-    dish_image = forms.ImageField()
-    cook_time = forms.IntegerField(required=True,)
     cuisine = forms.ModelChoiceField(queryset=Cuisine.objects.all(),empty_label='Select a cuisine')
-    #cook = forms.ModelChoiceField(queryset=Cook.objects.all())
-    allergies = forms.CharField(required=False)
-    price = forms.IntegerField(required=True,)
+    dish_image = forms.ImageField()
+    ingredients = forms.CharField(required=True,widget=forms.Textarea(attrs={'style':'width=50%;','rows':2}))
+    description = forms.CharField(required=True,widget=forms.Textarea(attrs={'style':'width=50%;','rows':3}))
+    cook_time = forms.IntegerField(required=True, label='Cook time (in minutes)',min_value=1)
+    price = forms.FloatField(required=True,min_value=0.00, widget=forms.NumberInput(attrs={'step':0.01}))
     vegan = forms.BooleanField(required=False,initial=False)
+    allergies = forms.CharField(required=False)
 
     class Meta:
         model = Dish
         fields = ['title', 'cuisine','description', 'dish_image','ingredients','price','cook_time','vegan','allergies']
-    
+
     def clean_vegan(self):
         vegan = self.cleaned_data.get('vegan')
         if vegan == 'on':
@@ -179,14 +176,6 @@ class DishCreateForm(forms.Form):
             vegan = False
         return vegan
 
-class DishCreate_Form(forms.Form):
-    title = forms.CharField(required=True,)
-    #cuisine = forms.ModelChoiceField(queryset=Cuisine.objects.all())
-    description = forms.CharField(required=True,)
-    ingredients = forms.CharField()
-    dish_image = forms.ImageField()
-    cook_time = forms.IntegerField(required=True,)
-    #cook = forms.ModelChoiceField(queryset=Cook.objects.all())
 
 class DishEditForm(forms.ModelForm):
     class Meta:
@@ -220,10 +209,3 @@ class DishReviewForm(forms.ModelForm):
         model = Dish_Review
         #fields = ('dish_rating', 'description')
         fields = ('description',)
-
-'''
-class DishCreateForm(forms.ModelForm):
-    class Meta:
-        model = Dish
-        fields = ('title', 'cuisine', 'description', 'dish_image', 'ingredients', 'cook_time', 'price', 'vegan', 'allergies')
-'''
