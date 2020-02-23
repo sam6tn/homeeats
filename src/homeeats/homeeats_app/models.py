@@ -183,3 +183,9 @@ class CookChangeRequest(models.Model):
   city = models.CharField(max_length=60, default="")
   state = models.CharField(max_length=20, default="")
   zipcode = models.CharField(max_length=20, default="")
+
+class OrderMessage(models.Model):
+  user = models.OneToOneField(User, on_delete=models.CASCADE)
+  message = models.CharField(max_length=256)
+  time = models.DateTimeField(default=getOrderDate)
+  order = models.ForeignKey(Order, on_delete=models.CASCADE)
