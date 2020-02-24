@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from .. import models
 from ..models import User
 from .. import forms
-from ..models import Cook, Cuisine, Dish, Order, Customer, Item, Dish_Review, Address, RejectReason, CookChangeRequest, ShoppingCart, CartItem
+from ..models import Cook, Cuisine, Dish, Order, Customer, Item, Dish_Review, Address, RejectReason, CookChangeRequest, ShoppingCart, CartItem, OrderMessage
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.forms import model_to_dict
@@ -61,6 +61,22 @@ def home(request):
 def getvalue(d, key):
     return d.get(key)
 
+#messaging function for the cook
+#gets the user from the request and creates an ordermessage object
+def message(request):
+    if request.method == "POST":
+        message = request.POST["message"]
+        user = request.user
+        order = Order.objects.get(id=request.POST["order_id"])
+
+        orderMessage = OrderMessage.objects.create(
+            user=user,
+            message=message,
+            order=order
+        )
+
+    return HttpResponseRedirect(reverse('single_order_view', args=[order.id]))
+
 @login_required
 @cook_required
 def single_order_view(request, order_id):
@@ -68,13 +84,15 @@ def single_order_view(request, order_id):
   cook = model_to_dict(get_object_or_404(Cook, user_id=request.user.id))
   order = Order.objects.get(id=order_id)
   customer = Customer.objects.get(id=order.customer_id)
+  messages = OrderMessage.objects.filter(order_id=order_id)
   user = customer.user
   context = {
     'user': user,
     'customer': customer,
     'order': order,
     'items': items,
-    'cook': cook
+    'cook': cook,
+    'messages': messages
   }
   return render(request, 'cook_templates/single_order_view.html', context)
 

@@ -549,7 +549,6 @@ class CustomerEditProfileTest(TestCase):
         self.assertEquals(form.errors['phone_number'][0],'Ensure this value has at most 10 characters (it has 15).')
         #print(form.errors['phone_number'][0])
 
-
 class DishRestrictionsTest(TestCase):
     def test_vegan_true(self):
          cook_user = User.objects.create(is_cook=True)

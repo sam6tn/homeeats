@@ -96,6 +96,40 @@
     
     </div>
 
+        {% comment %} This is the part that handles generating the messsages {% endcomment %}
+        <div class="container p-4 bg-white rounded shadow-sm mb-5">
+            {% for message in messages %}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card-body">
+                            <h5 class="card-title">{{message.user.first_name}}</h5>
+                            <p class="card-text">{{message.message}}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="row">
+                <div class="col-lg-12">
+                    <form action="{% url 'cook_message' %}" method="POST">
+                        {% csrf_token %}
+                        <textarea class="form-control" placeholder="Message" name="message" id="message" rows="1"></textarea>
+                        <input type="hidden" id="order_id" name="order_id" value="{{order.id}}">
+                    </form>
+                </div>
+            </div>
+        </div>
+
 </div>
+
+<script>
+    $(document).ready(function(){
+        $('#message').keypress(function(e){
+            if(e.which == 13){
+                e.preventDefault();
+                $('form').submit();
+            }
+        });
+    });
+</script>
 
 {% endblock %}
