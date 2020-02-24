@@ -6,7 +6,7 @@ from ..forms import CustomerCreateForm, DishReviewForm, UserEditForm, AddressEdi
 from .. import forms
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
-from ..models import Dish, Customer, Dish_Review, Cook, Address, ShoppingCart, CartItem, Order, Item
+from ..models import Dish, Customer, Dish_Review, Cook, Address, ShoppingCart, CartItem, Order, Item, OrderMessage
 from .. import models
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
@@ -281,6 +281,22 @@ def toggle_favorite(request):
 
     return JsonResponse(data)
 
+#messaging function for the customer
+#gets the user from the request and creates an ordermessage object
+def message(request):
+    if request.method == "POST":
+        message = request.POST["message"]
+        user = request.user
+        order = Order.objects.get(id=request.POST["order_id"])
+
+        orderMessage = OrderMessage.objects.create(
+            user=user,
+            message=message,
+            order=order
+        )
+
+    return HttpResponseRedirect(reverse('order', args=[order.id]))
+
 
 @login_required
 @customer_required
@@ -396,6 +412,7 @@ def cancel_order(request):
 @customer_required
 def order(request, order_id):
     order = Order.objects.get(id=order_id)
+    messages = OrderMessage.objects.filter(order_id=order_id)
     if request.method == "POST":
         form = DishReviewForm(request.POST)
         if form.is_valid():
@@ -435,7 +452,7 @@ def order(request, order_id):
         customer = Customer.objects.get(user_id=request.user.id)
         shopping_cart = ShoppingCart.objects.get(customer=customer)
         cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
-        return render(request, 'customer_templates/order.html', {'order': order, 'form': form, 'reviewed_items': reviewed_items, 'customer': customer, 'cart_items': cart_items})
+        return render(request, 'customer_templates/order.html', {'order': order, 'form': form, 'reviewed_items': reviewed_items, 'customer': customer, 'cart_items': cart_items, 'messages': messages})
 
 
 @login_required
