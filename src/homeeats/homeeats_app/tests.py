@@ -741,3 +741,29 @@ class InvalidDishFormFields(TestCase):
     def test_invalid_vegan(self):
         dishForm = DishCreateForm({'vegan': 123})
         self.assertFalse(dishForm.is_valid())
+
+class CookViewsTest(TestCase):
+    fixtures = ['real_data.json']
+    def test_cook_offline_clears_shopping_cart(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        self.client.get(reverse('available'))
+        self.client.logout()
+        self.client.login(username='test@customer.com', password='capstone')
+        self.client.post(reverse('addtocart'), data={'dish_id': 1})
+        self.client.logout()
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        self.client.get(reverse('available'))
+        self.assertEqual(0.00, ShoppingCart.objects.get(customer_id=2).total_after_tip)
+    def test_cook_change_request_creates_change_request_object(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        self.client.post(reverse('requestchange'), data={'kitchen_license': 'testingtesting', 'phone_number': '7037862000', 'street_address': '1815 Jefferson Park Ave', 'city': 'Charlottesville', 'state': 'VA', 'zipcode': '22903'})
+        self.assertEqual(CookChangeRequest.objects.get(kitchen_license='testingtesting').phone_number, '7037862000')
+
+class MainViewsTests(TestCase):
+    fixtures = ['real_data.json']
+    def test_custom_user_login_cook(self):
+        response = self.client.post(reverse('login'), data={'username':'ramsey@ramsey.com', 'password':'ramseyramsey'})
+        self.assertEqual(response.url, '/cook/home')
+    def test_custom_user_login_customer(self):
+        response = self.client.post(reverse('login'), data={'username':'test@customer.com', 'password':'capstone'})
+        self.assertEqual(response.url, '/customer/home')
