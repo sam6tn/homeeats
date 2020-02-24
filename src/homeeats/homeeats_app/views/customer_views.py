@@ -707,6 +707,7 @@ def favorites(request):
         'customer': customer,
         'dishes': favorite_dishes
     }
+
     return render(request, 'customer_templates/favorites.html', context)
 
 

@@ -9,6 +9,18 @@ from .forms import *
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 
+# class CustomerHomeSearchTest(TestCase):
+#     def test_search_with_sort_by_rating(self):
+
+class CustomerFavoritesTest(TestCase):
+    fixtures = ['test_data2.json']
+    def test_favorites_page_loads(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        response = self.client.get(reverse('favorites'))
+        self.assertEquals(response.status_code,200)
+
+
+
 class RevenueReportTest(TestCase):
     def test_revenue_page_get_success(self):
         response = self.client.get(reverse('admin_revenue'))
@@ -234,6 +246,7 @@ class CustomerCartTest(TestCase):
         response = self.client.post(reverse('addtocart'), {})
         self.assertEquals(response.status_code, 302)
     def test_addtocart_returns(self):
+        self.client.login(username='anki@anki.com', password='ankith')
         response = self.client.post(reverse('addtocart'), {'dish_id':1})
         self.assertEqual(str(response.content, encoding='utf8'),'')
     def test_removefromcart_redirects(self):
