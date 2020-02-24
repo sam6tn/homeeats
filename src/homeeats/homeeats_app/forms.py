@@ -4,6 +4,7 @@ from django import forms
 from .models import User, Cuisine, Customer, Cook, Dish, Dish_Review, Address
 from phonenumber_field.modelfields import PhoneNumberField
 from django.utils import timezone
+from django.contrib.postgres.forms import SimpleArrayField
 
 def getYear():
     return timezone.localtime(timezone.now()).year
@@ -153,19 +154,56 @@ class CookCreateForm(forms.ModelForm):
             raise forms.ValidationError("Zipcode must be all digits.")
         return zipcode
     
-
 class DishCreateForm(forms.Form):
     title = forms.CharField(required=True,)
-    #cuisine = forms.ModelChoiceField(queryset=Cuisine.objects.all())
-    description = forms.CharField(required=True,)
-    ingredients = forms.CharField()
+    cuisine = forms.ModelChoiceField(queryset=Cuisine.objects.all(),empty_label='Select a cuisine')
     dish_image = forms.ImageField()
-    cook_time = forms.IntegerField(required=True,)
-    #cook = forms.ModelChoiceField(queryset=Cook.objects.all())
-class DishEditForm(forms.ModelForm):
+    #ingredients = forms.CharField(required=True,widget=forms.Textarea(attrs={'style':'width=50%;','rows':2}))
+    ingredients = SimpleArrayField(forms.CharField())
+    description = forms.CharField(required=True,widget=forms.Textarea(attrs={'style':'width=50%;','rows':3}))
+    cook_time = forms.IntegerField(required=True, label='Cook time (in minutes)',min_value=1)
+    price = forms.FloatField(required=True,min_value=0.00, widget=forms.NumberInput(attrs={'step':0.01}))
+    vegan = forms.BooleanField(required=False,initial=False)
+    allergies = forms.CharField(required=False)
+
     class Meta:
         model = Dish
-        fields = ('title', 'description','ingredients', 'dish_image', 'cook_time', 'cuisine', 'vegan', 'allergies')
+        fields = ['title', 'cuisine','description', 'dish_image','ingredients','price','cook_time','vegan','allergies']
+
+    def clean_vegan(self):
+        vegan = self.cleaned_data.get('vegan')
+        if vegan == 'on':
+            vegan = True
+        else:
+            vegan = False
+        return vegan
+
+
+class DishEditForm(forms.ModelForm):
+    title = forms.CharField(required=True,)
+    cuisine = forms.ModelChoiceField(queryset=Cuisine.objects.all(),empty_label='Select a cuisine')
+    dish_image = forms.ImageField()
+    ingredients = SimpleArrayField(forms.CharField())
+    description = forms.CharField(required=True,widget=forms.Textarea(attrs={'style':'width=50%;','rows':3}))
+    cook_time = forms.IntegerField(required=True, label='Cook time (in minutes)',min_value=1)
+    price = forms.FloatField(required=True,min_value=0.00, widget=forms.NumberInput(attrs={'step':0.01}))
+    vegan = forms.BooleanField(required=False,initial=False)
+    allergies = forms.CharField(required=False)
+    class Meta:
+        model = Dish
+        fields = ('title', 'description','ingredients', 'dish_image', 'cook_time', 'price', 'cuisine', 'vegan', 'allergies',)
+    
+    def clean_price(self):
+        price = self.cleaned_data.get('price')
+        if (float(price) < 0.01):
+            raise forms.ValidationError("Price must be greater than or equal to $0.01.")
+        return price
+    
+    def clean_cook_time(self):
+        cook_time = self.cleaned_data.get('cook_time')
+        if (int(cook_time) < 1):
+            raise forms.ValidationError("Cook time must be greater than or equal to 1 minute.")
+        return cook_time
 
 class DishSearchForm(forms.Form):
     search = forms.CharField(label="Search",max_length=30, required=False, widget=forms.TextInput(attrs={'placeholder':'Search','class':'form-control mr-sm-2'}))
@@ -184,7 +222,7 @@ class DishSearchForm(forms.Form):
         required=False)
     cuisine = forms.ChoiceField(
         choices=cuisines, 
-        widget=forms.Select(attrs={'onchange':'submitForm()','class':'custom-select','style':'font-size:10pt;margin-right:10px'}), 
+        widget=forms.Select(attrs={'onchange':'submitForm()','class':'custom-select','style':'font-size:10pt;margin-right:10px',}), 
         required=False)
 
 class DishReviewForm(forms.ModelForm):
@@ -194,8 +232,3 @@ class DishReviewForm(forms.ModelForm):
         model = Dish_Review
         #fields = ('dish_rating', 'description')
         fields = ('description',)
-
-class DishCreateForm(forms.ModelForm):
-    class Meta:
-        model = Dish
-        fields = ('title', 'cuisine', 'description', 'dish_image', 'ingredients', 'cook_time', 'price', 'vegan', 'allergies')

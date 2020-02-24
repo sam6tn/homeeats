@@ -83,33 +83,46 @@ def single_order_view(request, order_id):
 def create_dish(request):
   cook = get_object_or_404(Cook, user_id=request.user.id)
   if request.method == 'POST':
-      form = forms.DishCreateForm(request.POST, request.FILES)
-      if form.is_valid():
-        data = form.cleaned_data
-        dish = Dish.objects.create(
-          title=data['title'], 
-          cuisine=data['cuisine'], 
-          description=data['description'],
-          dish_image=data['dish_image'],
-          ingredients=data['ingredients'],  
-          price=data['price'], 
-          cook_time=data['cook_time'],
-          vegan=data['vegan'],
-          allergies=data['allergies'],
-          cook=cook
-          )
-        dish.save()
-        objs = Cuisine.objects.filter(cooks__in=[cook])
-        if(data['cuisine'] not in objs): #add cook to cuisine if doesn't already exist
-          data['cuisine'].cooks.add(cook)
-        return HttpResponseRedirect(reverse('cook_manage'))
-      else:
-        messages.add_message(request, messages.ERROR, 'There are fields missing or invalid, try again please')
-        return render(request, 'cook_templates/create_dish.html', {'form': form, 'cook': model_to_dict(cook)})
+
+    form = forms.DishCreateForm(request.POST, request.FILES)
+    if form.is_valid():
+      data = form.cleaned_data
+      
+      #Creating a dish instance to save the form information to
+      dish = models.Dish.objects.create(
+        title=data['title'], 
+        cuisine=data['cuisine'], 
+        description=data['description'],
+        dish_image=data['dish_image'],
+        ingredients=data['ingredients'],  
+        price=data['price'], 
+        cook_time=data['cook_time'],
+        vegan=data['vegan'],
+        allergies=data['allergies'],
+        cook=cook
+      )
+  
+      dish.save()
+      
+      #Updating the cooks information to include the added dish
+      cook.save()
+      
+      objs = Cuisine.objects.filter(cooks__in=[cook])
+      if(data['cuisine'] not in objs): #add cook to cuisine if doesn't already exist
+        data['cuisine'].cooks.add(cook)
+        
+      messages.add_message(request, messages.SUCCESS, 'Dish was successfully created!')
+      return HttpResponseRedirect(reverse('cook_manage'))
+    else:
+      
+      messages.add_message(request, messages.ERROR, 'There are fields missing or invalid, try again please')
+      return render(request, 'cook_templates/create_dish.html', {'form': form, 'cook': model_to_dict(cook)})
+      
   else:
+    
     form = forms.DishCreateForm()
     return render(request, 'cook_templates/create_dish.html', {'form':form, 'cook': model_to_dict(cook)})
-
+    
 @login_required
 @cook_required
 def delete_dish(request, dish_id):
@@ -337,19 +350,35 @@ def cook_edit_dish(request, dish_id):
   dish = Dish.objects.get(id=dish_id)
   cook = Cook.objects.get(user_id=request.user.id)
   if dish.cook != cook:
+    print("Wrong cook")
     return HttpResponseRedirect(reverse('cook_manage'))
   if request.method == 'POST':
     form = forms.DishEditForm(request.POST, request.FILES, instance=dish)
+    print("POST request")
     if form.is_valid():
+      print("Form is valid")
+      data = form.cleaned_data
+
+      #Updatesthe dish and updates the cook information in the database
+      form.save()
+      cook.save()
       dish = form.save(commit=False)
       dish.cook = cook
       dish.save()
+      messages.add_message(request, messages.SUCCESS, 'Dish was successfully updated!')
       return HttpResponseRedirect(reverse('cook_cuisine_dishes', args=[dish.cuisine_id]))
     else:
-      messages.add_message(request, messages.ERROR, 'There are fields missing or invalid, try again please')
+      # Display an error message if the price is below 0.01
+      if (float(request.POST['price']) < 0.01):
+         messages.add_message(request, messages.ERROR, 'Price must be greater than or equal to $0.01.')
+      
+      # Display an error message if the cook time is below 1 minute
+      if (int(request.POST['cook_time']) < 1):
+         messages.add_message(request, messages.ERROR, 'Cook time must be greater than or equal to 1 minute.')
+      return render(request, 'cook_templates/cook_edit_dish.html', {'form': form,'cuisine_id': dish.cuisine_id, 'dish': dish})
   else:
     form = forms.DishEditForm(instance=dish)
-  return render(request, 'cook_templates/cook_edit_dish.html', {'form': form, 'cuisine_id': dish.cuisine_id, 'dish': dish})
+    return render(request, 'cook_templates/cook_edit_dish.html', {'form': form, 'cuisine_id': dish.cuisine_id, 'dish': dish})
 
 def order_history(request):
   cook = Cook.objects.get(user_id=request.user.id)
