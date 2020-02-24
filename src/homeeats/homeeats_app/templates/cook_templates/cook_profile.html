@@ -22,57 +22,84 @@
   </ul>
   {% endif %}
 
-  <div style="text-align: center;width:27%;margin: 20px auto;">
+<!-- 
+  New Table format for cook profile page
+  Pulling icons (stored on the server) for cleaner output
+  --> 
+  <div style="text-align: center;width:27%;margin: 10px auto;">
     <h2>My Account</h2>
-      <img src="{{ user.cook.government_id.url }}">
+     <table class="table table-striped table-dark">
+      <tbody>
+      <tr>
+
+      <!-- Pulling government issued drivers license that is uploaded upon account creation--> 
+      <td colspan="2"><img src="{{ user.cook.government_id.url }}"></td>
+      </tr>
+      <tr>
 
       <div style="margin:10px;text-align: left;">
-        <b>First Name:</b>
+       <!-- Cook Name-->
+       <td><img src="/media/profile.png" width="60" height="60"></td>
         <div style="float:right;">
-          {{ user.first_name }}
-        </div>
-      </div>
-      <div style="margin:10px;text-align: left;">
-        <b>Last Name:</b>
-        <div style="float:right;">
-          {{ user.last_name }}
-        </div>
-      </div>
-      <div style="margin:10px;text-align: left;">
-        <b>Kitchen License:</b>
-        <div style="float:right;">
-          {{ cook.kitchen_license }}
-        </div>
-      </div>
-      <div style="margin:10px;text-align: left;">
-        <b>Email:</b>
-        <div style="float:right;">
-          {{ user.username }}
-        </div>
-      </div>
-      <div style="margin:10px;text-align: left;">
-        <b>Phone Number:</b>
-        <div style="float:right;">
-          {{ cook.phone_number }}
-        </div>
-      </div>
-      <div style="margin:10px;text-align: left;">
-        <b>Street Name:</b>
-        <div style="float:right;">
-          {{ address.street_name }}
-        </div>
-      </div>
-      <div style="margin:10px;text-align: left;">
-        <b>City, State, Zip</b>
-        <div style="float:right;">
-          {{ address.city }}, {{address.state}}, {{address.zipcode}}
+          <td>{{ user.first_name }} {{ user.last_name }}</td>
         </div>
       </div>
 
+    </tr>
+    <tr>
+        <!-- Cook Email-->
+        <td><img src="/media/email.png" width="60" height="60"></td>
+        <div style="float:right;">
+          <font size ="25"><td>{{ user.username }}</td></font>
+        </div>
+
+    </tr>
+    <tr>
+      <!-- Cook Phone Number-->
+      <div style="margin:10px;text-align: left;">
+        
+        <td><img src="/media/phone_icon.png" width="60" height="60"></td>
+        <div style="float:right;">
+          <td>{{ cook.phone_number }}</td>
+        </div>
+      </div>
+
+    </tr>
+    <tr>
+      <!-- Cook Location-->
+      <div style="margin:40px;text-align: left;">
+        <td><img src="/media/location.png" width="65" height="65"></td>
+        <div style="float:right;">
+          <td>{{ address.street_name }}, {{ address.city }}, {{address.state}}, {{address.zipcode}}</td>
+        </div>
+      </div>
+
+    </tr>
+    <tr>
+      <!-- Cook Kitchen License-->
+      <div style="margin:10px;text-align: left;">
+        <td><img src="/media/license.jfif" width="60" height="60"></td>
+        <div style="float:right;">
+          <td>{{ cook.kitchen_license }}</td>
+        </div>
+      </div>
+    </tr>
+    <tr>
+
+      <div style="margin:10px;text-align: left;">
+        <td>Bulk Ordering</td>
+        <div style="float:right;">
+          <td>Available</td>
+        </div>
+      </div>
+    </tr>
+    <tr>
       <form action="{% url 'cookeditprofile' %}" method="POST">
         {% csrf_token %}
-        <input type="submit" value="Edit Profile" class="btn btn-primary">
+        <td colspan = "2"> <div align="center"> <input type="submit" value="Edit Profile" class="btn btn-primary"> </div> </td>
       </form>
+    </tr>
+</tbody>
   </div>
 
   {% endblock %}

@@ -4,10 +4,23 @@ import json
 from django.shortcuts import render, get_object_or_404
 from django.test import RequestFactory
 from . import views
+from .views import *
 from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address, User, Customer, Order, ShoppingCart, CartItem, CookChangeRequest
 from .forms import *
 
 from django.core.files.uploadedfile import SimpleUploadedFile
+
+# class CustomerHomeSearchTest(TestCase):
+#     def test_search_with_sort_by_rating(self):
+
+class CustomerFavoritesTest(TestCase):
+    fixtures = ['test_data2.json']
+    def test_favorites_page_loads(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        response = self.client.get(reverse('favorites'))
+        self.assertEquals(response.status_code,200)
+
+
 
 class RevenueReportTest(TestCase):
     def test_revenue_page_get_success(self):
@@ -91,6 +104,19 @@ class CookManageTest(TestCase):
        response = self.client.get(reverse('delete_dish', args=[2]))
        self.assertEquals(response.status_code, 302)
        self.assertEquals(response.url, "/cook/cuisine/1/dishes")
+    
+    #Tests that the editing a dish page correctly redirects
+    def test_edit_dish_redirect_to_cook_cuisine_dishes(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        response = self.client.get(reverse('cook_edit_dish',args=[2]))
+        self.assertEquals(response.status_code,200)
+    
+    #Tests that the adding to a dish page correctly redirects
+    def test_create_dish_redirect_to_cook_cuisine_dishes(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        response = self.client.get(reverse('create_dish'))
+        self.assertEquals(response.status_code,200)
+    
 
 class CustomerCheckoutTest(TestCase):
     def test_checkout_access(self):
@@ -234,6 +260,7 @@ class CustomerCartTest(TestCase):
         response = self.client.post(reverse('addtocart'), {})
         self.assertEquals(response.status_code, 302)
     def test_addtocart_returns(self):
+        self.client.login(username='anki@anki.com', password='ankith')
         response = self.client.post(reverse('addtocart'), {'dish_id':1})
         self.assertEqual(str(response.content, encoding='utf8'),'')
     def test_removefromcart_redirects(self):
@@ -522,7 +549,6 @@ class CustomerEditProfileTest(TestCase):
         self.assertEquals(form.errors['phone_number'][0],'Ensure this value has at most 10 characters (it has 15).')
         #print(form.errors['phone_number'][0])
 
-
 class DishRestrictionsTest(TestCase):
     def test_vegan_true(self):
          cook_user = User.objects.create(is_cook=True)
@@ -674,7 +700,12 @@ class CookChangeRequestTest(TestCase):
         cook = Cook.objects.create(user=cook_user)
         cook_change_request = CookChangeRequest(cook=cook, city='Ashburn')
         self.assertEqual(cook_change_request.city, 'Ashburn')
-
+    def test_zip(self):
+        cook_user= User.objects.create(username="cook_user", is_cook=True)
+        cook = Cook.objects.create(user=cook_user)
+        cook_change_request = CookChangeRequest(cook=cook, zipcode='22903')
+        self.assertEqual(cook_change_request.zipcode, '22903')
+        
 class InvalidDishCreateFormTest(TestCase):
     def test_invalid_vegan(self):
         form = DishCreateForm({'vegan': '123'})

@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Coverage report</title>
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <script type="text/javascript" src="jquery.ba-throttle-debounce.min.js"></script>
+    <script type="text/javascript" src="jquery.tablesorter.min.js"></script>
+    <script type="text/javascript" src="jquery.hotkeys.js"></script>
+    <script type="text/javascript" src="coverage_html.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(coverage.index_ready);
+    </script>
+</head>
+<body class="indexfile">
+<div id="header">
+    <div class="content">
+        <h1>Coverage report:
+            <span class="pc_cov">70%</span>
+        </h1>
+        <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
+        <form id="filter_container">
+            <input id="filter" type="text" value="" placeholder="filter..." />
+        </form>
+    </div>
+</div>
+<div class="help_panel">
+    <img id="panel_icon" src="keybd_open.png" alt="Hide keyboard shortcuts" />
+    <p class="legend">Hot-keys on this page</p>
+    <div>
+    <p class="keyhelp">
+        <span class="key">n</span>
+        <span class="key">s</span>
+        <span class="key">m</span>
+        <span class="key">x</span>
+        <span class="key">c</span> &nbsp; change column sorting
+    </p>
+    </div>
+</div>
+<div id="index">
+    <table class="index">
+        <thead>
+            <tr class="tablehead" title="Click to sort">
+                <th class="name left headerSortDown shortkey_n">Module</th>
+                <th class="shortkey_s">statements</th>
+                <th class="shortkey_m">missing</th>
+                <th class="shortkey_x">excluded</th>
+                <th class="right shortkey_c">coverage</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr class="total">
+                <td class="name left">Total</td>
+                <td>2375</td>
+                <td>713</td>
+                <td>0</td>
+                <td class="right" data-ratio="1662 2375">70%</td>
+            </tr>
+        </tfoot>
+        <tbody>
+            <tr class="file">
+                <td class="name left"><a href="homeeats___init___py.html">homeeats/__init__.py</a></td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 0">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_settings_py.html">homeeats/settings.py</a></td>
+                <td>31</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="31 31">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_urls_py.html">homeeats/urls.py</a></td>
+                <td>6</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="6 6">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_wsgi_py.html">homeeats/wsgi.py</a></td>
+                <td>4</td>
+                <td>4</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 4">0%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app___init___py.html">homeeats_app/__init__.py</a></td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 0">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_admin_py.html">homeeats_app/admin.py</a></td>
+                <td>54</td>
+                <td>12</td>
+                <td>0</td>
+                <td class="right" data-ratio="42 54">78%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_apps_py.html">homeeats_app/apps.py</a></td>
+                <td>3</td>
+                <td>3</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 3">0%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_decorators_py.html">homeeats_app/decorators.py</a></td>
+                <td>12</td>
+                <td>2</td>
+                <td>0</td>
+                <td class="right" data-ratio="10 12">83%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_forms_py.html">homeeats_app/forms.py</a></td>
+                <td>161</td>
+                <td>14</td>
+                <td>0</td>
+                <td class="right" data-ratio="147 161">91%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_managers_py.html">homeeats_app/managers.py</a></td>
+                <td>20</td>
+                <td>15</td>
+                <td>0</td>
+                <td class="right" data-ratio="5 20">25%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0001_initial_py.html">homeeats_app/migrations/0001_initial.py</a></td>
+                <td>12</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="12 12">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0002_auto_20191031_2021_py.html">homeeats_app/migrations/0002_auto_20191031_2021.py</a></td>
+                <td>5</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="5 5">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0003_auto_20191104_2036_py.html">homeeats_app/migrations/0003_auto_20191104_2036.py</a></td>
+                <td>5</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="5 5">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0004_cook_delivery_distance_miles_py.html">homeeats_app/migrations/0004_cook_delivery_distance_miles.py</a></td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="4 4">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0005_address_is_cook_address_py.html">homeeats_app/migrations/0005_address_is_cook_address.py</a></td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="4 4">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0006_dish_rating_py.html">homeeats_app/migrations/0006_dish_rating.py</a></td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="4 4">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0007_auto_20191110_2323_py.html">homeeats_app/migrations/0007_auto_20191110_2323.py</a></td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="4 4">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0008_cuisine_flag_py.html">homeeats_app/migrations/0008_cuisine_flag.py</a></td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="4 4">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0009_cartitems_shoppingcart_py.html">homeeats_app/migrations/0009_cartitems_shoppingcart.py</a></td>
+                <td>5</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="5 5">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0010_auto_20191118_0433_py.html">homeeats_app/migrations/0010_auto_20191118_0433.py</a></td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="4 4">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0011_auto_20191118_0453_py.html">homeeats_app/migrations/0011_auto_20191118_0453.py</a></td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="4 4">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0012_auto_20191118_0507_py.html">homeeats_app/migrations/0012_auto_20191118_0507.py</a></td>
+                <td>5</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="5 5">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0013_dish_review_report_reason_py.html">homeeats_app/migrations/0013_dish_review_report_reason.py</a></td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="4 4">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0014_item_review_py.html">homeeats_app/migrations/0014_item_review.py</a></td>
+                <td>5</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="5 5">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0015_dish_cook_disabled_py.html">homeeats_app/migrations/0015_dish_cook_disabled.py</a></td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="4 4">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0016_auto_20191123_1803_py.html">homeeats_app/migrations/0016_auto_20191123_1803.py</a></td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="4 4">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0017_auto_20191126_2215_py.html">homeeats_app/migrations/0017_auto_20191126_2215.py</a></td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="4 4">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0018_remove_order_delivery_fee_py.html">homeeats_app/migrations/0018_remove_order_delivery_fee.py</a></td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="4 4">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0019_shoppingcart_item_subtotal_py.html">homeeats_app/migrations/0019_shoppingcart_item_subtotal.py</a></td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="4 4">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0020_address_current_customer_address_py.html">homeeats_app/migrations/0020_address_current_customer_address.py</a></td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="4 4">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0021_shoppingcart_tax_py.html">homeeats_app/migrations/0021_shoppingcart_tax.py</a></td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="4 4">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0022_order_pending_deadline_py.html">homeeats_app/migrations/0022_order_pending_deadline.py</a></td>
+                <td>5</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="5 5">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0023_order_estimated_arrival_time_py.html">homeeats_app/migrations/0023_order_estimated_arrival_time.py</a></td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="4 4">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0024_order_actual_arrival_time_py.html">homeeats_app/migrations/0024_order_actual_arrival_time.py</a></td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="4 4">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0025_auto_20191204_1959_py.html">homeeats_app/migrations/0025_auto_20191204_1959.py</a></td>
+                <td>5</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="5 5">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0026_auto_20191204_2114_py.html">homeeats_app/migrations/0026_auto_20191204_2114.py</a></td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="4 4">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0027_auto_20191204_2147_py.html">homeeats_app/migrations/0027_auto_20191204_2147.py</a></td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="4 4">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0028_auto_20191204_1944_py.html">homeeats_app/migrations/0028_auto_20191204_1944.py</a></td>
+                <td>5</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="5 5">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0029_auto_20191204_1951_py.html">homeeats_app/migrations/0029_auto_20191204_1951.py</a></td>
+                <td>5</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="5 5">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0030_shoppingcart_special_requests_py.html">homeeats_app/migrations/0030_shoppingcart_special_requests.py</a></td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="4 4">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0031_auto_20191205_1448_py.html">homeeats_app/migrations/0031_auto_20191205_1448.py</a></td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="4 4">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0032_cook_government_id_py.html">homeeats_app/migrations/0032_cook_government_id.py</a></td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="4 4">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0033_cookchangerequest_py.html">homeeats_app/migrations/0033_cookchangerequest.py</a></td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="4 4">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0034_cookchangerequest_cook_py.html">homeeats_app/migrations/0034_cookchangerequest_cook.py</a></td>
+                <td>5</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="5 5">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0035_auto_20191206_2256_py.html">homeeats_app/migrations/0035_auto_20191206_2256.py</a></td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="4 4">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0036_auto_20191208_1754_py.html">homeeats_app/migrations/0036_auto_20191208_1754.py</a></td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="4 4">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0037_auto_20191208_1759_py.html">homeeats_app/migrations/0037_auto_20191208_1759.py</a></td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="4 4">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0038_order_requested_delivery_time_py.html">homeeats_app/migrations/0038_order_requested_delivery_time.py</a></td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="4 4">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0039_shoppingcart_requested_delivery_time_py.html">homeeats_app/migrations/0039_shoppingcart_requested_delivery_time.py</a></td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="4 4">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations_0040_auto_20200223_1642_py.html">homeeats_app/migrations/0040_auto_20200223_1642.py</a></td>
+                <td>7</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="7 7">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_migrations___init___py.html">homeeats_app/migrations/__init__.py</a></td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 0">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_models_py.html">homeeats_app/models.py</a></td>
+                <td>153</td>
+                <td>5</td>
+                <td>0</td>
+                <td class="right" data-ratio="148 153">97%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_tests_py.html">homeeats_app/tests.py</a></td>
+                <td>606</td>
+                <td>13</td>
+                <td>0</td>
+                <td class="right" data-ratio="593 606">98%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_urls_py.html">homeeats_app/urls.py</a></td>
+                <td>2</td>
+                <td>2</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 2">0%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_urls___init___py.html">homeeats_app/urls/__init__.py</a></td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 0">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_urls_cook_urls_py.html">homeeats_app/urls/cook_urls.py</a></td>
+                <td>3</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="3 3">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_urls_customer_urls_py.html">homeeats_app/urls/customer_urls.py</a></td>
+                <td>3</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="3 3">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_urls_main_urls_py.html">homeeats_app/urls/main_urls.py</a></td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="4 4">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_views_py.html">homeeats_app/views.py</a></td>
+                <td>3</td>
+                <td>3</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 3">0%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_views___init___py.html">homeeats_app/views/__init__.py</a></td>
+                <td>1</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="1 1">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_views_admin_views_py.html">homeeats_app/views/admin_views.py</a></td>
+                <td>112</td>
+                <td>71</td>
+                <td>0</td>
+                <td class="right" data-ratio="41 112">37%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_views_cook_views_py.html">homeeats_app/views/cook_views.py</a></td>
+                <td>344</td>
+                <td>136</td>
+                <td>0</td>
+                <td class="right" data-ratio="208 344">60%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_views_customer_views_py.html">homeeats_app/views/customer_views.py</a></td>
+                <td>505</td>
+                <td>358</td>
+                <td>0</td>
+                <td class="right" data-ratio="147 505">29%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="homeeats_app_views_main_views_py.html">homeeats_app/views/main_views.py</a></td>
+                <td>155</td>
+                <td>73</td>
+                <td>0</td>
+                <td class="right" data-ratio="82 155">53%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="manage_py.html">manage.py</a></td>
+                <td>12</td>
+                <td>2</td>
+                <td>0</td>
+                <td class="right" data-ratio="10 12">83%</td>
+            </tr>
+        </tbody>
+    </table>
+    <p id="no_rows">
+        No items found using the specified filter.
+    </p>
+</div>
+<div id="footer">
+    <div class="content">
+        <p>
+            <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.0.3</a>,
+            created at 2020-02-23 20:03
+        </p>
+    </div>
+</div>
+</body>
+</html>

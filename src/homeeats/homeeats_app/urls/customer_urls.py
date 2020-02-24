@@ -16,6 +16,7 @@ urlpatterns = [
   path('cancelorder/', customer_views.cancel_order, name="cancel_order"),
   path('favorites/', customer_views.favorites, name='favorites'),
   path('togglefav/', customer_views.toggle_favorite, name='togglefav'),
+  path('message/', customer_views.message, name='message'),
   path('myaccount/',customer_views.myaccount, name = 'myaccount'), #customer profile page
   path('change_current_address/<str:address_id>', customer_views.change_current_address, name='change_current_address'),
   path('delete_address/<str:address_id>', customer_views.delete_address, name='delete_address')
