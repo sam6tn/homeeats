@@ -4,6 +4,7 @@ import json
 from django.shortcuts import render, get_object_or_404
 from django.test import RequestFactory
 from . import views
+from .views import *
 from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address, User, Customer, Order, ShoppingCart, CartItem, CookChangeRequest
 from .forms import *
 
@@ -91,6 +92,17 @@ class CookManageTest(TestCase):
        response = self.client.get(reverse('delete_dish', args=[2]))
        self.assertEquals(response.status_code, 302)
        self.assertEquals(response.url, "/cook/cuisine/1/dishes")
+    
+    def test_edit_dish_redirect_to_cook_cuisine_dishes(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        response = self.client.get(reverse('cook_edit_dish',args=[2]))
+        self.assertEquals(response.status_code,200)
+    
+    def test_create_dish_redirect_to_cook_cuisine_dishes(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        response = self.client.get(reverse('create_dish'))
+        self.assertEquals(response.status_code,200)
+    
 
 class CustomerCheckoutTest(TestCase):
     def test_checkout_access(self):
@@ -741,3 +753,13 @@ class InvalidDishFormFields(TestCase):
     def test_invalid_vegan(self):
         dishForm = DishCreateForm({'vegan': 123})
         self.assertFalse(dishForm.is_valid())
+
+'''
+class DishFormRedirect(TestCase):
+    fixtures = ['test_data.json']
+    def setUp(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+    
+    def test_dish_manage_view(self):
+'''
+
