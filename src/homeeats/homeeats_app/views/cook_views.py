@@ -179,9 +179,9 @@ def available(request):
     cook.online = False
     cook.save()
     shopping_carts = ShoppingCart.objects.filter(cook=cook)
-    for cart in shopping_carts:
-      for item in cart.cartitem_set.all():
-        item.delete()
+    for cart in shopping_carts: #have to delete item from all shopping carts 
+      for item in cart.cartitem_set.all(): # we know all the items are going to be from same cook
+        item.delete() #so delete all of them
       cart.total_before_tip = 0
       cart.item_subtotal = 0
       cart.tax = 0
