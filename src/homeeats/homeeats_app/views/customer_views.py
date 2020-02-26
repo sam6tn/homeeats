@@ -493,6 +493,8 @@ def checkout(request):
         cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
         address = Address.objects.get(
             customer=customer, current_customer_address=True)
+        cook_share = shopping_cart.item_subtotal * .2
+        homeeats_share = shopping_cart.item_subtotal - cook_share
         order = Order.objects.create(  # create new pending order
             name=order_name,
             cook=order_cook,
@@ -500,6 +502,8 @@ def checkout(request):
             status='p',
             total=shopping_cart.total_after_tip,
             item_subtotal=shopping_cart.item_subtotal,
+            cook_share = cook_share,
+            homeeats_share = homeeats_share,
             tax=shopping_cart.tax,
             delivery_fee=order_cook.delivery_fee,
             tip=shopping_cart.tip,
