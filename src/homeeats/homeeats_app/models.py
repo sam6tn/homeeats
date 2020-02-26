@@ -113,6 +113,8 @@ class Order(models.Model):
   customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
   cook = models.ForeignKey(Cook, on_delete=models.CASCADE)
   item_subtotal = models.DecimalField(default=0, decimal_places=2, max_digits=6)
+  homeeats_share = models.DecimalField(default=0, decimal_places=2, max_digits=6)
+  cook_share = models.DecimalField(default=0, decimal_places=2, max_digits=6)
   tax = models.DecimalField(default=0, decimal_places=2, max_digits=6)
   tip = models.DecimalField(default=0, decimal_places=2, max_digits=6)
   delivery_fee = models.DecimalField(default=0, decimal_places=2, max_digits=6)
