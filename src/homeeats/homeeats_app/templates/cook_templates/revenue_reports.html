@@ -1,0 +1,44 @@
+{% extends 'cook_base.html' %}
+{% load staticfiles %}
+
+{% block pagecontent %}
+
+<div class="container mt-2">
+
+<h1>Revenue Report</h1>
+
+<table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">Order #</th>
+        <th scope="col">Customer Name</th>
+        <th scope="col">Order Date</th>
+        <th scope="col">Item Subtotal</th>
+        <th scope="col">Tax</th>
+        <th scope="col">Delivery Fee</th>
+        <th scope="col">Tip</th>
+        <th scope="col">Order Total</th>
+        <th scope="col">Your Share (80% of Item Subtotal)</th>
+        <th scope="col">HomeEats Share (20% of Item Subtotal)</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for order in orders %}
+      <tr>
+        <th scope="row">{{order.id}}</th>
+        <td>{{order.name}}</td>
+        <td>{{order.date|date:"m/d/y"}}</td>
+        <td>{{order.item_subtotal}}</td>
+        <td>{{order.tax}}</td>
+        <td>{{order.delivery_fee}}</td>
+        <td>{{order.tip}}</td>
+        <td>{{order.total}}</td>
+        <td>{{order.cook_share}}</td>
+        <td>{{order.homeeats_share}}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+</div>
+{% endblock %}

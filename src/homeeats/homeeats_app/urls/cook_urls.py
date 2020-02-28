@@ -23,5 +23,6 @@ urlpatterns = [
   path('myaccount/',cook_views.myaccount, name='cookaccount'),
   path('orderhistory/', cook_views.order_history, name='order_history'),
   path('editprofile/', cook_views.editprofile, name='cookeditprofile'),
-  path('requestchange/', cook_views.requestchange, name='requestchange')
+  path('requestchange/', cook_views.requestchange, name='requestchange'),
+  path('revenuereports/', cook_views.revenuereports, name='revenuereports')
 ]

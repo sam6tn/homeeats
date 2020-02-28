@@ -364,6 +364,16 @@ def cook_enable_dish(request, dish_id):
 
 @login_required
 @cook_required
+def revenuereports(request):
+  cook = Cook.objects.get(user_id=request.user.id)
+  orders = Order.objects.filter(cook=cook)
+  context = {
+    'orders': orders
+  }
+  return render(request, 'cook_templates/revenue_reports.html', context)
+
+@login_required
+@cook_required
 def cook_edit_dish(request, dish_id):
   dish = Dish.objects.get(id=dish_id)
   cook = Cook.objects.get(user_id=request.user.id)
