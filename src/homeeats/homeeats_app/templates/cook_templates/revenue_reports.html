@@ -34,9 +34,20 @@
         <td>{{order.delivery_fee}}</td>
         <td>{{order.tip}}</td>
         <td>{{order.total}}</td>
-        <td class="font-weight-bold">{{order.cook_share}}</td>
+        <td class="font-weight-bold">${{order.cook_share}}</td>
       </tr>
     {% endfor %}
+    <tr class="bg-success">
+        <th scope="row">Total Revenue</th>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td class="font-weight-bold">${{total_revenue}}</td>
+    </tr>
     </tbody>
   </table>
 

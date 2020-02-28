@@ -11,6 +11,7 @@ from ..decorators import cook_required
 from django.contrib import messages
 import datetime
 from django.template.defaulttags import register
+from django.db.models import Sum
 from django.utils import timezone
 from decimal import Decimal
 import urllib.request
@@ -366,9 +367,11 @@ def cook_enable_dish(request, dish_id):
 @cook_required
 def revenuereports(request):
   cook = Cook.objects.get(user_id=request.user.id)
-  orders = Order.objects.filter(cook=cook)
+  orders = Order.objects.filter(cook=cook, status='d').order_by('date')
+  total_revenue = orders.aggregate(Sum('cook_share'))['cook_share__sum']
   context = {
-    'orders': orders
+    'orders': orders,
+    'total_revenue': total_revenue
   }
   return render(request, 'cook_templates/revenue_reports.html', context)
 
