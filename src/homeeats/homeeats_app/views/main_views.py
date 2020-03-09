@@ -35,10 +35,7 @@ def customercreate(request):
     if form.is_valid() and address_form.is_valid():
       data = form.cleaned_data
       address_data = address_form.cleaned_data
-      if User.objects.filter(username=data['email']).exists():
-        messages.add_message(request, messages.ERROR, 'An account with this email already exists, go to login page or use a different email')
-        return render(request, 'customer_create.html', {'form': form})
-      elif verify_address(address_data['street'], address_data['town'], address_data['state']):
+      if verify_address(address_data['street'], address_data['town'], address_data['state']):
         user = User.objects.create_user(username=data['email'], email=data['email'], password=data['password'], first_name=data['first_name'], last_name=data['last_name'])
         customer = models.Customer.objects.create(phone_number=data['phone_number'], user_id=user.id)
         user.is_customer = True

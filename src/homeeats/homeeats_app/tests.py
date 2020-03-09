@@ -7,6 +7,7 @@ from . import views
 from .views import *
 from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address, User, Customer, Order, ShoppingCart, CartItem, CookChangeRequest
 from .forms import *
+from django.contrib.messages import get_messages
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 
@@ -460,6 +461,20 @@ class AddressCreationTest(TestCase):
          self.assertTrue(self.cook.id == self.cook_address.cook.id)
 
 class CustomerCreateFormTest(TestCase):
+    def SetUp(self):
+        form = CustomerCreateForm({
+            'first_name': "First",
+            'last_name': "Last",
+            'password': "password",
+            'email': "test@email.com",
+            'street': "123 rotunda",
+            'town': "Charlottesville",
+            'state': "VA",
+            'zipcode': "22903",
+            'phone_number': "0123456789"
+        })
+        if form.is_valid():
+            form.save()
     def test_valid_data(self):
         form = CustomerCreateForm({
             'first_name': "First",
@@ -490,7 +505,31 @@ class CustomerCreateFormTest(TestCase):
             'phone_number': "0123456789"
         })      
         self.assertFalse(form.is_valid())
-    
+
+    '''
+    def test_email_already_exists(self):
+        request = {
+            'first_name': "First",
+            'last_name': "Last",
+            'password': "password",
+            'email': "test@email.com",
+            'street': "123 rotunda",
+            'town': "Charlottesville",
+            'state': "VA",
+            'zipcode': "22903",
+            'phone_number': "0123456789"
+        }
+        #response = self.client.post(reverse('customercreate'), request)
+        url = reverse('customercreate')
+        response = self.client.get(url)
+        messages = list(response.context['messages'])
+        print('MESSAGES',messages)
+        print("RESPONSE2", response.status_code)
+        print("RESPONSE message",str(messages[1]))
+        self.assertEquals(messages.ERROR, 40) #40 is the messages error status code
+        self.assertEquals(response.status_code, 302)
+        self.assertTemplateUsed(response,'customer_create.html')
+    '''
     
     '''
     Tests that data will not saved if required information is missing
@@ -798,3 +837,7 @@ class MainViewsTests(TestCase):
     def test_custom_user_login_customer(self):
         response = self.client.post(reverse('login'), data={'username':'test@customer.com', 'password':'capstone'})
         self.assertEqual(response.url, '/customer/home')
+    
+    
+
+    
