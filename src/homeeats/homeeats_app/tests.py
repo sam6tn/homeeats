@@ -5,14 +5,11 @@ from django.shortcuts import render, get_object_or_404
 from django.test import RequestFactory
 from . import views
 from .views import *
-from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address, User, Customer, Order, ShoppingCart, CartItem, CookChangeRequest
+from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address, User, Customer, Order, ShoppingCart, CartItem, CookChangeRequest, OrderMessage
 from .forms import *
 from django.contrib.messages import get_messages
 
 from django.core.files.uploadedfile import SimpleUploadedFile
-
-# class CustomerHomeSearchTest(TestCase):
-#     def test_search_with_sort_by_rating(self):
 
 class CustomerFavoritesTest(TestCase):
     fixtures = ['test_data2.json']
@@ -828,6 +825,72 @@ class CookViewsTest(TestCase):
         self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
         self.client.post(reverse('requestchange'), data={'kitchen_license': 'testingtesting', 'phone_number': '7037862000', 'street_address': '1815 Jefferson Park Ave', 'city': 'Charlottesville', 'state': 'VA', 'zipcode': '22903'})
         self.assertEqual(CookChangeRequest.objects.get(kitchen_license='testingtesting').phone_number, '7037862000')
+    def test_cook_single_order_view_works_on_existing_order(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        response = self.client.get(reverse('single_order_view', args=[2]))
+        self.assertEqual(response.status_code, 200)
+    def test_cook_message_works(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        self.client.post(reverse('cook_message'), data={'message': 'Hello123', 'order_id': 2})
+        message = OrderMessage.objects.get(message="Hello123")
+        self.assertEqual(message.message,"Hello123")
+    def test_reviews_for_dishes_gives_right_reviews(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        response = self.client.get(reverse('reviews_for_dish', args=[1]))
+        self.assertEqual(response.status_code, 200)
+    def test_cook_disable_dish_removes_from_shopping_cart_and_reenable_works(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        self.client.get(reverse('available'))
+        self.client.logout()
+        self.client.login(username='test@customer.com', password='capstone')
+        self.client.post(reverse('addtocart'), data={'dish_id': 1})
+        self.client.logout()
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        self.client.get(reverse('cook_disable_dish', args=[1]))
+        self.client.logout()
+        self.assertEqual(0.00, ShoppingCart.objects.get(customer_id=2).total_after_tip)
+    def test_order_history_works(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        response = self.client.get(reverse('order_history'))
+        self.assertEqual(response.status_code, 200)
+
+class CustomerViewsTest(TestCase):
+    fixtures = ['real_data.json']
+    def test_delete_address_works_and_redirects(self):
+        self.client.login(username='test@customer.com', password='capstone')
+        response = self.client.post(reverse('delete_address', args=[5]))
+        self.assertEqual(response.url, '/customer/home/')
+        self.assertEqual(response.status_code, 302)
+    def test_toggle_favorite_and_unfavorite(self):
+        self.client.login(username='test@customer.com', password='capstone')
+        response = self.client.post(reverse('togglefav'), data={'dish_id': 1})
+        self.assertEqual(response.status_code, 200)
+        response = self.client.post(reverse('togglefav'), data={'dish_id': 1})
+        self.assertEqual(response.status_code, 200)
+    def test_get_order_and_post_dish_review(self):
+        self.client.login(username='test@customer.com', password='capstone')
+        response = self.client.get(reverse('order', args=[3]))
+        self.assertEqual(response.status_code, 200)
+        #do post part
+    def test_customer_message(self):
+        self.client.login(username='test@customer.com', password='capstone')
+        self.client.post(reverse('message'), data={'message': 'Hello123', 'order_id': 3})
+        message = OrderMessage.objects.get(message="Hello123")
+        self.assertEqual(message.message,"Hello123")
+    def test_available_dishes_load_on_home_page(self):
+        self.client.login(username='test@customer.com', password='capstone')
+        response = self.client.get(reverse('customer_home'))
+        self.assertEqual(response.status_code, 200)
+    def test_filters_work(self):
+        self.client.login(username='test@customer.com', password='capstone')
+        response = self.client.post(reverse('customer_home'), data={"cuisine": 1})
+        self.assertEqual(response.status_code, 200)
+        response = self.client.post(reverse('customer_home'), data={"cuisine": "", "search": "", "sort": ""})
+        self.assertEqual(response.status_code, 200)
+    def test_customer_edit_profile_get_and_post(self):
+        self.client.login(username='test@customer.com', password='capstone')
+        response = self.client.get(reverse('customer_edit_profile'))
+        self.assertEqual(response.status_code, 200)
 
 class MainViewsTests(TestCase):
     fixtures = ['real_data.json']
