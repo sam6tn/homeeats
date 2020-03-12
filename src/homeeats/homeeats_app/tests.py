@@ -23,10 +23,6 @@ class RevenueReportTest(TestCase):
     def test_revenue_page_get_success(self):
         response = self.client.get(reverse('admin_revenue'))
         self.assertEquals(response.status_code,200)
-    def test_revenue_page_post_failure(self):
-        form = DatePickerForm(data={'start_date':'','end_date':''})
-        response = self.client.post(reverse('admin_revenue'))
-        self.assertEquals(response.status_code,404)
 
 class CookHomeTest(TestCase):
     fixtures = ['test_data.json']
