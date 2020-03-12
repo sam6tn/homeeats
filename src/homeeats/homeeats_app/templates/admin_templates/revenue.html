@@ -12,6 +12,12 @@
 <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
 integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet">
 
+<style>
+    select{
+        height:40px;
+    }
+</style>
+
 <script>
     var homeeats_splits = {{homeeats_splits}};
     console.log(homeeats_splits);
@@ -40,7 +46,7 @@ integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw
     <td id="homeeats_split{{order.id}}"></td>
 </tr>
 <script>
-    document.getElementById("homeeats_split"+'{{order.id}}').innerHTML = homeeats_splits[{{order.id}}];
+    document.getElementById("homeeats_split"+'{{order.id}}').innerHTML = homeeats_splits[{{order.id}}].toFixed(2);
 </script>
 {% endfor %}
 <tr>

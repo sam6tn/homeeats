@@ -10,7 +10,6 @@ from django.contrib import messages
 TWOPLACES = Decimal(10) ** -2  
 
 def revenue(request):
-
     if request.method == 'POST':
         dateform = forms.DatePickerForm(request.POST)
         if dateform.is_valid():
@@ -19,8 +18,8 @@ def revenue(request):
             end_date = data["end_date"]
             orders = Order.objects.filter(date__range=(start_date, end_date)).order_by('-date')
         else:
-            return HttpResponseNotFound('<h1>Invalid Date Selection</h1>')
-
+            messages.add_message(request, messages.ERROR, "Invalid Date Selection. Please Enter Valid Dates.")
+            orders = Order.objects.none()
     else:
         orders = Order.objects.all().order_by('-date')
         dateform = forms.DatePickerForm()
