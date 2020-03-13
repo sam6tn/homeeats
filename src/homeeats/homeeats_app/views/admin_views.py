@@ -115,12 +115,10 @@ def reportedreviews(request):
     reviews = Dish_Review.objects.filter(report_flag=True)
     if request.method == "POST":
         review = Dish_Review.objects.get(id=request.POST["id"])
-        print(request.POST)
         if 'delete' in request.POST:
             review.delete()
         elif 'ban' in request.POST:
             customer = Customer.objects.get(id=review.customer.id)
-            print(customer)
             customer.banned = True
             customer.save()
             review.delete()

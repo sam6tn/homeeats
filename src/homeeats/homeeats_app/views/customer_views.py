@@ -207,6 +207,7 @@ def addtocart(request):
             shopping_cart.empty = False
             shopping_cart.total_before_tip += dish.cook.delivery_fee
         shopping_cart.save()
+        
     data = {
         'quantity': return_quantity,
         'dish_id': request.POST["dish_id"]
@@ -328,7 +329,6 @@ def cart(request):
           shopping_cart.save()
           return HttpResponseRedirect(reverse('payment'))
         except Exception as e:
-          print(e)
           messages.add_message(request, messages.ERROR, "The tip amount is invalid, please enter a correct amount")
           return HttpResponseRedirect(reverse('cart'))
 
@@ -348,25 +348,25 @@ def payment(request):
     return render(request, 'customer_templates/payment.html', {'cart': cart, 'cart_items': cart_items, 'key': settings.STRIPE_PUBLISHABLE_KEY})
 
 
-@login_required
-@customer_required
-def removeItem(request):
-    item = CartItem.objects.get(id=request.POST["item_id"])
-    customer = Customer.objects.get(user_id=request.user.id)
-    cart = customer.shoppingcart
-    cart.total_before_tip = cart.total_before_tip - item.subtotal
-    cart.item_subtotal = cart.item_subtotal - item.subtotal
-    cart.total_before_tip -= cart.tax
-    cart.tax = Decimal(round((.06 * float(cart.item_subtotal)), 2))
-    cart.total_before_tip += cart.tax
-    if cart.total_before_tip == cart.cook.delivery_fee:
-        cart.cook_id = None
-        cart.empty = True
-        cart.total_before_tip = 0
-        cart.tax = 0
-    item.delete()
-    cart.save()
-    return HttpResponse(202, 'ok')
+# @login_required
+# @customer_required
+# def removeItem(request):
+#     item = CartItem.objects.get(id=request.POST["item_id"])
+#     customer = Customer.objects.get(user_id=request.user.id)
+#     cart = customer.shoppingcart
+#     cart.total_before_tip = cart.total_before_tip - item.subtotal
+#     cart.item_subtotal = cart.item_subtotal - item.subtotal
+#     cart.total_before_tip -= cart.tax
+#     cart.tax = Decimal(round((.06 * float(cart.item_subtotal)), 2))
+#     cart.total_before_tip += cart.tax
+#     if cart.total_before_tip == cart.cook.delivery_fee:
+#         cart.cook_id = None
+#         cart.empty = True
+#         cart.total_before_tip = 0
+#         cart.tax = 0
+#     item.delete()
+#     cart.save()
+#     return HttpResponse(202, 'ok')
 
 
 @register.filter
@@ -483,7 +483,6 @@ def checkout(request):
                 messages.add_message(
                     request, messages.ERROR, 'Payment not valid, please try again')
                 return HttpResponseRedirect(reverse('payment'))
-                pass
 
         customer = Customer.objects.get(user_id=request.user.id)
         shopping_cart = ShoppingCart.objects.get(customer=customer)
@@ -493,8 +492,8 @@ def checkout(request):
         cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
         address = Address.objects.get(
             customer=customer, current_customer_address=True)
-        homeeats_share = shopping_cart.item_subtotal * .2
-        cook_share = shopping_cart.item_subtotal - homeeats_share + shopping_cart.tip + shopping_cart.delivery_fee
+        homeeats_share = float(shopping_cart.item_subtotal) * .2
+        cook_share = float(shopping_cart.item_subtotal) - homeeats_share + float(shopping_cart.tip) + float(order_cook.delivery_fee)
         order = Order.objects.create(  # create new pending order
             name=order_name,
             cook=order_cook,
@@ -739,7 +738,6 @@ def myaccount(request):
         first_name = request.GET.get('first_name')
         last_name = request.GET.get('last_name')
         username = request.GET.get('username')
-        print('first_name: ', first_name)
         return HttpResponseRedirect(reverse('customer_edit_profile'))
     customer = Customer.objects.get(user_id=request.user.id)
     shopping_cart = ShoppingCart.objects.get(customer=customer)
