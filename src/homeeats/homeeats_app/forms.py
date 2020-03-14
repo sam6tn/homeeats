@@ -169,6 +169,7 @@ class DishCreateForm(forms.Form):
         model = Dish
         fields = ['title', 'cuisine','description', 'dish_image','ingredients','price','cook_time','vegan','allergies']
 
+    '''
     def clean_vegan(self):
         vegan = self.cleaned_data.get('vegan')
         if vegan == 'on':
@@ -176,7 +177,7 @@ class DishCreateForm(forms.Form):
         else:
             vegan = False
         return vegan
-
+    '''
 
 class DishEditForm(forms.ModelForm):
     title = forms.CharField(required=True,)

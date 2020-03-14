@@ -612,7 +612,6 @@ class CustomerCreateFormTest(TestCase):
     '''
     def test_email_already_exists(self):
         #Create a user object
-        print("Current users",User.objects.all())
         user = User.objects.create_user(username="test@email.com", email="test@email.com", password="password", first_name="First", last_name="Last")
 
         #Another user is creating an account via the form but tries to use an email that already exists in the database
@@ -755,6 +754,7 @@ class DishRestrictionsTest(TestCase):
         dishForm = DishCreateForm({'vegan': True, 'allergies': 'Peanuts'})
         self.assertFalse(dishForm.is_valid())
 
+
 class CustomerProfileRedirectTest(TestCase):
     def test_customer_profile_navigation(self):
         self.client.login(username='anki@anki.com', password='ankith')
@@ -822,16 +822,22 @@ class DishReviewModelTest(TestCase):
       
 class AddressCreateFormTest(TestCase):
     def test_missing_street(self):
-        form = UserEditForm({'street': "",'town': "Charlottesville", 'state':'VA', 'zipcode':22903})
+        form = AddressCreateForm({'street': "",'town': "Charlottesville", 'state':'VA', 'zipcode':22903})
         self.assertFalse(form.is_valid())
     
     def test_missing_town(self):
-        form = UserEditForm({'street': "street",'town': "", 'state':'VA', 'zipcode':22903})
+        form = AddressCreateForm({'street': "street",'town': "", 'state':'VA', 'zipcode':22903})
         self.assertFalse(form.is_valid())
     
     def test_missing_state(self):
-        form = UserEditForm({'street': "street",'town': "cville", 'state':'', 'zipcode':22903})
+        form = AddressCreateForm({'street': "street",'town': "cville", 'state':'', 'zipcode':22903})
         self.assertFalse(form.is_valid())
+    
+    def test_invalid_zipcode(self):
+        form = AddressCreateForm({'street': "street",'town': "cville", 'state':'VA', 'zipcode':'2290e'})
+        self.assertFalse(form.is_valid())
+        self.assertTrue(form.has_error("zipcode"))
+        self.assertEqual(form.errors.as_json(),'{"zipcode": [{"message": "Zipcode must be all digits.", "code": ""}]}')
 
 class CustomerChangeCurrentAddressTest(TestCase):
     def test_change_current_address(self):
@@ -924,6 +930,43 @@ class CookCreateAccountTest(TestCase):
             'password': 'avatar'
         })
         self.assertFalse(form.is_valid())
+    
+    def test_invalid_phone_number_char(self):
+        #avatar = tempfile.NamedTemporaryFile(suffix=".jpg").name
+        form = CookCreateForm({
+            'delivery_distance_miles': '10',
+            'delivery_fee': '3.00',
+            'kitchen_license': 'testing',
+            'street': '1 University Court',
+            'town': 'Charlottesville',
+            'state': 'VA',
+            'zipcode': '07739',
+            'government_id': 'avatar',
+            'password': 'avatar',
+            'phone_number': "eas4567890",
+        })
+        self.assertFalse(form.is_valid())
+        self.assertTrue(form.has_error("phone_number"))
+        self.assertEquals(form.errors.as_json(),
+            '{"phone_number": [{"message": "Enter a valid 10-digit phone number, e.g. 0123456789", "code": ""}], "government_id": [{"message": "This field is required.", "code": "required"}]}')
+
+    def test_invalid_zipcode(self):
+        form = CookCreateForm({
+            'delivery_distance_miles': '10',
+            'delivery_fee': '3.00',
+            'kitchen_license': 'testing',
+            'street': '1 University Court',
+            'town': 'Charlottesville',
+            'state': 'VA',
+            'zipcode': '077ea',
+            'government_id': 'avatar',
+            'password': 'avatar',
+            'phone_number': "1234567890",
+        })
+        self.assertFalse(form.is_valid())
+        self.assertTrue(form.has_error("zipcode"))
+        self.assertEqual(form.errors.as_json(),'{"zipcode": [{"message": "Zipcode must be all digits.", "code": ""}], "government_id": [{"message": "This field is required.", "code": "required"}]}')
+
 
 class InvalidDishFormFields(TestCase):
     def test_missing_vegan_field(self):
