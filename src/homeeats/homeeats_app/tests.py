@@ -11,6 +11,117 @@ from django.contrib.messages import get_messages
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 
+class AdminTests(TestCase):
+    fixtures = ['test_data2.json']
+    def test_approve_cook_applications(self):
+        self.client.login(username='admin', password='capstone')
+        response = self.client.post(reverse('admin_applications'), data={'id':1,'approve':['']})
+        self.assertEquals(response.status_code,200)
+    def test_decline_cook_applications(self):
+        self.client.login(username='admin', password='capstone')
+        response = self.client.post(reverse('admin_applications'), data={'id':1,'decline':['']})
+        self.assertEquals(response.status_code,200)
+    def test_admin_cook_view(self):
+        self.client.login(username='admin', password='capstone')
+        response = self.client.get(reverse('admin_cook',args=[1]))
+        self.assertEquals(response.status_code, 200)
+    def test_admin_customer_view(self):
+        self.client.login(username='admin', password='capstone')
+        response = self.client.get(reverse('admin_customer',args=[1]))
+        self.assertEquals(response.status_code, 200)
+    def test_reported_review_delete(self):
+        self.client.login(username='admin', password='capstone')
+        review = Dish_Review.objects.create(
+            description="",
+            report_flag=True,
+            customer=Customer.objects.get(id=1),
+            dish=Dish.objects.get(id=1)
+        )
+        response = self.client.post(reverse('admin_reportedreviews'),data={'id':review.id,'delete':['']})
+        self.assertEquals(response.status_code,200)
+    def test_reported_review_ban(self):
+        self.client.login(username='admin', password='capstone')
+        review = Dish_Review.objects.create(
+            description="",
+            report_flag=True,
+            customer=Customer.objects.get(id=1),
+            dish=Dish.objects.get(id=1)
+        )
+        response = self.client.post(reverse('admin_reportedreviews'),data={'id':review.id,'ban':['']})
+        self.assertEquals(response.status_code,200)
+    def test_reported_review_allow(self):
+        self.client.login(username='admin', password='capstone')
+        review = Dish_Review.objects.create(
+            description="",
+            report_flag=True,
+            customer=Customer.objects.get(id=1),
+            dish=Dish.objects.get(id=1)
+        )
+        response = self.client.post(reverse('admin_reportedreviews'),data={'id':review.id,'allow':['']})
+        self.assertEquals(response.status_code,200)
+    def test_change_requests_approve(self):
+        self.client.login(username='admin', password='capstone')
+        change = CookChangeRequest.objects.create(
+            cook=Cook.objects.get(id=1),
+            kitchen_license="123456"
+        )
+        response = self.client.post(reverse('admin_changerequests'), data={'id':change.id,'approve':['']})
+        self.assertEquals(response.status_code,200)
+    def test_change_requests_decline(self):
+        self.client.login(username='admin', password='capstone')
+        change = CookChangeRequest.objects.create(
+            cook=Cook.objects.get(id=1),
+            kitchen_license="123456"
+        )
+        response = self.client.post(reverse('admin_changerequests'), data={'id':change.id,'decline':['']})
+        self.assertEquals(response.status_code,200)
+
+
+class CustomerTests(TestCase):
+    fixtures = ['test_data2.json']
+    def test_orders_loads(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        response = self.client.get(reverse('orders'))
+        self.assertEquals(response.status_code,200)
+    def test_myaccount_loads(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        response = self.client.get(reverse('myaccount'))
+        self.assertEquals(response.status_code,200)
+    def test_myaccount_post(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        response = self.client.post(reverse('myaccount'))
+        self.assertEquals(response.status_code,302)
+    def test_payment_screen(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        response = self.client.get(reverse('payment'))
+        self.assertEquals(response.status_code,200)
+    def test_cart(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        response = self.client.get(reverse('cart'))
+        self.assertEquals(response.status_code,200)
+    def test_add_and_remove(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        self.client.post(reverse('addtocart'), {'dish_id': 1})
+        response = self.client.post(reverse('removefromcart'), {'dish_id': 1})
+        self.assertEquals(response.status_code, 200)
+    def test_getvalue(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        mydict = {'a':'b'}
+        self.assertEquals(getvalue(mydict,'a'),'b')
+    def test_cancel_order(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        order = Order.objects.create(
+            customer=Customer.objects.get(id=3),
+            status='p',
+            cook=Cook.objects.get(id=1)
+        )
+        response = self.client.post(reverse('cancel_order'), {'order_id': order.id})
+        self.assertEquals(response.status_code, 302)
+    def test_dish(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        response = self.client.post(reverse('customer_dish',args=[1]))
+        self.assertEquals(response.status_code, 200)
+
 class CustomerFavoritesTest(TestCase):
     fixtures = ['test_data2.json']
     def test_favorites_page_loads(self):
@@ -18,16 +129,10 @@ class CustomerFavoritesTest(TestCase):
         response = self.client.get(reverse('favorites'))
         self.assertEquals(response.status_code,200)
 
-
-
 class RevenueReportTest(TestCase):
     def test_revenue_page_get_success(self):
         response = self.client.get(reverse('admin_revenue'))
         self.assertEquals(response.status_code,200)
-    def test_revenue_page_post_failure(self):
-        form = DatePickerForm(data={'start_date':'','end_date':''})
-        response = self.client.post(reverse('admin_revenue'))
-        self.assertEquals(response.status_code,404)
 
 class CookHomeTest(TestCase):
     fixtures = ['test_data.json']
@@ -117,6 +222,7 @@ class CookManageTest(TestCase):
     
 
 class CustomerCheckoutTest(TestCase):
+    fixtures = ['test_data2.json']
     def test_checkout_access(self):
         self.client.login(username='anki@anki.com', password='ankith')
         response = self.client.get(reverse('checkout'))
@@ -124,83 +230,83 @@ class CustomerCheckoutTest(TestCase):
     def test_checkout_redirect(self):
         self.client.login(username='anki@anki.com', password='ankith')
         response = self.client.get(reverse('checkout'))
-        self.assertEquals(response.url, "/?next=/customer/checkout/")
-    def test_checkout_home_redirect(self):
-        self.client.login(username='anki@anki.com', password='ankith')
-        self.client.get(reverse('checkout'))
-        response = self.client.get(reverse('customer_home'))
-        self.assertEquals(response.url, "/?next=/customer/home/")
-    def test_checkout_home_access(self):
-        self.client.login(username='anki@anki.com', password='ankith')
-        self.client.get(reverse('checkout'))
-        response = self.client.get(reverse('customer_home'))
-        self.assertEquals(response.status_code, 302)
+        self.assertEquals(response.url, "/customer/home/")
     def test_valid_payment(self):
         self.client.login(username='anki@anki.com', password='ankith')
-        self.client.post(reverse('addtocart'), {'quantity': 1, 'dish_id': 1}, content_type='application/x-www-form-urlencoded')
+        self.client.post(reverse('addtocart'), data={'dish_id': 1})
+        self.client.post(reverse('cart'), data={'tip':1,'orderTime':'In 30 min','special_requests':'none'})
         data = {
             "cardNumber": "4242424242424242",
-            "expDate": 12/20,
+            "expDate": "12/20",
             "cvc": "314",
             "payment_option": "card",
         }
-        response = self.client.post(reverse('checkout'), data, content_type='application/x-www-form-urlencoded')
+        response = self.client.post(reverse('checkout'), data)
         self.assertEquals(response.status_code, 302)
     
     def test_invalid_payment(self):
         self.client.login(username='anki@anki.com', password='ankith')
-        self.client.post(reverse('addtocart'), {'quantity': 1, 'dish_id': 1}, content_type='application/x-www-form-urlencoded')
+        self.client.post(reverse('addtocart'), {'quantity': 1, 'dish_id': 1})
+        self.client.post(reverse('cart'), data={'tip':1,'orderTime':'In one hour','special_requests':'none'})
         data = {
             "cardNumber": "5242424242424242",
-            "expDate": 12/20,
+            "expDate": "12/20",
             "cvc": "314",
             "payment_option": "card",
         }
-        response = self.client.post(reverse('checkout'), data, content_type='application/x-www-form-urlencoded', follow=True)
-        self.assertEquals(response.status_code, 200)
+        response = self.client.post(reverse('checkout'), data)
+        self.assertEquals(response.status_code, 302)
+    def test_tip_negative(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        self.client.post(reverse('addtocart'), {'quantity': 1, 'dish_id': 1})
+        self.client.post(reverse('cart'), data={'tip':-1,'orderTime':'Now','special_requests':'none'})
+        data = {
+            "cardNumber": "5242424242424242",
+            "expDate": "12/20",
+            "cvc": "314",
+            "payment_option": "card",
+        }
+        response = self.client.post(reverse('checkout'), data)
+        self.assertEquals(response.status_code, 302)
     def test_invalid_date(self):
         self.client.login(username='anki@anki.com', password='ankith')
-        self.client.post(reverse('addtocart'), {'quantity': 1, 'dish_id': 1}, content_type='application/x-www-form-urlencoded')
+        self.client.post(reverse('addtocart'), data={'dish_id': 1})
+        self.client.post(reverse('cart'), data={'tip':1,'orderTime':'In two hours','special_requests':'none'})
         data = {
             "cardNumber": "4242424242424242",
-            "expDate": 12/18,
+            "expDate": "12/18",
             "cvc": "314",
             "payment_option": "card",
         }
-        response = self.client.post(reverse('checkout'), data, content_type='application/x-www-form-urlencoded', follow=True)
-        self.assertEquals(response.status_code, 200)
+        response = self.client.post(reverse('checkout'), data)
+        self.assertEquals(response.status_code, 302)
     def test_invalid_cvv(self):
         self.client.login(username='anki@anki.com', password='ankith')
-        self.client.post(reverse('addtocart'), {'quantity': 1, 'dish_id': 1}, content_type='application/x-www-form-urlencoded')
+        self.client.post(reverse('addtocart'), data={'dish_id': 1})
+        self.client.post(reverse('cart'), data={'tip':1,'orderTime':'In three hours','special_requests':'none'})
         data = {
             "cardNumber": "4242424242424242",
-            "expDate": 12/20,
+            "expDate": "12/20",
             "cvc": "34",
             "payment_option": "card",
         }
-        response = self.client.post(reverse('checkout'), data, content_type='application/x-www-form-urlencoded', follow=True)
-        self.assertEquals(response.status_code, 200)
+        response = self.client.post(reverse('checkout'), data)
+        self.assertEquals(response.status_code, 302)
     def test_cash(self):
         self.client.login(username='anki@anki.com', password='ankith')
-        self.client.post(reverse('addtocart'), {'quantity': 1, 'dish_id': 1}, content_type='application/x-www-form-urlencoded')
+        self.client.post(reverse('addtocart'), data={'dish_id': 1})
+        self.client.post(reverse('cart'), data={'tip':1,'orderTime':'Now','special_requests':'none'})
         data = {
             "payment_option": "cash",
         }
-        response = self.client.post(reverse('checkout'), data, content_type='application/x-www-form-urlencoded', follow=True)
-        self.assertEquals(response.status_code, 200)
+        response = self.client.post(reverse('checkout'), data)
+        self.assertEquals(response.status_code, 302)
     def test_skip_checkout(self):
         self.client.login(username='anki@anki.com', password='ankith')
-        self.client.post(reverse('addtocart'), {'quantity': 1, 'dish_id': 1}, content_type='application/x-www-form-urlencoded')
+        self.client.post(reverse('addtocart'), data={'dish_id': 1})
+        self.client.post(reverse('cart'), data={'tip':1,'orderTime':'Now','special_requests':'none'})
         response = self.client.get(reverse('checkout'), follow=True)
         self.assertEquals(response.status_code, 200)
-    def test_checkout_post_response(self):
-        self.client.login(username='anki@anki.com', password='ankith')
-        response = self.client.post(reverse('checkout'))
-        self.assertEquals(response.status_code, 302)
-    def test_checkout_post_url(self):
-        self.client.login(username='anki@anki.com', password='ankith')
-        response = self.client.post(reverse('checkout'))
-        self.assertEquals(response.url, "/?next=/customer/checkout/")
 
 class CustomerCartTest(TestCase):
     def test_cart_access(self):
@@ -224,31 +330,26 @@ class CustomerCartTest(TestCase):
         self.assertTrue(quantity > 0)
     def test_remove(self):
         self.client.login(username='anki@anki.com', password='ankith')
-        self.client.post(reverse('addtocart'), {'quantity': 1, 'dish_id': 1})
-        response = self.client.post(reverse('removeItem'), {'cart_id': 3, 'item_id': 1})
+        self.client.post(reverse('addtocart'), {'dish_id': 1})
+        response = self.client.post(reverse('removefromcart'), {'dish_id': 1})
         self.assertEquals(response.status_code, 302)
-    def test_remove_multiple(self):
-        self.client.login(username='anki@anki.com', password='ankith')
-        self.client.post(reverse('addtocart'), {'quantity': 1, 'dish_id': 1})
-        self.client.post(reverse('addtocart'), {'quantity': 1, 'dish_id': 2})
-        response = self.client.post(reverse('removeItem'), {'cart_id': 3, 'item_id': 1})
-        response = self.client.post(reverse('removeItem'), {'cart_id': 3, 'item_id': 2})
-        self.assertEquals(response.status_code, 302)
-    def test_remove_multiple_none(self):
-        self.client.login(username='anki@anki.com', password='ankith')
-        self.client.post(reverse('addtocart'), {'quantity': 1, 'dish_id': 1})
-        response = self.client.post(reverse('removeItem'), {'cart_id': 3, 'item_id': 1})
-        response = self.client.post(reverse('removeItem'), {'cart_id': 3, 'item_id': 1})
-        self.assertEquals(response.status_code, 302)
-    def test_remove_none(self):
-        self.client.login(username='anki@anki.com', password='ankith')
-        response = self.client.post(reverse('removeItem'), {'cart_id': 3, 'item_id': 1})
-        self.assertEquals(response.status_code, 302)
-    def test_payment(self):
-        self.client.login(username='anki@anki.com', password='ankith')
-        self.client.post(reverse('addtocart'), {'quantity': 1, 'dish_id': 1})
-        response = self.client.get(reverse('payment'))
-        self.assertEquals(response.status_code, 202)
+    # def test_remove_multiple(self):
+    #     self.client.login(username='anki@anki.com', password='ankith')
+    #     self.client.post(reverse('addtocart'), {'quantity': 1, 'dish_id': 1})
+    #     self.client.post(reverse('addtocart'), {'quantity': 1, 'dish_id': 2})
+    #     response = self.client.post(reverse('removeItem'), {'cart_id': 3, 'item_id': 1})
+    #     response = self.client.post(reverse('removeItem'), {'cart_id': 3, 'item_id': 2})
+    #     self.assertEquals(response.status_code, 302)
+    # def test_remove_multiple_none(self):
+    #     self.client.login(username='anki@anki.com', password='ankith')
+    #     self.client.post(reverse('addtocart'), {'quantity': 1, 'dish_id': 1})
+    #     response = self.client.post(reverse('removeItem'), {'cart_id': 3, 'item_id': 1})
+    #     response = self.client.post(reverse('removeItem'), {'cart_id': 3, 'item_id': 1})
+    #     self.assertEquals(response.status_code, 302)
+    # def test_remove_none(self):
+    #     self.client.login(username='anki@anki.com', password='ankith')
+    #     response = self.client.post(reverse('removeItem'), {'cart_id': 3, 'item_id': 1})
+    #     self.assertEquals(response.status_code, 302)
     def test_payment(self):
         self.client.login(username='anki@anki.com', password='ankith')
         self.client.post(reverse('addtocart'), {'quantity': 1, 'dish_id': 1})
@@ -502,31 +603,6 @@ class CustomerCreateFormTest(TestCase):
             'phone_number': "0123456789"
         })      
         self.assertFalse(form.is_valid())
-
-    '''
-    def test_email_already_exists(self):
-        request = {
-            'first_name': "First",
-            'last_name': "Last",
-            'password': "password",
-            'email': "test@email.com",
-            'street': "123 rotunda",
-            'town': "Charlottesville",
-            'state': "VA",
-            'zipcode': "22903",
-            'phone_number': "0123456789"
-        }
-        #response = self.client.post(reverse('customercreate'), request)
-        url = reverse('customercreate')
-        response = self.client.get(url)
-        messages = list(response.context['messages'])
-        print('MESSAGES',messages)
-        print("RESPONSE2", response.status_code)
-        print("RESPONSE message",str(messages[1]))
-        self.assertEquals(messages.ERROR, 40) #40 is the messages error status code
-        self.assertEquals(response.status_code, 302)
-        self.assertTemplateUsed(response,'customer_create.html')
-    '''
     
     '''
     Tests that data will not saved if required information is missing
