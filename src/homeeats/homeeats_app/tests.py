@@ -219,7 +219,7 @@ class CookManageTest(TestCase):
         self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
         response = self.client.get(reverse('create_dish'))
         self.assertEquals(response.status_code,200)
-    
+        
 
 class CustomerCheckoutTest(TestCase):
     fixtures = ['test_data2.json']
@@ -1080,7 +1080,6 @@ class MainViewsTests(TestCase):
     def test_custom_user_login_customer(self):
         response = self.client.post(reverse('login'), data={'username':'test@customer.com', 'password':'capstone'})
         self.assertEqual(response.url, '/customer/home')
-    
     
 
     
