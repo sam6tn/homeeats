@@ -601,8 +601,36 @@ class CustomerCreateFormTest(TestCase):
             'state': "VA",
             'zipcode': "22903",
             'phone_number': "0123456789"
-        })      
+        }) 
+             
         self.assertFalse(form.is_valid())
+    
+    '''
+    Tests that a user cannot create an account with an email that already exists by
+    creating user object with an email address and then trying to make another user account
+    with the same email address
+    '''
+    def test_email_already_exists(self):
+        #Create a user object
+        print("Current users",User.objects.all())
+        user = User.objects.create_user(username="test@email.com", email="test@email.com", password="password", first_name="First", last_name="Last")
+
+        #Another user is creating an account via the form but tries to use an email that already exists in the database
+        form = CustomerCreateForm({
+            'first_name': "First",
+            'last_name': "Last",
+            'password': "password",
+            'email': "test@email.com",
+            'street': "123 rotunda",
+            'town': "Charlottesville",
+            'state': "VA",
+            'zipcode': "22903",
+            'phone_number': "0123456789"
+        })   
+        
+        self.assertFalse(form.is_valid())
+        self.assertTrue(form.has_error("email"))
+        self.assertEqual(form.errors.as_json(),'{"email": [{"message": "An account with this email already exists, go to login page or use a different email", "code": ""}]}')
     
     '''
     Tests that data will not saved if required information is missing
@@ -621,6 +649,39 @@ class CustomerCreateFormTest(TestCase):
         })
         self.assertFalse(form.is_valid())
     
+    def test_invalid_phone_number_length(self):
+        form = CustomerCreateForm({
+            'first_name': "First",
+            'last_name': "Last",
+            'password': "password",
+            'email': "first@email.com",
+            'street': "123 rotunda",
+            'town': "Charlottesville",
+            'state': "VA",
+            'zipcode': "22903",
+            'phone_number': "456789"
+        })
+        self.assertFalse(form.is_valid())
+        self.assertTrue(form.has_error("phone_number"))
+        self.assertEquals(form.errors.as_json(),
+            '{"phone_number": [{"message": "Enter a valid phone number, e.g. 0123456789", "code": ""}]}')
+    
+    def test_invalid_phone_number_characters(self):
+        form = CustomerCreateForm({
+            'first_name': "First",
+            'last_name': "Last",
+            'password': "password",
+            'email': "first@email.com",
+            'street': "123 rotunda",
+            'town': "Charlottesville",
+            'state': "VA",
+            'zipcode': "22903",
+            'phone_number': "asd4567890"
+        })
+        self.assertFalse(form.is_valid())
+        self.assertTrue(form.has_error("phone_number"))
+        self.assertEquals(form.errors.as_json(),
+            '{"phone_number": [{"message": "Enter a valid phone number, e.g. 0123456789", "code": ""}]}')
 
 class CustomerEditProfileTest(TestCase):
     '''

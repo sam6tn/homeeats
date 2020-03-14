@@ -47,14 +47,13 @@ class CustomerCreateForm(forms.ModelForm):
         data = self.cleaned_data['phone_number']
         if not data.isdigit():
             raise forms.ValidationError('Enter a valid phone number, e.g. 0123456789')
-            
+        elif len(data) != 10:
+            raise forms.ValidationError('Enter a valid phone number, e.g. 0123456789')
         return data
     
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if User.objects.filter(username=email).exists():
-            #messages.add_message(request, messages.ERROR, 'An account with this email already exists, go to login page or use a different email')
-            #return render(request, 'customer_create.html', {'form': form})
             raise forms.ValidationError("An account with this email already exists, go to login page or use a different email")
         return email    
 
