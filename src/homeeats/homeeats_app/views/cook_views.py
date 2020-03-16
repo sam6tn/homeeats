@@ -370,9 +370,28 @@ def revenuereports(request):
   orders = Order.objects.filter(cook=cook, status='d').order_by('date') #filter for completed orders and order chronologically 
   total_revenue = orders.aggregate(Sum('cook_share'))['cook_share__sum'] 
   #calculate total revenue for the cook by adding up all of the cook_share fields
+  if request.method == 'POST':
+    dateform = forms.DatePickerForm(request.POST)
+    print(request.POST)
+    if dateform.is_valid():
+      data = dateform.cleaned_data
+      start_date = data["start_date"]
+      end_date = data["end_date"]
+      cook = Cook.objects.get(user_id=request.user.id)
+      orders = Order.objects.filter(cook=cook, status='d').filter(date__range=(start_date, end_date)).order_by('-date')
+    else:
+      messages.add_message(request, messages.ERROR, "Invalid Date Selection. Please Enter Valid Dates.")
+      orders = Order.objects.none()
+  else:
+    cook = Cook.objects.get(user_id=request.user.id)
+    orders = Order.objects.filter(cook=cook, status='d').order_by('date')
+    dateform = forms.DatePickerForm()
+
+  total_revenue = orders.aggregate(Sum('cook_share'))['cook_share__sum']
   context = {
     'orders': orders,
-    'total_revenue': total_revenue
+    'total_revenue': total_revenue,
+    'dateform':dateform
   }
   return render(request, 'cook_templates/revenue_reports.html', context)
 

@@ -7,6 +7,8 @@ from . import views
 from .views import *
 from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address, User, Customer, Order, ShoppingCart, CartItem, CookChangeRequest, OrderMessage
 from .forms import *
+from django.contrib.messages import get_messages
+
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 class AdminTests(TestCase):
@@ -128,9 +130,36 @@ class CustomerFavoritesTest(TestCase):
         self.assertEquals(response.status_code,200)
 
 class RevenueReportTest(TestCase):
+    fixtures = ['test_data2.json']
     def test_revenue_page_get_success(self):
         response = self.client.get(reverse('admin_revenue'))
         self.assertEquals(response.status_code,200)
+    def test_revenue_page_orders(self):
+        self.client.login(username='admin', password='capstone')
+        response = self.client.get(reverse('admin_revenue'))
+        orders = response.context['orders']
+        self.assertEquals(len(orders),2)
+    def test_revenue_page_datepicker_valid(self):
+        dateForm = DatePickerForm({})
+        self.assertFalse(dateForm.is_valid())
+    def test_revenue_page_datepicker_form_wrong(self):
+        self.client.login(username='admin', password='capstone')
+        response = self.client.post(reverse('admin_revenue'), {'start_date_month': '1', 'start_date_day': '18', 'start_date_year': '2020', 'end_date_month': '1', 'end_date_day': '24', 'end_date_year': '2020'})
+        orders = response.context['orders']
+        self.assertEqual(len(orders), 0)
+    def test_revenue_page_datepicker_form_right(self):
+        self.client.login(username='admin', password='capstone')
+        response = self.client.post(reverse('admin_revenue'), {'start_date_month': '11', 'start_date_day': '02', 'start_date_year': '2019', 'end_date_month': '1', 'end_date_day': '24', 'end_date_year': '2020'})
+        orders = response.context['orders']
+        self.assertEqual(len(orders), 2)
+
+class RevenueReportTestCook(TestCase):
+    fixtures = ['test_data2.json']
+    def test_revenue_page_orders(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        response = self.client.get(reverse('revenuereports'))
+        orders = response.context['orders']
+        self.assertEquals(len(orders),0)
 
 class CookHomeTest(TestCase):
     fixtures = ['test_data.json']
@@ -217,7 +246,7 @@ class CookManageTest(TestCase):
         self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
         response = self.client.get(reverse('create_dish'))
         self.assertEquals(response.status_code,200)
-    
+        
 
 class CustomerCheckoutTest(TestCase):
     fixtures = ['test_data2.json']
@@ -305,18 +334,6 @@ class CustomerCheckoutTest(TestCase):
         self.client.post(reverse('cart'), data={'tip':1,'orderTime':'Now','special_requests':'none'})
         response = self.client.get(reverse('checkout'), follow=True)
         self.assertEquals(response.status_code, 200)
-    # def test_checkout_post_response(self):
-    #     self.client.login(username='anki@anki.com', password='ankith')
-    #     self.client.post(reverse('addtocart'), data={'dish_id': 1})
-    #     self.client.post(reverse('cart'), data={'tip':1,'orderTime':'Now','special_requests':'none'})
-    #     response = self.client.post(reverse('checkout'))
-    #     self.assertEquals(response.status_code, 302)
-    # def test_checkout_post_url(self):
-    #     self.client.login(username='anki@anki.com', password='ankith')
-    #     self.client.post(reverse('addtocart'), data={'dish_id': 1})
-    #     self.client.post(reverse('cart'), data={'tip':1,'orderTime':'Now','special_requests':'none'})
-    #     response = self.client.post(reverse('checkout'))
-    #     self.assertEquals(response.url, "/?next=/customer/checkout/")
 
 class CustomerCartTest(TestCase):
     def test_cart_access(self):
@@ -569,6 +586,20 @@ class AddressCreationTest(TestCase):
          self.assertTrue(self.cook.id == self.cook_address.cook.id)
 
 class CustomerCreateFormTest(TestCase):
+    def SetUp(self):
+        form = CustomerCreateForm({
+            'first_name': "First",
+            'last_name': "Last",
+            'password': "password",
+            'email': "test@email.com",
+            'street': "123 rotunda",
+            'town': "Charlottesville",
+            'state': "VA",
+            'zipcode': "22903",
+            'phone_number': "0123456789"
+        })
+        if form.is_valid():
+            form.save()
     def test_valid_data(self):
         form = CustomerCreateForm({
             'first_name': "First",
@@ -597,9 +628,35 @@ class CustomerCreateFormTest(TestCase):
             'state': "VA",
             'zipcode': "22903",
             'phone_number': "0123456789"
-        })      
+        }) 
+             
         self.assertFalse(form.is_valid())
     
+    '''
+    Tests that a user cannot create an account with an email that already exists by
+    creating user object with an email address and then trying to make another user account
+    with the same email address
+    '''
+    def test_email_already_exists(self):
+        #Create a user object
+        user = User.objects.create_user(username="test@email.com", email="test@email.com", password="password", first_name="First", last_name="Last")
+
+        #Another user is creating an account via the form but tries to use an email that already exists in the database
+        form = CustomerCreateForm({
+            'first_name': "First",
+            'last_name': "Last",
+            'password': "password",
+            'email': "test@email.com",
+            'street': "123 rotunda",
+            'town': "Charlottesville",
+            'state': "VA",
+            'zipcode': "22903",
+            'phone_number': "0123456789"
+        })   
+        
+        self.assertFalse(form.is_valid())
+        self.assertTrue(form.has_error("email"))
+        self.assertEqual(form.errors.as_json(),'{"email": [{"message": "An account with this email already exists, go to login page or use a different email", "code": ""}]}')
     
     '''
     Tests that data will not saved if required information is missing
@@ -618,6 +675,39 @@ class CustomerCreateFormTest(TestCase):
         })
         self.assertFalse(form.is_valid())
     
+    def test_invalid_phone_number_length(self):
+        form = CustomerCreateForm({
+            'first_name': "First",
+            'last_name': "Last",
+            'password': "password",
+            'email': "first@email.com",
+            'street': "123 rotunda",
+            'town': "Charlottesville",
+            'state': "VA",
+            'zipcode': "22903",
+            'phone_number': "456789"
+        })
+        self.assertFalse(form.is_valid())
+        self.assertTrue(form.has_error("phone_number"))
+        self.assertEquals(form.errors.as_json(),
+            '{"phone_number": [{"message": "Enter a valid phone number, e.g. 0123456789", "code": ""}]}')
+    
+    def test_invalid_phone_number_characters(self):
+        form = CustomerCreateForm({
+            'first_name': "First",
+            'last_name': "Last",
+            'password': "password",
+            'email': "first@email.com",
+            'street': "123 rotunda",
+            'town': "Charlottesville",
+            'state': "VA",
+            'zipcode': "22903",
+            'phone_number': "asd4567890"
+        })
+        self.assertFalse(form.is_valid())
+        self.assertTrue(form.has_error("phone_number"))
+        self.assertEquals(form.errors.as_json(),
+            '{"phone_number": [{"message": "Enter a valid phone number, e.g. 0123456789", "code": ""}]}')
 
 class CustomerEditProfileTest(TestCase):
     '''
@@ -691,6 +781,7 @@ class DishRestrictionsTest(TestCase):
         dishForm = DishCreateForm({'vegan': True, 'allergies': 'Peanuts'})
         self.assertFalse(dishForm.is_valid())
 
+
 class CustomerProfileRedirectTest(TestCase):
     def test_customer_profile_navigation(self):
         self.client.login(username='anki@anki.com', password='ankith')
@@ -758,16 +849,22 @@ class DishReviewModelTest(TestCase):
       
 class AddressCreateFormTest(TestCase):
     def test_missing_street(self):
-        form = UserEditForm({'street': "",'town': "Charlottesville", 'state':'VA', 'zipcode':22903})
+        form = AddressCreateForm({'street': "",'town': "Charlottesville", 'state':'VA', 'zipcode':22903})
         self.assertFalse(form.is_valid())
     
     def test_missing_town(self):
-        form = UserEditForm({'street': "street",'town': "", 'state':'VA', 'zipcode':22903})
+        form = AddressCreateForm({'street': "street",'town': "", 'state':'VA', 'zipcode':22903})
         self.assertFalse(form.is_valid())
     
     def test_missing_state(self):
-        form = UserEditForm({'street': "street",'town': "cville", 'state':'', 'zipcode':22903})
+        form = AddressCreateForm({'street': "street",'town': "cville", 'state':'', 'zipcode':22903})
         self.assertFalse(form.is_valid())
+    
+    def test_invalid_zipcode(self):
+        form = AddressCreateForm({'street': "street",'town': "cville", 'state':'VA', 'zipcode':'2290e'})
+        self.assertFalse(form.is_valid())
+        self.assertTrue(form.has_error("zipcode"))
+        self.assertEqual(form.errors.as_json(),'{"zipcode": [{"message": "Zipcode must be all digits.", "code": ""}]}')
 
 class CustomerChangeCurrentAddressTest(TestCase):
     def test_change_current_address(self):
@@ -860,6 +957,43 @@ class CookCreateAccountTest(TestCase):
             'password': 'avatar'
         })
         self.assertFalse(form.is_valid())
+    
+    def test_invalid_phone_number_char(self):
+        #avatar = tempfile.NamedTemporaryFile(suffix=".jpg").name
+        form = CookCreateForm({
+            'delivery_distance_miles': '10',
+            'delivery_fee': '3.00',
+            'kitchen_license': 'testing',
+            'street': '1 University Court',
+            'town': 'Charlottesville',
+            'state': 'VA',
+            'zipcode': '07739',
+            'government_id': 'avatar',
+            'password': 'avatar',
+            'phone_number': "eas4567890",
+        })
+        self.assertFalse(form.is_valid())
+        self.assertTrue(form.has_error("phone_number"))
+        self.assertEquals(form.errors.as_json(),
+            '{"phone_number": [{"message": "Enter a valid 10-digit phone number, e.g. 0123456789", "code": ""}], "government_id": [{"message": "This field is required.", "code": "required"}]}')
+
+    def test_invalid_zipcode(self):
+        form = CookCreateForm({
+            'delivery_distance_miles': '10',
+            'delivery_fee': '3.00',
+            'kitchen_license': 'testing',
+            'street': '1 University Court',
+            'town': 'Charlottesville',
+            'state': 'VA',
+            'zipcode': '077ea',
+            'government_id': 'avatar',
+            'password': 'avatar',
+            'phone_number': "1234567890",
+        })
+        self.assertFalse(form.is_valid())
+        self.assertTrue(form.has_error("zipcode"))
+        self.assertEqual(form.errors.as_json(),'{"zipcode": [{"message": "Zipcode must be all digits.", "code": ""}], "government_id": [{"message": "This field is required.", "code": "required"}]}')
+
 
 class InvalidDishFormFields(TestCase):
     def test_missing_vegan_field(self):
@@ -973,3 +1107,6 @@ class MainViewsTests(TestCase):
     def test_custom_user_login_customer(self):
         response = self.client.post(reverse('login'), data={'username':'test@customer.com', 'password':'capstone'})
         self.assertEqual(response.url, '/customer/home')
+    
+
+    
