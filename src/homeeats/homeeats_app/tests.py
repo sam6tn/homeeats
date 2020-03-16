@@ -130,9 +130,36 @@ class CustomerFavoritesTest(TestCase):
         self.assertEquals(response.status_code,200)
 
 class RevenueReportTest(TestCase):
+    fixtures = ['test_data2.json']
     def test_revenue_page_get_success(self):
         response = self.client.get(reverse('admin_revenue'))
         self.assertEquals(response.status_code,200)
+    def test_revenue_page_orders(self):
+        self.client.login(username='admin', password='capstone')
+        response = self.client.get(reverse('admin_revenue'))
+        orders = response.context['orders']
+        self.assertEquals(len(orders),2)
+    def test_revenue_page_datepicker_valid(self):
+        dateForm = DatePickerForm({})
+        self.assertFalse(dateForm.is_valid())
+    def test_revenue_page_datepicker_form_wrong(self):
+        self.client.login(username='admin', password='capstone')
+        response = self.client.post(reverse('admin_revenue'), {'start_date_month': '1', 'start_date_day': '18', 'start_date_year': '2020', 'end_date_month': '1', 'end_date_day': '24', 'end_date_year': '2020'})
+        orders = response.context['orders']
+        self.assertEqual(len(orders), 0)
+    def test_revenue_page_datepicker_form_right(self):
+        self.client.login(username='admin', password='capstone')
+        response = self.client.post(reverse('admin_revenue'), {'start_date_month': '11', 'start_date_day': '02', 'start_date_year': '2019', 'end_date_month': '1', 'end_date_day': '24', 'end_date_year': '2020'})
+        orders = response.context['orders']
+        self.assertEqual(len(orders), 2)
+
+class RevenueReportTestCook(TestCase):
+    fixtures = ['test_data2.json']
+    def test_revenue_page_orders(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        response = self.client.get(reverse('revenuereports'))
+        orders = response.context['orders']
+        self.assertEquals(len(orders),0)
 
 class CookHomeTest(TestCase):
     fixtures = ['test_data.json']
