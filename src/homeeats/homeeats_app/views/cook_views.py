@@ -367,8 +367,9 @@ def cook_enable_dish(request, dish_id):
 @cook_required
 def revenuereports(request):
   cook = Cook.objects.get(user_id=request.user.id)
-  orders = Order.objects.filter(cook=cook, status='d').order_by('date')
-  total_revenue = orders.aggregate(Sum('cook_share'))['cook_share__sum']
+  orders = Order.objects.filter(cook=cook, status='d').order_by('date') #filter for completed orders and order chronologically 
+  total_revenue = orders.aggregate(Sum('cook_share'))['cook_share__sum'] 
+  #calculate total revenue for the cook by adding up all of the cook_share fields
   context = {
     'orders': orders,
     'total_revenue': total_revenue
