@@ -96,18 +96,32 @@
     
     </div>
 
-        {% comment %} This is the part that handles generating the messsages {% endcomment %}
-        <div class="container p-4 bg-white rounded shadow-sm mb-5">
-            {% for message in messages %}
-                <div class="row">
-                    <div class="col-lg-12">
+    {% comment %} This is the part that handles generating the messsages {% endcomment %}
+    <div class="container p-4 bg-white rounded shadow-sm mb-5">
+        {% for message in messages %}
+            <div class="row">
+                <div class="col-lg-12">
+                <!-- Left aligning all the customer messages -->
+                {% if message.user.first_name == order.customer.user.first_name %}
+                    <div class="card text-left mt-4 bg-info text-white">
+                        <!-- Adding Customer Label as asked for by customer -->
+                        <div class="card-header">{{message.user.first_name}} (Customer)</div>
                         <div class="card-body">
-                            <h5 class="card-title">{{message.user.first_name}}</h5>
                             <p class="card-text">{{message.message}}</p>
                         </div>
                     </div>
+                    {% else %}
+                    <!-- Right aligning all the cook messages -->
+                    <div class="card text-right mt-4 bg-light">
+                        <div class="card-header">{{message.user.first_name}} (Cook)</div>
+                        <div class="card-body">
+                            <p class="card-text">{{message.message}}</p>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
-            {% endfor %}
+            </div>
+        {% endfor %}
             <div class="row">
                 <div class="col-lg-12">
                     <form action="{% url 'cook_message' %}" method="POST">
