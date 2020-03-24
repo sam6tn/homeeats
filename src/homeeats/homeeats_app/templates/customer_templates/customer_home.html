@@ -230,6 +230,8 @@
                                     {% else %}
                                     <a href="{% url 'customer_dish' dish.id %}"><h5 class="card-title" style="color:black;position:relative">{{dish.title}}</h5></a>
                                     {% endif %}
+
+                                    <div>Chef: {{dish.cook.user.first_name}} {{dish.cook.user.last_name}}</div>
                           {% if dish.rating > 0 %}
                               <span class="fa fa-star {% if dish.rating >= 1 %}checked{% endif %} fa-sm"></span>
                               <span class="fa fa-star {% if dish.rating >= 2 %}checked{% endif %} fa-sm"></span>

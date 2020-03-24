@@ -82,7 +82,7 @@
   function removeItem(item_id, cart_id) {
     $.ajax({
         type: "POST",
-        url: "{% url 'removeItem' %}",
+        url: "{% url 'removefromcart' %}",
         data: {
         'item_id': item_id,
         'cart_id': cart_id,
