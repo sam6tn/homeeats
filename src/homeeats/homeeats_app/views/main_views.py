@@ -11,6 +11,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from ..forms import CustomerCreateForm, AddressCreateForm
 from django.urls import reverse_lazy
+from django.core.mail import send_mail
 import urllib.request
 import urllib.parse
 import json
@@ -47,6 +48,13 @@ def customercreate(request):
         shopping_cart = models.ShoppingCart.objects.create(customer=customer)
         shopping_cart.save()
         messages.add_message(request, messages.SUCCESS, 'Your account has been successfully created, login to start ordering now!')
+        send_mail(
+            'Welcome to HomeEats',
+            'Your HomeEats account has been created and you can start ordering now!',
+            'capstonecustomer2020@gmail.com',
+            [user.email],
+            fail_silently=False,
+        )
         return HttpResponseRedirect(reverse('login'))
   else:
     form = forms.CustomerCreateForm()
@@ -86,6 +94,13 @@ def cookcreate(request):
         user.save()
         cook.save()
         messages.add_message(request, messages.SUCCESS, 'Cook account requested, please wait until your account is approved!')
+        send_mail(
+            'Welcome to HomeEats',
+            'Your HomeEats Cook Account has requested approval, after someone reviews your account you will be ready to go!',
+            'capstonecustomer2020@gmail.com',
+            [user.email],
+            fail_silently=False,
+        )
         return HttpResponseRedirect(reverse('login'))
       else: 
         messages.add_message(request, messages.ERROR, 'Address not valid, please try again')
