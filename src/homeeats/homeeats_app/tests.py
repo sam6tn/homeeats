@@ -648,6 +648,9 @@ class CustomerCreateFormTest(TestCase):
         })
         self.assertFalse(form.is_valid())
     
+    '''
+    Tests that form is invalid if phone number is not a length of 10
+    '''
     def test_invalid_phone_number_length(self):
         form = CustomerCreateForm({
             'first_name': "First",
@@ -662,10 +665,21 @@ class CustomerCreateFormTest(TestCase):
         })
         self.assertFalse(form.is_valid())
         self.assertTrue(form.has_error("phone_number"))
+
+        '''
+        Checks that the error validation message for phonenumber is correct
+        '''
         self.assertEquals(form.errors.as_json(),
             '{"phone_number": [{"message": "Enter a valid phone number, e.g. 0123456789", "code": ""}]}')
     
+    '''
+    Test that form will be invalid if phonenumber contains non-numeric characters
+    '''
     def test_invalid_phone_number_characters(self):
+
+        '''
+        Create form with invalid phone number field
+        '''
         form = CustomerCreateForm({
             'first_name': "First",
             'last_name': "Last",
@@ -679,6 +693,10 @@ class CustomerCreateFormTest(TestCase):
         })
         self.assertFalse(form.is_valid())
         self.assertTrue(form.has_error("phone_number"))
+
+        '''
+        Checks the error validation message contains the phone number error message
+        '''
         self.assertEquals(form.errors.as_json(),
             '{"phone_number": [{"message": "Enter a valid phone number, e.g. 0123456789", "code": ""}]}')
 
@@ -833,10 +851,21 @@ class AddressCreateFormTest(TestCase):
         form = AddressCreateForm({'street': "street",'town': "cville", 'state':'', 'zipcode':22903})
         self.assertFalse(form.is_valid())
     
+    '''
+    Tests that a non-numeric zipcode will invalidate the form
+    '''
     def test_invalid_zipcode(self):
+
+        '''
+        Create form with invalid zipcode field (zipcode contains non-numeric characters)
+        '''
         form = AddressCreateForm({'street': "street",'town': "cville", 'state':'VA', 'zipcode':'2290e'})
         self.assertFalse(form.is_valid())
         self.assertTrue(form.has_error("zipcode"))
+
+        '''
+        Error validation message has the zipcode error validation message
+        '''
         self.assertEqual(form.errors.as_json(),'{"zipcode": [{"message": "Zipcode must be all digits.", "code": ""}]}')
 
 class CustomerChangeCurrentAddressTest(TestCase):
@@ -931,8 +960,13 @@ class CookCreateAccountTest(TestCase):
         })
         self.assertFalse(form.is_valid())
     
+    '''
+    Test that form will be invalid if phonenumber contains non-numeric characters
+    '''
     def test_invalid_phone_number_char(self):
-        #avatar = tempfile.NamedTemporaryFile(suffix=".jpg").name
+        '''
+        Create form with invalid phone number field
+        '''
         form = CookCreateForm({
             'delivery_distance_miles': '10',
             'delivery_fee': '3.00',
@@ -947,10 +981,21 @@ class CookCreateAccountTest(TestCase):
         })
         self.assertFalse(form.is_valid())
         self.assertTrue(form.has_error("phone_number"))
+
+        '''
+        Checks the error validation message contains the phone number error message
+        '''
         self.assertEquals(form.errors.as_json(),
             '{"phone_number": [{"message": "Enter a valid 10-digit phone number, e.g. 0123456789", "code": ""}], "government_id": [{"message": "This field is required.", "code": "required"}]}')
 
+    '''
+    Tests that a non-numeric zipcode will invalidate the form
+    '''
     def test_invalid_zipcode(self):
+        
+        '''
+        Create form with invalid zipcode field (zipcode contains non-numeric characters)
+        '''
         form = CookCreateForm({
             'delivery_distance_miles': '10',
             'delivery_fee': '3.00',
@@ -965,6 +1010,10 @@ class CookCreateAccountTest(TestCase):
         })
         self.assertFalse(form.is_valid())
         self.assertTrue(form.has_error("zipcode"))
+
+        '''
+        Error validation message has the zipcode error validation message
+        '''
         self.assertEqual(form.errors.as_json(),'{"zipcode": [{"message": "Zipcode must be all digits.", "code": ""}], "government_id": [{"message": "This field is required.", "code": "required"}]}')
 
 
