@@ -259,6 +259,10 @@
                               >
                                       <i class="fa fa-plus text-success"></i>
                                   </button>
+                                <button onclick="removefromcart('{{dish.id}}')" style="padding:0;background:none;border:none;outline:none;margin-top:3px;margin-right:5px;float:right;position:relative;">
+                                    <i class="fa fa-minus text-danger"></i>
+                                </button>
+                                        
                                   {% endif %}
                                   <span id="quantity{{dish.id}}" style="float:right;margin-right:5px;">
                                       {% for item in customer.shoppingcart.cartitem_set.all %}
@@ -303,6 +307,23 @@
                 document.getElementById(textname).innerHTML = data.quantity;
                 location.reload();
             }
+        });
+    }
+
+    function removefromcart(id){
+        $.ajax({
+        type: "POST",
+        url: "{% url 'removefromcart' %}",
+        data: {
+        'dish_id': id,
+        'csrfmiddlewaretoken': '{{ csrf_token }}'
+        },
+        dataType: 'json',
+
+        // Upon removing from cart successfully
+        success: function (data) {
+            location.reload();
+        }
         });
     }
     function submitForm(){

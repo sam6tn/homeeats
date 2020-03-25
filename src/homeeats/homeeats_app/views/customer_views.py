@@ -252,6 +252,10 @@ def removefromcart(request):
             shopping_cart.total_before_tip = 0
             shopping_cart.tax = 0
 
+        if shopping_cart.empty == True:
+            shopping_cart.empty = False
+            shopping_cart.total_before_tip += dish.cook.delivery_fee
+
         shopping_cart.save()
     data = {
         'quantity': return_quantity,
