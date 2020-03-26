@@ -1051,7 +1051,7 @@ class CookViewsTest(TestCase):
         self.assertEqual(CookChangeRequest.objects.get(kitchen_license='testingtesting').phone_number, '7037862000')
     def test_cook_single_order_view_works_on_existing_order(self):
         self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
-        response = self.client.get(reverse('single_order_view', args=[2]))
+        response = self.client.get(reverse('single_order_view', args=[1]))
         self.assertEqual(response.status_code, 200)
     def test_cook_message_works(self):
         self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
@@ -1124,6 +1124,17 @@ class MainViewsTests(TestCase):
     def test_custom_user_login_customer(self):
         response = self.client.post(reverse('login'), data={'username':'test@customer.com', 'password':'capstone'})
         self.assertEqual(response.url, '/customer/home')
+    def test_already_logged_in_go_to_login(self):
+        response = self.client.post(reverse('login'), data={'username':'test@customer.com', 'password':'capstone'})
+        self.assertEqual(response.url, '/customer/home')
+        response = self.client.post(reverse('login'), data={'username':'test@customer.com', 'password':'capstone'})
+        self.assertEqual(response.url, '/customer/home')
+    def test_already_logged_in_go_to_login_cook(self):
+        response = self.client.post(reverse('login'), data={'username':'ramsey@ramsey.com', 'password':'ramseyramsey'})
+        self.assertEqual(response.url, '/cook/home')
+        response = self.client.post(reverse('login'), data={'username':'ramsey@ramsey.com', 'password':'ramseyramsey'})
+        self.assertEqual(response.url, '/cook/home')
+        
     
 
     
