@@ -1165,14 +1165,17 @@ class MainViewsTests(TestCase):
     def test_already_logged_in_go_to_login(self):
         response = self.client.post(reverse('login'), data={'username':'test@customer.com', 'password':'capstone'})
         self.assertEqual(response.url, '/customer/home')
-        response = self.client.post(reverse('login'), data={'username':'test@customer.com', 'password':'capstone'})
+        response = self.client.get(reverse('login'))
         self.assertEqual(response.url, '/customer/home')
     def test_already_logged_in_go_to_login_cook(self):
         response = self.client.post(reverse('login'), data={'username':'ramsey@ramsey.com', 'password':'ramseyramsey'})
         self.assertEqual(response.url, '/cook/home')
-        response = self.client.post(reverse('login'), data={'username':'ramsey@ramsey.com', 'password':'ramseyramsey'})
+        response = self.client.get(reverse('login'))
         self.assertEqual(response.url, '/cook/home')
-        
+    def test_cook_create(self):
+        f = SimpleUploadedFile(name='alfredo.jpg', content=open(settings.BASE_DIR + '/homeeats_app/alfredo.jpg', 'rb').read(), content_type='image/jpeg')
+        response = self.client.post(reverse('cookcreate'), data={'email': 'yennnn@yennnn.com', 'street': '5108 Marshal Farm Court', 'town': 'Fairfax', 'state': 'VA', 'password': 'XdF8j876Dkl', 'first_name': 'Jack', 'last_name': 'Sparrow', 'kitchen_license': '873240DD932LL83', 'government_id': f, 'phone_number': '7038888888', 'delivery_distance_miles': 30, 'delivery_fee': 4.00, 'zipcode': '22033'})
+        self.assertEqual(response.status_code, 302)
     
 
     
