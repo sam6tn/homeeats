@@ -155,8 +155,8 @@ class CookCreateForm(forms.ModelForm):
     
 class DishCreateForm(forms.Form):
     title = forms.CharField(required=True,)
-    cuisine = forms.ModelChoiceField(queryset=Cuisine.objects.all(),empty_label='Select a cuisine')
     dish_image = forms.ImageField()
+    cuisine = forms.ModelChoiceField(queryset=Cuisine.objects.all(),empty_label='Select a cuisine')
     #ingredients = forms.CharField(required=True,widget=forms.Textarea(attrs={'style':'width=50%;','rows':2}))
     ingredients = SimpleArrayField(forms.CharField())
     description = forms.CharField(required=True,widget=forms.Textarea(attrs={'style':'width=50%;','rows':3}))
@@ -167,7 +167,7 @@ class DishCreateForm(forms.Form):
 
     class Meta:
         model = Dish
-        fields = ['title', 'cuisine','description','ingredients','price','cook_time','vegan','allergies']
+        fields = ['title', 'cuisine','description', 'dish_image', 'ingredients','price','cook_time','vegan','allergies']
 
     '''
     def clean_vegan(self):

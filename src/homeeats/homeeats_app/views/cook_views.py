@@ -19,6 +19,7 @@ import urllib.parse
 import json
 import ssl
 from django.core.mail import send_mail
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 #cook home page after login
 @login_required

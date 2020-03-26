@@ -8,8 +8,9 @@ from .views import *
 from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address, User, Customer, Order, ShoppingCart, CartItem, CookChangeRequest, OrderMessage
 from .forms import *
 from django.contrib.messages import get_messages
-
+import os
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.conf import settings
 
 #test all views in admin_views.py
 class AdminTests(TestCase):
@@ -1110,8 +1111,9 @@ class CookViewsTest(TestCase):
         self.assertEqual(response.status_code, 200)
     def test_cook_create_dish(self):
         self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
-        response = self.client.post(reverse('create_dish'), data={'title': 'ravioli', 'cuisine': 1, 'description': 'good ravioli', 'dish_image': 'something/dish_image', 'ingredients': 'cheese', 'price': 2.00, 'cook_time': 20, 'vegan': True, 'allergies': 'xd'})
-        self.assertEqual(response.status_code, 200)
+        f = SimpleUploadedFile(name='alfredo.jpg', content=open(settings.BASE_DIR + '/homeeats_app/alfredo.jpg', 'rb').read(), content_type='image/jpeg')
+        response = self.client.post(reverse('create_dish'), data={'title': 'ravioli', 'cuisine': 1, 'dish_image': f, 'description': 'good ravioli', 'ingredients': 'cheese', 'price': 2.00, 'cook_time': 20, 'vegan': True, 'allergies': 'xd'})
+        self.assertEqual(response.status_code, 302)
 
 
 class CustomerViewsTest(TestCase):
