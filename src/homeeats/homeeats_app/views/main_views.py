@@ -17,10 +17,6 @@ import urllib.parse
 import json
 import ssl
 
-def index(request):
-    template = loader.get_template('../templates/index.html')
-    return HttpResponse(template.render())
-
 '''
 View of the customer creation form with form validation.
 '''
