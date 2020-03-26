@@ -169,6 +169,21 @@ class CustomerTests(TestCase):
         self.client.login(username='anki@anki.com', password='ankith')
         response = self.client.post(reverse('customer_dish',args=[1]))
         self.assertEquals(response.status_code, 200)
+    def test_order_review(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        order = Order.objects.create(
+            customer=Customer.objects.get(id=3),
+            status='d',
+            cook=Cook.objects.get(id=1)
+        )
+        item = Item.objects.create(
+            dish=Dish.objects.get(id=1),
+            quantity=1,
+            order=order
+        )
+        data = {'description': ['test'], 'rating1': ['5'], 'dish_id': ['1'], 'submit1': ['']}
+        response = self.client.post(reverse('order', args=[order.id]),data=data)
+        self.assertEquals(response.status_code, 302)
 
 class CustomerFavoritesTest(TestCase):
     fixtures = ['test_data2.json']
@@ -1142,10 +1157,15 @@ class CustomerViewsTest(TestCase):
         self.assertEqual(response.status_code, 200)
         response = self.client.post(reverse('customer_home'), data={"cuisine": "", "search": "", "sort": ""})
         self.assertEqual(response.status_code, 200)
-    def test_customer_edit_profile_get_and_post(self):
+    def test_customer_edit_profile_get(self):
         self.client.login(username='test@customer.com', password='capstone')
         response = self.client.get(reverse('customer_edit_profile'))
         self.assertEqual(response.status_code, 200)
+    # def test_customer_edit_profile_post(self):
+    #     self.client.login(username='test@customer.com', password='capstone')
+    #     response = self.client.post(reverse('customer_edit_profile'))
+    #     self.assertEqual(response.status_code, 200)
+        
 
 class MainViewsTests(TestCase):
     fixtures = ['real_data.json']
