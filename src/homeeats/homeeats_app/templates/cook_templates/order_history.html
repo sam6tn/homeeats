@@ -8,61 +8,90 @@
 <h1>Fulfilled Orders</h1>
 
 <ul class="list-group">
+    <!-- Table header, Showing Order, Customer Name, Delivery Date, Total, Payment, and Details -->
 
-    {% for order in completed_orders %}
-    <a href="{% url 'single_order_view' order.id %}" class="list-group-item list-group-item-action">
-
-            <table style="width:100%">
-                <tr>
-                    <td><h4>Order #{{order.id}}</h4></td>
-                    <td><p class="font-weight-normal" style="float: right">{{order.name}}</p></td>
-                </tr>
-                <tr>
-                        <td><p class="card-text font-weight-bold text-secondary">
-                                Total: ${{order.total}} 
-                                {% if order.payment_option == 'a' %} 
-                                    <span class="badge badge-success">Cash</span>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Order #</th>
+                <th scope="col">Customer</th>
+                <th scope="col">Delivery Date</th>
+                <th scope="col">Total</th>
+                <th scope="col">Payment</th>
+                <th scope="col">Details</th>
+            </tr>
+    </thead>
+         <tbody>
+            <!-- Looping through all completed orders to automatically add rows to the table as more orders come in-->
+            {% for order in completed_orders %}
+    
+      
+            <tr>
+                <th scope="row">{{order.id}}</th>
+                <td>{{order.name}}</td>
+                <td>{{order.actual_arrival_time}}</td>
+                <td>${{order.total}}</td>
+                {% if order.payment_option == 'a' %} 
+                <!-- Showing Either Cash or Card Logo --> 
+                                    <td><span class="badge badge-success">Cash</span></td>
                                 {% else %}
-                                    <span class="badge badge-primary">Card</span>
+                                    <td><span class="badge badge-primary">Card</span></td>
                                 {% endif %}
-                            </p></td>
-                        <td><p class="text-muted" style="float: right;">Delivered: {{order.actual_arrival_time}}</p></td>
-                </tr>
+                <!-- Hyperlink to go to order details page -->
 
-            </table>
-    </a>
-    {% endfor %}
+                <td> <a href="{% url 'single_order_view' order.id %}" class="list-group-item list-group-item-action w-75 p-1">Order {{order.id}} <img src="/media/logo.png" width="40" height="40"></a></td>
+            </tr>
+        
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    
+    
 </ul>
-
+<!-- Repeating the same process for rejected orders --> 
 <h1>Rejected Orders</h1>
 
 <ul class="list-group">
 
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Order #</th>
+                <th scope="col">Customer</th>
+                <th scope="col">Delivery Date</th>
+                <th scope="col">Total</th>
+                <th scope="col">Payment</th>
+                <th scope="col">Reason</th>
+                <th scope="col">Details</th>
+            </tr>
+    </thead>
+         <tbody>
         {% for order in rejected_orders %}
-        <a href="{% url 'single_order_view' order.id %}" class="list-group-item list-group-item-action">
-            <table style="width:100%">
-                <tr>
-                    <td><h4>Order #{{order.id}}</h4></td>
-                    <td><p class="font-weight-normal" style="float: right">{{order.name}}</p></td>
-                </tr>
-                <tr>
-                        <td><p class="card-text font-weight-bold text-secondary">
-                            Total: ${{order.total}} 
-                            {% if order.payment_option == 'a' %} 
-                                <span class="badge badge-success">Cash</span>
-                            {% else %}
-                                <span class="badge badge-primary">Card</span>
-                            {% endif %}
-                        </p></td>
-                        <td><p class="text-muted" style="float: right;">{{order.date}}</p></td>
-                </tr>
-                <tr>
-                        <td><p class="card-text">Reason: {{order.rejected_reason}}</p></td>
-                </tr>
 
-            </table>
-    </a>
+        <tr>
+            <th scope="row">{{order.id}}</th>
+            <td>{{order.name}}</td>
+            <td>{{order.date}}</td>
+            <td>${{order.total}}</td>
+           {% if order.payment_option == 'a' %} 
+                <!-- Showing Either Cash or Card Logo --> 
+                                    <td><span class="badge badge-success">Cash</span></td>
+                                {% else %}
+                                    <td><span class="badge badge-primary">Card</span></td>
+                                {% endif %}
+                
+
+            <td>{{order.rejected_reason}}</td>
+
+            <!-- Hyperlink to go to order details page -->
+
+
+
+        <td><a href="{% url 'single_order_view' order.id %}" class="list-group-item list-group-item-action w-75 p-1">Order {{order.id}}<img src="/media/logo.png" width="40" height="40"></a></td>
         {% endfor %}
+    </tbody>
+    </table>
     </ul>
 
 </div>

@@ -7,6 +7,12 @@
 
 <h1>Revenue Report</h1>
 
+<form method="POST">
+    {% csrf_token %}
+    {{dateform}}
+    <input class="btn btn-primary" type="submit" value="Update">
+</form>
+
 <h5>Your revenue = 80% of Item Subtotal + Delivery Fee + Tip</h3>
 
 <table class="table">
