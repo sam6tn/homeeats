@@ -11,6 +11,23 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 
 class AdminTests(TestCase):
     fixtures = ['test_data2.json']
+    def test_admin_revenue(self):
+        self.client.login(username='admin', password='capstone')
+        order = Order.objects.create(
+            customer=Customer.objects.get(id=3),
+            status='c',
+            cook=Cook.objects.get(id=1)
+        )
+        data = {'start_date_month': ['1'],
+            'start_date_day': ['1'],
+            'start_date_year': ['2019'],
+            'end_date_month': ['1'],
+            'end_date_day': ['1'],
+            'end_date_year': ['2020']
+        }
+        # form = DatePickerForm(data)
+        response = self.client.post(reverse('admin_revenue'), data=data)
+        self.assertEquals(response.status_code,200)
     def test_approve_cook_applications(self):
         self.client.login(username='admin', password='capstone')
         response = self.client.post(reverse('admin_applications'), data={'id':1,'approve':['']})
