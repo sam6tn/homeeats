@@ -16,7 +16,6 @@ admin.site.index_title = "HomeEats Administration"
 #Update dish rating upon review deletion
 @receiver(pre_delete, sender=Dish_Review)
 def _Dish_Review_delete(sender, instance, **kwargs):
-	print("Deleting dish review")
 	dish = instance.dish
 	dish_reviews = Dish_Review.objects.filter(dish=dish).exclude(id=instance.id)
 	total_rating = 0
@@ -27,7 +26,6 @@ def _Dish_Review_delete(sender, instance, **kwargs):
 			total_rating += review.dish_rating
 			new_rating = int(round(total_rating/len(dish_reviews)))
 	dish.rating = new_rating
-	print(dish.rating)
 	dish.save()
 
 #Customizing the Dish Page
