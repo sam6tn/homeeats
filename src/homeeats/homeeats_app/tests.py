@@ -1108,6 +1108,11 @@ class CookViewsTest(TestCase):
         self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
         response = self.client.get(reverse('order_history'))
         self.assertEqual(response.status_code, 200)
+    def test_cook_create_dish(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        response = self.client.post(reverse('create_dish'), data={'title': 'ravioli', 'cuisine': 1, 'description': 'good ravioli', 'dish_image': 'something/dish_image', 'ingredients': 'cheese', 'price': 2.00, 'cook_time': 20, 'vegan': True, 'allergies': 'xd'})
+        self.assertEqual(response.status_code, 200)
+
 
 class CustomerViewsTest(TestCase):
     fixtures = ['real_data.json']

@@ -133,7 +133,7 @@ def create_dish(request):
       messages.add_message(request, messages.SUCCESS, 'Dish was successfully created!')
       return HttpResponseRedirect(reverse('cook_manage'))
     else:
-      
+      print(form.errors)
       messages.add_message(request, messages.ERROR, 'There are fields missing or invalid, try again please')
       return render(request, 'cook_templates/create_dish.html', {'form': form, 'cook': model_to_dict(cook)})
       

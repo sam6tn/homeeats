@@ -167,7 +167,7 @@ class DishCreateForm(forms.Form):
 
     class Meta:
         model = Dish
-        fields = ['title', 'cuisine','description', 'dish_image','ingredients','price','cook_time','vegan','allergies']
+        fields = ['title', 'cuisine','description','ingredients','price','cook_time','vegan','allergies']
 
     '''
     def clean_vegan(self):
