@@ -372,7 +372,6 @@ def revenuereports(request):
   #calculate total revenue for the cook by adding up all of the cook_share fields
   if request.method == 'POST':
     dateform = forms.DatePickerForm(request.POST)
-    print(request.POST)
     if dateform.is_valid():
       data = dateform.cleaned_data
       start_date = data["start_date"]

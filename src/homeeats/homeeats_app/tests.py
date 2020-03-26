@@ -11,6 +11,7 @@ from django.contrib.messages import get_messages
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 
+#test all views in admin_views.py
 class AdminTests(TestCase):
     fixtures = ['test_data2.json']
     def test_admin_revenue(self):
@@ -92,7 +93,37 @@ class AdminTests(TestCase):
         )
         response = self.client.post(reverse('admin_changerequests'), data={'id':change.id,'decline':['']})
         self.assertEquals(response.status_code,200)
-
+    def test_dateform_invalid(self):
+        self.client.login(username='admin', password='capstone')
+        data = {'start_date_month': ['2'],
+            'start_date_day': ['31'],
+            'start_date_year': ['2020'],
+            'end_date_month': ['1'],
+            'end_date_day': ['1'],
+            'end_date_year': ['2019']
+        }
+        response = self.client.post(reverse('admin_revenue'), data=data)
+        self.assertEquals(response.status_code,200)
+    def test_change_requests_diff_address(self):
+        self.client.login(username='admin', password='capstone')
+        change = CookChangeRequest.objects.create(
+            cook=Cook.objects.get(id=1),
+            kitchen_license="123456",
+            street_name="wrong address"
+        )
+        response = self.client.get(reverse('admin_changerequests'))
+        self.assertEquals(response.status_code,200)
+    def test_change_requests_same_address(self):
+        self.client.login(username='admin', password='capstone')
+        c = Cook.objects.get(id=1)
+        a = Address.objects.get(cook=c)
+        change = CookChangeRequest.objects.create(
+            cook=c,
+            kitchen_license="123456",
+            street_name=a.street_name
+        )
+        response = self.client.get(reverse('admin_changerequests'))
+        self.assertEquals(response.status_code,200)
 
 class CustomerTests(TestCase):
     fixtures = ['test_data2.json']
