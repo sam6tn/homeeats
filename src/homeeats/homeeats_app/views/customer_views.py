@@ -427,7 +427,6 @@ def order(request, order_id):
             dish = Dish.objects.get(id=dish_id)
             item = order.item_set.get(dish=dish)
             rating_name = "rating"+dish_id
-            #rating = data["dish_rating"]
             rating = request.POST[rating_name]
             text = data["description"]
             report = False
@@ -671,6 +670,7 @@ The form will show the customer their username, but they will not be allowed to 
 def customer_edit_profile(request):
     current_user = models.User.objects.get(id=request.user.id)
     if request.method == 'POST':
+
         form = UserEditForm(request.POST,
                             request.FILES,
                             instance=request.user)

@@ -8,11 +8,30 @@ from .views import *
 from homeeats_app.models import Cook, Cuisine, Dish, Dish_Review, Address, User, Customer, Order, ShoppingCart, CartItem, CookChangeRequest, OrderMessage
 from .forms import *
 from django.contrib.messages import get_messages
-
+import os
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.conf import settings
 
+#test all views in admin_views.py
 class AdminTests(TestCase):
     fixtures = ['test_data2.json']
+    def test_admin_revenue(self):
+        self.client.login(username='admin', password='capstone')
+        order = Order.objects.create(
+            customer=Customer.objects.get(id=3),
+            status='c',
+            cook=Cook.objects.get(id=1)
+        )
+        data = {'start_date_month': ['1'],
+            'start_date_day': ['1'],
+            'start_date_year': ['2019'],
+            'end_date_month': ['1'],
+            'end_date_day': ['1'],
+            'end_date_year': ['2020']
+        }
+        # form = DatePickerForm(data)
+        response = self.client.post(reverse('admin_revenue'), data=data)
+        self.assertEquals(response.status_code,200)
     def test_approve_cook_applications(self):
         self.client.login(username='admin', password='capstone')
         response = self.client.post(reverse('admin_applications'), data={'id':1,'approve':['']})
@@ -75,7 +94,37 @@ class AdminTests(TestCase):
         )
         response = self.client.post(reverse('admin_changerequests'), data={'id':change.id,'decline':['']})
         self.assertEquals(response.status_code,200)
-
+    def test_dateform_invalid(self):
+        self.client.login(username='admin', password='capstone')
+        data = {'start_date_month': ['2'],
+            'start_date_day': ['31'],
+            'start_date_year': ['2020'],
+            'end_date_month': ['1'],
+            'end_date_day': ['1'],
+            'end_date_year': ['2019']
+        }
+        response = self.client.post(reverse('admin_revenue'), data=data)
+        self.assertEquals(response.status_code,200)
+    def test_change_requests_diff_address(self):
+        self.client.login(username='admin', password='capstone')
+        change = CookChangeRequest.objects.create(
+            cook=Cook.objects.get(id=1),
+            kitchen_license="123456",
+            street_name="wrong address"
+        )
+        response = self.client.get(reverse('admin_changerequests'))
+        self.assertEquals(response.status_code,200)
+    def test_change_requests_same_address(self):
+        self.client.login(username='admin', password='capstone')
+        c = Cook.objects.get(id=1)
+        a = Address.objects.get(cook=c)
+        change = CookChangeRequest.objects.create(
+            cook=c,
+            kitchen_license="123456",
+            street_name=a.street_name
+        )
+        response = self.client.get(reverse('admin_changerequests'))
+        self.assertEquals(response.status_code,200)
 
 class CustomerTests(TestCase):
     fixtures = ['test_data2.json']
@@ -121,6 +170,21 @@ class CustomerTests(TestCase):
         self.client.login(username='anki@anki.com', password='ankith')
         response = self.client.post(reverse('customer_dish',args=[1]))
         self.assertEquals(response.status_code, 200)
+    def test_order_review(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        order = Order.objects.create(
+            customer=Customer.objects.get(id=3),
+            status='d',
+            cook=Cook.objects.get(id=1)
+        )
+        item = Item.objects.create(
+            dish=Dish.objects.get(id=1),
+            quantity=1,
+            order=order
+        )
+        data = {'description': ['test'], 'rating1': ['5'], 'dish_id': ['1'], 'submit1': ['']}
+        response = self.client.post(reverse('order', args=[order.id]),data=data)
+        self.assertEquals(response.status_code, 302)
 
 class CustomerFavoritesTest(TestCase):
     fixtures = ['test_data2.json']
@@ -1083,7 +1147,7 @@ class CookViewsTest(TestCase):
         self.assertEqual(CookChangeRequest.objects.get(kitchen_license='testingtesting').phone_number, '7037862000')
     def test_cook_single_order_view_works_on_existing_order(self):
         self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
-        response = self.client.get(reverse('single_order_view', args=[2]))
+        response = self.client.get(reverse('single_order_view', args=[1]))
         self.assertEqual(response.status_code, 200)
     def test_cook_message_works(self):
         self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
@@ -1109,6 +1173,12 @@ class CookViewsTest(TestCase):
         self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
         response = self.client.get(reverse('order_history'))
         self.assertEqual(response.status_code, 200)
+    def test_cook_create_dish(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        f = SimpleUploadedFile(name='alfredo.jpg', content=open(settings.BASE_DIR + '/homeeats_app/alfredo.jpg', 'rb').read(), content_type='image/jpeg')
+        response = self.client.post(reverse('create_dish'), data={'title': 'ravioli', 'cuisine': 1, 'dish_image': f, 'description': 'good ravioli', 'ingredients': 'cheese', 'price': 2.00, 'cook_time': 20, 'vegan': True, 'allergies': 'xd'})
+        self.assertEqual(response.status_code, 302)
+
 
 class CustomerViewsTest(TestCase):
     fixtures = ['real_data.json']
@@ -1143,10 +1213,15 @@ class CustomerViewsTest(TestCase):
         self.assertEqual(response.status_code, 200)
         response = self.client.post(reverse('customer_home'), data={"cuisine": "", "search": "", "sort": ""})
         self.assertEqual(response.status_code, 200)
-    def test_customer_edit_profile_get_and_post(self):
+    def test_customer_edit_profile_get(self):
         self.client.login(username='test@customer.com', password='capstone')
         response = self.client.get(reverse('customer_edit_profile'))
         self.assertEqual(response.status_code, 200)
+    # def test_customer_edit_profile_post(self):
+    #     self.client.login(username='test@customer.com', password='capstone')
+    #     response = self.client.post(reverse('customer_edit_profile'))
+    #     self.assertEqual(response.status_code, 200)
+        
 
 class MainViewsTests(TestCase):
     fixtures = ['real_data.json']
@@ -1156,6 +1231,20 @@ class MainViewsTests(TestCase):
     def test_custom_user_login_customer(self):
         response = self.client.post(reverse('login'), data={'username':'test@customer.com', 'password':'capstone'})
         self.assertEqual(response.url, '/customer/home')
+    def test_already_logged_in_go_to_login(self):
+        response = self.client.post(reverse('login'), data={'username':'test@customer.com', 'password':'capstone'})
+        self.assertEqual(response.url, '/customer/home')
+        response = self.client.get(reverse('login'))
+        self.assertEqual(response.url, '/customer/home')
+    def test_already_logged_in_go_to_login_cook(self):
+        response = self.client.post(reverse('login'), data={'username':'ramsey@ramsey.com', 'password':'ramseyramsey'})
+        self.assertEqual(response.url, '/cook/home')
+        response = self.client.get(reverse('login'))
+        self.assertEqual(response.url, '/cook/home')
+    def test_cook_create(self):
+        f = SimpleUploadedFile(name='alfredo.jpg', content=open(settings.BASE_DIR + '/homeeats_app/alfredo.jpg', 'rb').read(), content_type='image/jpeg')
+        response = self.client.post(reverse('cookcreate'), data={'email': 'yennnn@yennnn.com', 'street': '5108 Marshal Farm Court', 'town': 'Fairfax', 'state': 'VA', 'password': 'XdF8j876Dkl', 'first_name': 'Jack', 'last_name': 'Sparrow', 'kitchen_license': '873240DD932LL83', 'government_id': f, 'phone_number': '7038888888', 'delivery_distance_miles': 30, 'delivery_fee': 4.00, 'zipcode': '22033'})
+        self.assertEqual(response.status_code, 302)
     
 
     

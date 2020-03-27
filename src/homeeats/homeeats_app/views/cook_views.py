@@ -19,6 +19,7 @@ import urllib.parse
 import json
 import ssl
 from django.core.mail import send_mail
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 #cook home page after login
 @login_required
@@ -133,7 +134,7 @@ def create_dish(request):
       messages.add_message(request, messages.SUCCESS, 'Dish was successfully created!')
       return HttpResponseRedirect(reverse('cook_manage'))
     else:
-      
+      print(form.errors)
       messages.add_message(request, messages.ERROR, 'There are fields missing or invalid, try again please')
       return render(request, 'cook_templates/create_dish.html', {'form': form, 'cook': model_to_dict(cook)})
       
@@ -372,7 +373,6 @@ def revenuereports(request):
   #calculate total revenue for the cook by adding up all of the cook_share fields
   if request.method == 'POST':
     dateform = forms.DatePickerForm(request.POST)
-    print(request.POST)
     if dateform.is_valid():
       data = dateform.cleaned_data
       start_date = data["start_date"]

@@ -57,9 +57,9 @@ def cookApplications(request):
 #     cooks = Cook.objects.all()
 #     return render(request,'admin_templates/cooks.html', {'cooks':cooks})
 
-@register.filter
-def getvalue(d, key):
-    return d.get(key)
+# @register.filter
+# def getvalue(d, key):
+#     return d.get(key)
 
 def cook(request,cook_id):
     cook = Cook.objects.get(id=cook_id)
