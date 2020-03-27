@@ -230,6 +230,8 @@
                                     {% else %}
                                     <a href="{% url 'customer_dish' dish.id %}"><h5 class="card-title" style="color:black;position:relative">{{dish.title}}</h5></a>
                                     {% endif %}
+
+                                    <div>Chef: {{dish.cook.user.first_name}} {{dish.cook.user.last_name}}</div>
                           {% if dish.rating > 0 %}
                               <span class="fa fa-star {% if dish.rating >= 1 %}checked{% endif %} fa-sm"></span>
                               <span class="fa fa-star {% if dish.rating >= 2 %}checked{% endif %} fa-sm"></span>
@@ -257,6 +259,10 @@
                               >
                                       <i class="fa fa-plus text-success"></i>
                                   </button>
+                                <button onclick="removefromcart('{{dish.id}}')" style="padding:0;background:none;border:none;outline:none;margin-top:3px;margin-right:5px;float:right;position:relative;">
+                                    <i class="fa fa-minus text-danger"></i>
+                                </button>
+                                        
                                   {% endif %}
                                   <span id="quantity{{dish.id}}" style="float:right;margin-right:5px;">
                                       {% for item in customer.shoppingcart.cartitem_set.all %}
@@ -284,9 +290,9 @@
 <script>
     function addtocart(id){
         // temp solution (covers screen and then reloads page to prevent adding dishes from different cooks)
-        {% if customer.shoppingcart.empty %}
-            document.getElementById("overlay").style.display = 'block';
-        {% endif %}
+        if (customer.shoppingcart.empty){
+            document.getElementById("overlay").style.display = 'block'; 
+        }
 
         $.ajax({
             type: "POST",
@@ -301,6 +307,23 @@
                 document.getElementById(textname).innerHTML = data.quantity;
                 location.reload();
             }
+        });
+    }
+
+    function removefromcart(id){
+        $.ajax({
+        type: "POST",
+        url: "{% url 'removefromcart' %}",
+        data: {
+        'dish_id': id,
+        'csrfmiddlewaretoken': '{{ csrf_token }}'
+        },
+        dataType: 'json',
+
+        // Upon removing from cart successfully
+        success: function (data) {
+            location.reload();
+        }
         });
     }
     function submitForm(){
