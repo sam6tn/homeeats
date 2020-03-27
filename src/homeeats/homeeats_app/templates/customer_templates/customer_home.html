@@ -290,9 +290,9 @@
 <script>
     function addtocart(id){
         // temp solution (covers screen and then reloads page to prevent adding dishes from different cooks)
-        {% if customer.shoppingcart.empty %}
-            document.getElementById("overlay").style.display = 'block';
-        {% endif %}
+        if (customer.shoppingcart.empty){
+            document.getElementById("overlay").style.display = 'block'; 
+        }
 
         $.ajax({
             type: "POST",

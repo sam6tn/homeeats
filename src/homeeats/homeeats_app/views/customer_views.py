@@ -193,7 +193,6 @@ def addtocart(request):
                 existing_already = True
                 return_quantity = existing_item.quantity
                 break
-            #return_quantity += existing_item.quantity
         if (existing_already == False):  # dish not yet in cart so create new cart item
             cart_item = CartItem.objects.create(
                 dish=dish,
@@ -243,21 +242,16 @@ def removefromcart(request):
                 existing_item.save()
                 existing_already = True
                 return_quantity = existing_item.quantity
-                print("RETURN QUANTITY",return_quantity)
                 if (existing_item.quantity < 1):
                     existing_item.delete()
                 break
+
         if shopping_cart.total_before_tip == shopping_cart.cook.delivery_fee:
             shopping_cart.cook_id = None
             shopping_cart.empty = True
             shopping_cart.total_before_tip = 0
             shopping_cart.tax = 0
-        
-        '''
-        if shopping_cart.empty == True:
-            shopping_cart.empty = False
-            shopping_cart.total_before_tip += dish.cook.delivery_fee
-        '''
+
         shopping_cart.save()
     data = {
         'quantity': return_quantity,
