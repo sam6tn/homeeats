@@ -1178,6 +1178,39 @@ class CookViewsTest(TestCase):
         f = SimpleUploadedFile(name='alfredo.jpg', content=open(settings.BASE_DIR + '/homeeats_app/alfredo.jpg', 'rb').read(), content_type='image/jpeg')
         response = self.client.post(reverse('create_dish'), data={'title': 'ravioli', 'cuisine': 1, 'dish_image': f, 'description': 'good ravioli', 'ingredients': 'cheese', 'price': 2.00, 'cook_time': 20, 'vegan': True, 'allergies': 'xd'})
         self.assertEqual(response.status_code, 302)
+    def test_dish_create_fail(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        f = SimpleUploadedFile(name='alfredo.jpg', content=open(settings.BASE_DIR + '/homeeats_app/alfredo.jpg', 'rb').read(), content_type='image/jpeg')
+        response = self.client.post(reverse('create_dish'), data={'cuisine': 1, 'dish_image': f, 'description': 'good ravioli', 'ingredients': 'cheese', 'price': 2.00, 'cook_time': 20, 'vegan': True, 'allergies': 'xd'})
+        self.assertEqual(response.status_code, 200)
+    def test_cook_enable_dish_work(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        response = self.client.get(reverse('cook_enable_dish', args=[1]))
+        self.assertEqual(response.status_code, 302)
+    def test_cook_enable_dish_fail(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        response = self.client.get(reverse('cook_enable_dish', args=[9]))
+        self.assertEqual(response.status_code, 302)
+    def test_revenue_reports_time_fields_work(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        self.client.get(reverse('revenuereports'))
+        response = self.client.post(reverse('revenuereports'), data={'start_date': '2019-02-01', 'end_date': '2019-09-01'})
+        self.assertEqual(response.status_code, 200)
+    def test_revenue_reports_time_fields_fail(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        self.client.get(reverse('revenuereports'))
+        response = self.client.post(reverse('revenuereports'), data={'start_date': '201-02-01', 'end_date': '201-09-01'})
+        self.assertEqual(response.status_code, 200)
+    def test_cook_edit_dish_pass(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        f = SimpleUploadedFile(name='alfredo.jpg', content=open(settings.BASE_DIR + '/homeeats_app/alfredo.jpg', 'rb').read(), content_type='image/jpeg')
+        response = self.client.post(reverse('cook_edit_dish', args=[1]), data={'title': 'ravioli', 'cuisine': 1, 'dish_image': f, 'description': 'good ravioli', 'ingredients': 'cheese', 'price': 2.00, 'cook_time': 20, 'vegan': True, 'allergies': 'xd'})
+        self.assertEqual(response.status_code, 302)
+    def test_cook_edit_dish_fail(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        f = SimpleUploadedFile(name='alfredo.jpg', content=open(settings.BASE_DIR + '/homeeats_app/alfredo.jpg', 'rb').read(), content_type='image/jpeg')
+        response = self.client.post(reverse('cook_edit_dish', args=[1]), data={'cuisine': 1, 'dish_image': f, 'description': 'good ravioli', 'ingredients': 'cheese', 'price': 2.00, 'cook_time': 20, 'vegan': True, 'allergies': 'xd'})
+        self.assertEqual(response.status_code, 200)
 
 
 class CustomerViewsTest(TestCase):
