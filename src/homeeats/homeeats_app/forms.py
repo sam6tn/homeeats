@@ -152,6 +152,15 @@ class CookCreateForm(forms.ModelForm):
         if not zipcode.isdigit():
             raise forms.ValidationError("Zipcode must be all digits.")
         return zipcode
+
+    '''
+    Raising validation errors if email already exists
+    '''
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(username=email).exists():
+            raise forms.ValidationError("An account with this email already exists, go to login page or use a different email")
+        return email 
     
 class DishCreateForm(forms.Form):
     title = forms.CharField(required=True,)

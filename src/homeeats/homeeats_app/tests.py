@@ -11,6 +11,7 @@ from django.contrib.messages import get_messages
 import os
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.conf import settings
+from django.contrib.messages import get_messages
 
 #test all views in admin_views.py
 class AdminTests(TestCase):
@@ -1108,6 +1109,23 @@ class CookCreateAccountTest(TestCase):
         self.assertEqual(form.errors.as_json(),'{"zipcode": [{"message": "Zipcode must be all digits.", "code": ""}], "government_id": [{"message": "This field is required.", "code": "required"}]}')
 
 
+    '''
+    Tests that cook cannot create an account with an email that already exists
+    '''
+    def test_already_existing_email(self):
+        user = User.objects.create_user(username="test@email.com", email="test@email.com", password="password", first_name="First", last_name="Last")
+        user.save()
+        f = SimpleUploadedFile(name='alfredo.jpg', content=open(settings.BASE_DIR + '/homeeats_app/alfredo.jpg', 'rb').read(), content_type='image/jpeg')
+        
+        data={'email': 'test@email.com', 'street': '5108 Marshal Farm Court', 
+            'town': 'Fairfax', 'state': 'VA', 'password': 'XdF8j876Dkl', 'first_name': 'Jack', 
+            'last_name': 'Sparrow', 'kitchen_license': '873240DD932LL83', 'phone_number': '7038888888', 'delivery_distance_miles': 30, 'delivery_fee': 4.00, 'zipcode': '22033'}
+        
+        file_data = {'government_id':SimpleUploadedFile(name='alfredo.jpg', content=open(settings.BASE_DIR + '/homeeats_app/alfredo.jpg', 'rb').read(), content_type='image/jpeg')}
+        form = CookCreateForm(data, file_data)
+        self.assertEqual(form.errors.as_json(), '{"email": [{"message": "An account with this email already exists, go to login page or use a different email", "code": ""}]}')
+        
+
 class InvalidDishFormFields(TestCase):
     def test_missing_vegan_field(self):
         dishForm = DishCreateForm({'allergies': 'Peanuts'})
@@ -1279,5 +1297,49 @@ class MainViewsTests(TestCase):
         response = self.client.post(reverse('cookcreate'), data={'email': 'yennnn@yennnn.com', 'street': '5108 Marshal Farm Court', 'town': 'Fairfax', 'state': 'VA', 'password': 'XdF8j876Dkl', 'first_name': 'Jack', 'last_name': 'Sparrow', 'kitchen_license': '873240DD932LL83', 'government_id': f, 'phone_number': '7038888888', 'delivery_distance_miles': 30, 'delivery_fee': 4.00, 'zipcode': '22033'})
         self.assertEqual(response.status_code, 302)
     
+    def test_cook_create_invalid_address(self):
+        f = SimpleUploadedFile(name='alfredo.jpg', content=open(settings.BASE_DIR + '/homeeats_app/alfredo.jpg', 'rb').read(), content_type='image/jpeg')
+        response = self.client.post(reverse('cookcreate'), data={'email': 'yennnn@yennnn.com', 'street': 'kjsakefjk', 'town': 'sdfksf', 'state': 'kjfds', 'password': 'XdF8j876Dkl', 'first_name': 'Jack', 'last_name': 'Sparrow', 'kitchen_license': '873240DD932LL83', 'government_id': f, 'phone_number': '7038888888', 'delivery_distance_miles': 30, 'delivery_fee': 4.00, 'zipcode': '22033'})
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(str(messages[0]), 'Address not valid, please try again')
+    
+    def test_cook_create_invalid_fields_message(self):
+        f = SimpleUploadedFile(name='alfredo.jpg', content=open(settings.BASE_DIR + '/homeeats_app/alfredo.jpg', 'rb').read(), content_type='image/jpeg')
+        response = self.client.post(reverse('cookcreate'), data={'email': 'yennnnyennnn.com', 'street': '5108 Marshal Farm Court', 'town': 'Fairfax', 'state': 'VA', 'password': 'XdF8j876Dkl', 'first_name': 'Jack', 'last_name': 'Sparrow', 'kitchen_license': '873240DD932LL83', 'government_id': f, 'phone_number': '7038888888', 'delivery_distance_miles': 30, 'delivery_fee': 1.00, 'zipcode': '22033'})
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(str(messages[0]), 'One or more of the fields entered are missing or invalid')
+    
+    def test_cook_create_template(self):
+        response = self.client.get(reverse('cookcreate'))
+        self.assertTemplateUsed(response,'cook_create.html')
+    
+    def test_customer_create_template(self):
+        response = self.client.get(reverse('customercreate'))
+        self.assertTemplateUsed(response,'customer_create.html')
+    
+    def test_user_login_template(self):
+        response = self.client.get(reverse('login'))
+        self.assertTemplateUsed(response,'../templates/login.html')
+    
+class DishEditFormTests(TestCase):
+    fixtures = ['test_data.json']
+
+    def test_dish_edit_price(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        f = SimpleUploadedFile(name='alfredo.jpg', content=open(settings.BASE_DIR + '/homeeats_app/alfredo.jpg', 'rb').read(), content_type='image/jpeg')
+        file_data = {'dish_image':f}
+        form = DishEditForm({'title':'pasta', 'cuisine':1,'ingredients':'noodles',
+            'description':'noodles in sauce', 'cook_time':10,'price':-5,'vegan':False}, file_data)
+        self.assertEqual(form.errors.as_json(), '{"price": [{"message": "Ensure this value is greater than or equal to 0.0.", "code": "min_value"}]}')
+
+    def test_dish_edit_cook_time(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        f = SimpleUploadedFile(name='alfredo.jpg', content=open(settings.BASE_DIR + '/homeeats_app/alfredo.jpg', 'rb').read(), content_type='image/jpeg')
+        file_data = {'dish_image':f}
+        form = DishEditForm({'title':'pasta', 'cuisine':1,'ingredients':'noodles',
+            'description':'noodles in sauce', 'cook_time':0,'price':5.00,'vegan':False}, file_data)
+        self.assertEqual(form.errors.as_json(), '{"cook_time": [{"message": "Ensure this value is greater than or equal to 1.", "code": "min_value"}]}')
+        
+            
 
     
