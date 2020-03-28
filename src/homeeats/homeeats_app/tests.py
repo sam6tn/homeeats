@@ -968,6 +968,13 @@ class CustomerChangeCurrentAddressTest(TestCase):
         customer = Customer.objects.get(phone_number='8888888888')
         add = Address.objects.get(customer=customer, current_customer_address=True)
         self.assertEqual(add.street_name, '1815 Jefferson Park Avenue')
+        
+        #Bad Address
+        response = self.client.post(reverse('customer_home'), {'street': 'ajdfkj', 'town': 'jkasdjfk', 'state': 'kjdasjf', 'zipcode': '1111'})
+        self.assertEquals(response.status_code,302)
+        response = self.client.post(reverse('customer_home'), {'town': 'jkasdjfk'})
+        self.assertEquals(response.status_code,302)
+
 
 class CookChangeRequestTest(TestCase):
     def test_cook_request_relationship(self):
@@ -1246,14 +1253,28 @@ class CustomerViewsTest(TestCase):
         self.assertEqual(response.status_code, 200)
         response = self.client.post(reverse('customer_home'), data={"cuisine": "", "search": "", "sort": ""})
         self.assertEqual(response.status_code, 200)
+        response = self.client.post(reverse('customer_home'), data={"cuisine": "", "search": "", "sort": "rating"})
+        self.assertEqual(response.status_code, 200)
+        response = self.client.post(reverse('customer_home'), data={"cuisine": "", "search": "", "sort": "price"})
+        self.assertEqual(response.status_code, 200)
+        response = self.client.post(reverse('customer_home'), data={"cuisine": "", "search": "", "sort": "reverse_price"})
+        self.assertEqual(response.status_code, 200)
+    def test_filter_dishes_by_cook(self):
+        self.client.login(username='test@customer.com', password='capstone')
+        s = ShoppingCart.objects.get(id=4)
+        s.empty = False
+        s.save()
+        response = self.client.post(reverse('customer_home'), data={"cuisine": 1})
     def test_customer_edit_profile_get(self):
         self.client.login(username='test@customer.com', password='capstone')
         response = self.client.get(reverse('customer_edit_profile'))
         self.assertEqual(response.status_code, 200)
-    # def test_customer_edit_profile_post(self):
-    #     self.client.login(username='test@customer.com', password='capstone')
-    #     response = self.client.post(reverse('customer_edit_profile'))
-    #     self.assertEqual(response.status_code, 200)
+    def test_customer_edit_profile_post(self):
+        self.client.login(username='test@customer.com', password='capstone')
+        response = self.client.post(reverse('customer_edit_profile'), data={'first_name':''})
+        self.assertEqual(response.status_code, 200)
+        response = self.client.post(reverse('customer_edit_profile'), data={'first_name':'a','last_name':'b','username':'test@customer.com','phone_number':'0123456789'})
+        self.assertEqual(response.status_code, 302)
         
 
 class MainViewsTests(TestCase):
