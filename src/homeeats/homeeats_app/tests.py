@@ -12,6 +12,7 @@ import os
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.conf import settings
 from django.contrib.messages import get_messages
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 #test all views in admin_views.py
 class AdminTests(TestCase):
@@ -69,6 +70,7 @@ class AdminTests(TestCase):
         )
         response = self.client.post(reverse('admin_reportedreviews'),data={'id':review.id,'ban':['']})
         self.assertEquals(response.status_code,200)
+    
     def test_reported_review_allow(self):
         self.client.login(username='admin', password='capstone')
         review = Dish_Review.objects.create(
@@ -1320,7 +1322,41 @@ class MainViewsTests(TestCase):
         response = self.client.post(reverse('cookcreate'), data={'email': 'yennnn@yennnn.com', 'street': 'kjsakefjk', 'town': 'sdfksf', 'state': 'kjfds', 'password': 'XdF8j876Dkl', 'first_name': 'Jack', 'last_name': 'Sparrow', 'kitchen_license': '873240DD932LL83', 'government_id': f, 'phone_number': '7038888888', 'delivery_distance_miles': 30, 'delivery_fee': 4.00, 'zipcode': '22033'})
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(str(messages[0]), 'Address not valid, please try again')
+
+    def test_customer_banned_redirect_message(self):
+        c = Customer.objects.get(user__username='test@customer.com')
+        c.banned=True
+        c.save()
+        response = self.client.post(reverse('login'), data={'username':'test@customer.com', 'password':'capstone'})
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(str(messages[0]),"You are currently banned from this site, please contact an administrator")
+        self.assertEqual(response.url,'/')
     
+    def test_cook_banned_redirect_message(self):
+        c = Cook.objects.get(user__username='ramsey@ramsey.com')
+        c.approved=True
+        c.banned=True
+        c.save()
+        response = self.client.post(reverse('login'), data={'username':'ramsey@ramsey.com', 'password':'ramseyramsey'})
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(str(messages[0]),"You are currently banned from this site, please contact an administrator")
+        self.assertEqual(response.url,'/')
+    
+    def test_cook_not_approved_redirect_message(self):
+        c = Cook.objects.get(user__username='ramsey@ramsey.com')
+        c.approved=False
+        c.banned=False
+        c.save()
+        response = self.client.post(reverse('login'), data={'username':'ramsey@ramsey.com', 'password':'ramseyramsey'})
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(str(messages[0]),"You have not been approved yet, contact an administrator about your approval status")
+        self.assertEqual(response.url,'/')
+    
+    def test_invalid_login_message(self):
+        response = self.client.post(reverse('login'), data={'username':'ramsey@ramsey.com', 'password':'wrong'})
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(str(messages[0]),"Invalid Login Credentials. Please Try Again.")
+        
     def test_cook_create_invalid_fields_message(self):
         f = SimpleUploadedFile(name='alfredo.jpg', content=open(settings.BASE_DIR + '/homeeats_app/alfredo.jpg', 'rb').read(), content_type='image/jpeg')
         response = self.client.post(reverse('cookcreate'), data={'email': 'yennnnyennnn.com', 'street': '5108 Marshal Farm Court', 'town': 'Fairfax', 'state': 'VA', 'password': 'XdF8j876Dkl', 'first_name': 'Jack', 'last_name': 'Sparrow', 'kitchen_license': '873240DD932LL83', 'government_id': f, 'phone_number': '7038888888', 'delivery_distance_miles': 30, 'delivery_fee': 1.00, 'zipcode': '22033'})
