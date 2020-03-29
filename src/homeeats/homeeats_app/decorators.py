@@ -10,7 +10,6 @@ def cook_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_
     )
     if function:
         return actual_decorator(function)
-    return actual_decorator
 
 
 def customer_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url='login'):
@@ -21,4 +20,3 @@ def customer_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, lo
     )
     if function:
         return actual_decorator(function)
-    return actual_decorator
