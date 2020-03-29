@@ -260,7 +260,13 @@ def removefromcart(request):
 
     return JsonResponse(data)
 
+'''
+If the heart-shaped like button on the dish card is empty, the customer can press the button to 
+save the dish to the arraylist of favorite dishes.
 
+Else the heart-shaped like button on the dish card is filled red, the customer can press the button 
+to remove the dish from the arraylist of favorite dishes.
+'''
 @login_required
 @customer_required
 def toggle_favorite(request):

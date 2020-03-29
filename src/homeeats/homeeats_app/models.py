@@ -16,20 +16,23 @@ class User(AbstractUser):
   is_customer = models.BooleanField(default=False)
 
 '''
-Columns in the cook database table
+Columns in the cook database table. The cook is a type of user, as specified by 
+the one-to-one field with the User model
 '''
 class Cook(models.Model):
-  banned = models.BooleanField(default=False)
-  approved = models.BooleanField(default=False)
-  online = models.BooleanField(default=False)
-  kitchen_license = models.CharField(max_length=30)
-  government_id = models.ImageField(default="", upload_to='cook_government_ids')
+  banned = models.BooleanField(default=False)       # False = account has not been banned; True = account has been banned
+  approved = models.BooleanField(default=False)     # False = account has not bee approved; True = account has been approved
+  online = models.BooleanField(default=False)       # False = cook is not currently accepting orders; True = cook is currently accepting orders
+  kitchen_license = models.CharField(max_length=30) # Kitchen license identification code 
+  government_id = models.ImageField(default="", upload_to='cook_government_ids') 
   phone_number = models.CharField(max_length=30, default="")
-  user = models.OneToOneField(User, on_delete=models.CASCADE)
-  def __str__(self):
-    return self.user.first_name + " " + self.user.last_name + " (" + str(self.id) + ")"
+  user = models.OneToOneField(User, on_delete=models.CASCADE)  # Each user account can have maximum one relationship with a cook, vice-versa
   delivery_distance_miles = models.IntegerField(default=30)
   delivery_fee = models.DecimalField(default=0, decimal_places=2, max_digits=6)
+
+  def __str__(self):
+    return self.user.first_name + " " + self.user.last_name + " (" + str(self.id) + ")"
+  
 
 class Cuisine(models.Model):
   name = models.CharField(default="", max_length=30)
@@ -38,18 +41,39 @@ class Cuisine(models.Model):
   def __str__(self):
     return self.name
 
+'''
+Columns of the dish database table. Cooks have the ability to generate new dishes in the database table.
+'''
 class Dish(models.Model):
-  title = models.CharField(default="", max_length=30)
+  # title is the name of the dish
+  title = models.CharField(default="", max_length=30) 
+
+  # False = dish is available for order; True = dish is unavailable for order
   cook_disabled = models.BooleanField(default=False)
+
+  # Specifies what kind of food the dish is, e.g. Italian
   cuisine = models.ForeignKey(Cuisine, on_delete=models.CASCADE)
+
   description = models.CharField(default="", max_length=200)
+
+  # List of ingredients that compose the dish, stored as an array in the database table
   ingredients = ArrayField(models.CharField(max_length=30, blank=True), default=list)
+
   dish_image = models.ImageField(default="", upload_to='dishes')
+
   cook_time = models.IntegerField(default=0)
+
   price = models.DecimalField(default=0, decimal_places=2, max_digits=6)
+
+  # Specifies the cook that makes the dish
   cook = models.ForeignKey(Cook, on_delete=models.CASCADE)
+
+  # Average of all numeric ratings from customers
   rating = models.IntegerField(default=0)
+
+  # False = dish is not vegan; True = dish is vegan
   vegan = models.BooleanField(default=False)
+  
   allergies = models.CharField(default="", max_length=200)
 
   def __str__(self):
@@ -57,11 +81,14 @@ class Dish(models.Model):
   class Meta:
     verbose_name_plural = "Dishes"
 
+'''
+Customer model is a type of user account, as specified by the one-to-one field with the user model.
+'''
 class Customer(models.Model):
-  banned = models.BooleanField(default=False)
+  banned = models.BooleanField(default=False) #False = account has not been banned; True = account has been banned
   phone_number = models.CharField(null=False,max_length=10, default="")
-  user = models.OneToOneField(User, on_delete=models.CASCADE)
-  favorites = models.ManyToManyField(Dish, blank=True)
+  user = models.OneToOneField(User, on_delete=models.CASCADE) # Each user account can have maximum one relationship with a customer, vice-versa
+  favorites = models.ManyToManyField(Dish, blank=True) #User can have many favorite dish objects
   def __str__(self):
     return self.user.first_name + " " + self.user.last_name + " (" + str(self.id) + ")"
 

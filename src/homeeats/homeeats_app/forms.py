@@ -31,29 +31,32 @@ class CustomerCreateForm(forms.ModelForm):
     last_name = forms.CharField(label='Last Name', required=True,error_messages={'required':'Please enter your last name.'})
     password = forms.CharField(widget=forms.PasswordInput())
     email = forms.EmailField(required=True,)
-    #street = forms.CharField(required=True,label='Street Address')
-    #town = forms.CharField(required=True,label='City/Town')
-    #state = forms.CharField(required=True,)
-    #zipcode = forms.CharField(required=True,)
     phone_number = forms.CharField(label='Phone Number')
     
     class Meta:
         model = Customer 
-        #fields = ('first_name','last_name','password','email','street','town','state',
-         #   'zipcode','phone_number',)
         fields = ('first_name','last_name','password','phone_number',)
     
+    '''
+    Validates phone number field
+    '''
     def clean_phone_number(self):
         data = self.cleaned_data['phone_number']
-        if not data.isdigit():
+
+        if not data.isdigit(): # Checks that the phone number only contains digits
             raise forms.ValidationError('Enter a valid phone number, e.g. 0123456789')
-        elif len(data) != 10:
+
+        elif len(data) != 10:   #Checks that the phone number only contains 10 characters
             raise forms.ValidationError('Enter a valid phone number, e.g. 0123456789')
         return data
     
+    
+    '''
+    Validates the email field
+    '''
     def clean_email(self):
         email = self.cleaned_data.get('email')
-        if User.objects.filter(username=email).exists():
+        if User.objects.filter(username=email).exists(): # Checks that another account with the entered email does not exist
             raise forms.ValidationError("An account with this email already exists, go to login page or use a different email")
         return email    
 
@@ -162,14 +165,18 @@ class CookCreateForm(forms.ModelForm):
             raise forms.ValidationError("An account with this email already exists, go to login page or use a different email")
         return email 
     
+
 class DishCreateForm(forms.Form):
     title = forms.CharField(required=True,)
     dish_image = forms.ImageField()
+
+    # Displays all of the cuisines in the cuisine database table as a drop down selection
     cuisine = forms.ModelChoiceField(queryset=Cuisine.objects.all(),empty_label='Select a cuisine')
-    #ingredients = forms.CharField(required=True,widget=forms.Textarea(attrs={'style':'width=50%;','rows':2}))
+    
+    # Allows the cook to enter the ingredients into a text field and splits the text at commas as saves ingredients into an array
     ingredients = SimpleArrayField(forms.CharField())
     description = forms.CharField(required=True,widget=forms.Textarea(attrs={'style':'width=50%;','rows':3}))
-    cook_time = forms.IntegerField(required=True, label='Cook time (in minutes)',min_value=1)
+    cook_time = forms.IntegerField(required=True, label='Cook time (in minutes)',min_value=1) 
     price = forms.FloatField(required=True,min_value=0.00, widget=forms.NumberInput(attrs={'step':0.01}))
     vegan = forms.BooleanField(required=False,initial=False)
     allergies = forms.CharField(required=False)
@@ -178,15 +185,6 @@ class DishCreateForm(forms.Form):
         model = Dish
         fields = ['title', 'cuisine','description', 'dish_image', 'ingredients','price','cook_time','vegan','allergies']
 
-    '''
-    def clean_vegan(self):
-        vegan = self.cleaned_data.get('vegan')
-        if vegan == 'on':
-            vegan = True
-        else:
-            vegan = False
-        return vegan
-    '''
 
 class DishEditForm(forms.ModelForm):
     title = forms.CharField(required=True,)
@@ -201,21 +199,11 @@ class DishEditForm(forms.ModelForm):
     class Meta:
         model = Dish
         fields = ('title', 'description','ingredients', 'dish_image', 'cook_time', 'price', 'cuisine', 'vegan', 'allergies',)
-    
-    '''
-    def clean_price(self):
-        price = self.cleaned_data.get('price')
-        if (float(price) < 0.01):
-            raise forms.ValidationError("Price must be greater than or equal to $0.01.")
-        return price
-    
-    def clean_cook_time(self):
-        cook_time = self.cleaned_data.get('cook_time')
-        if (int(cook_time) < 1):
-            raise forms.ValidationError("Cook time must be greater than or equal to 1 minute.")
-        return cook_time
-    '''
 
+
+'''
+Filters dish results based on search criteria and can sort dishes based on rating and price
+'''
 class DishSearchForm(forms.Form):
     search = forms.CharField(label="Search",max_length=30, required=False, widget=forms.TextInput(attrs={'placeholder':'Search','class':'form-control mr-sm-2'}))
     SORT_CHOICES = (
@@ -225,6 +213,7 @@ class DishSearchForm(forms.Form):
     )
     cuisine_types = Cuisine.objects.all()
     cuisines = [('none','Cuisine: All')]
+
     for cuisine in cuisine_types:
         cuisines.append((cuisine.id,'Cuisine: '+cuisine.name))
     sort = forms.ChoiceField(

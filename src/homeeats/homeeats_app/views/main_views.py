@@ -27,27 +27,38 @@ View of the customer creation form with form validation.
 
 def customercreate(request):
   if request.method == 'POST':
-    form = forms.CustomerCreateForm(request.POST)
+    form = forms.CustomerCreateForm(request.POST) 
     address_form = forms.AddressCreateForm(request.POST)
 
-    '''
-    If any of the customer information is incorrect, keep form filled out but display error messages
-    '''
     if form.is_valid() and address_form.is_valid():
       data = form.cleaned_data
       address_data = address_form.cleaned_data
-      if verify_address(address_data['street'], address_data['town'], address_data['state']):
+
+      if verify_address(address_data['street'], address_data['town'], address_data['state']): #Checks that the address is a valid location
+        '''
+        Creating new user and customer objects to save and link together
+        '''
         user = User.objects.create_user(username=data['email'], email=data['email'], password=data['password'], first_name=data['first_name'], last_name=data['last_name'])
         customer = models.Customer.objects.create(phone_number=data['phone_number'], user_id=user.id)
         user.is_customer = True
         user.save()
         customer.save()
+        
+        '''
+        Get customer id of customer object just made, then linking and saving it to customer's address object
+        '''
         customer = models.Customer.objects.get(user_id=user.id)
         address = models.Address.objects.create(customer=customer, street_name=address_data['street'], city=address_data['town'], state=address_data['state'], zipcode=address_data['zipcode'], current_customer_address=True)
         address.save()
+
+        '''
+        Creating a shopping cart object for customer to store orders in
+        '''
         shopping_cart = models.ShoppingCart.objects.create(customer=customer)
         shopping_cart.save()
         messages.add_message(request, messages.SUCCESS, 'Your account has been successfully created, login to start ordering now!')
+        
+        # Confirmation email of account creations
         send_mail(
             'Welcome to HomeEats',
             'Your HomeEats account has been created and you can start ordering now!',
@@ -56,6 +67,10 @@ def customercreate(request):
             fail_silently=False,
         )
         return HttpResponseRedirect(reverse('login'))
+  
+  '''
+  If any of the customer information is incorrect, keep form filled out but display error messages
+  '''
   else:
     form = forms.CustomerCreateForm()
     address_form = forms.AddressCreateForm()
