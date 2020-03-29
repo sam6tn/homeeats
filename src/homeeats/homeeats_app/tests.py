@@ -578,6 +578,14 @@ class UserGroupTest(TestCase):
     def test_redirect_customer_home(self):
         response = self.client.get(reverse('cook_home'))
         self.assertEquals(response.status_code, 302)
+    def test_customer_home_success(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        response = self.client.get(reverse('customer_home'))
+        self.assertEquals(response.status_code, 302)
+    def test_cook_home_success(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        response = self.client.get(reverse('cook_home'))
+        self.assertEquals(response.status_code, 302)
 
 class CookReportDishReviewTest(TestCase):
     fixtures = ['test_data.json']
