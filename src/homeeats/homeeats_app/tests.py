@@ -1375,6 +1375,37 @@ class MainViewsTests(TestCase):
         response = self.client.get(reverse('login'))
         self.assertTemplateUsed(response,'../templates/login.html')
     
+    def test_order_reject_status(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        c = Cook.objects.get(user__username='ramsey@ramsey.com')
+        o = Order.objects.create(
+            customer=Customer.objects.get(id=3),
+            status='p',
+            cook=c
+        )
+        self.assertEqual(o.status,'p')
+        response = self.client.post(reverse('reject_order'),{'order_id':o.id})
+        o1 = Order.objects.get(id=o.id)
+        self.assertEqual(o1.status,'r')
+        self.assertEqual(o1.reject_reason.reason,"Expired")
+        #print(response.data)
+    
+    def test_order_reject_reason(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        reason = RejectReason.objects.create(reason="Too busy")
+        c = Cook.objects.get(user__username='ramsey@ramsey.com')
+        o = Order.objects.create(
+            customer=Customer.objects.get(id=3),
+            status='p',
+            cook=c,
+            reject_reason=reason
+        )
+        self.assertEqual(o.status,'p')
+        response = self.client.post(reverse('reject_order'),{'order_id':o.id})
+        o1 = Order.objects.get(id=o.id)
+        self.assertEqual(o1.status,'r')
+        self.assertEqual(o1.reject_reason.reason,"Expired")
+    
 class DishEditFormTests(TestCase):
     fixtures = ['test_data.json']
 

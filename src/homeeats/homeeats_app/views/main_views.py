@@ -189,10 +189,10 @@ def reject_order(request):
     try:
       order.reject_reason = RejectReason.objects.get(reason="Expired")
     except:
-      #Create the "Expired" reject reason if not already existing
       e = RejectReason(reason="Expired")
       e.save()
       order.reject_reason = RejectReason.objects.get(reason="Expired")
+    
     order.save()
     data={
       'success':True
