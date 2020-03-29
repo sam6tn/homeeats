@@ -294,10 +294,18 @@ class CookManageTest(TestCase):
         dishes = response.context['dishes']
         self.assertEquals(len(dishes),1)
     def test_delete_dish_redirects_to_cook_cuisine_dishes(self):
-       self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
-       response = self.client.get(reverse('delete_dish', args=[2]))
-       self.assertEquals(response.status_code, 302)
-       self.assertEquals(response.url, "/cook/cuisine/1/dishes")
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        response = self.client.get(reverse('delete_dish', args=[2]))
+        self.assertEquals(response.status_code, 302)
+        self.assertEquals(response.url, "/cook/cuisine/1/dishes")
+    def test_cook_delete_last_dish_in_cuisine(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        response = self.client.get(reverse('delete_dish', args=[2]))
+        self.assertEquals(response.status_code, 302)
+        self.assertEquals(response.url, "/cook/cuisine/1/dishes")
+        response = self.client.get(reverse('delete_dish', args=[3]))
+        self.assertEquals(response.status_code, 302)
+        self.assertEquals(response.url, "/cook/manage/")
     
     #Tests that the editing a dish page correctly redirects
     def test_edit_dish_redirect_to_cook_cuisine_dishes(self):
@@ -1149,6 +1157,11 @@ class CookViewsTest(TestCase):
         self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
         self.client.post(reverse('requestchange'), data={'kitchen_license': 'testingtesting', 'phone_number': '7037862000', 'street_address': '1815 Jefferson Park Ave', 'city': 'Charlottesville', 'state': 'VA', 'zipcode': '22903'})
         self.assertEqual(CookChangeRequest.objects.get(kitchen_license='testingtesting').phone_number, '7037862000')
+        self.client.get(reverse('cookeditprofile'))
+    def test_cook_change_request_fail(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        response = self.client.post(reverse('requestchange'), data={'kitchen_license': 'testingtesting', 'phone_number': '7037862000', 'street_address': 'aljsfd;lkjfa;sldjf', 'city': 'akdj;sfklajslkdf', 'state': 'adfasdf', 'zipcode': '12231232131231212'})
+        self.assertEqual(response.status_code, 302)
     def test_cook_single_order_view_works_on_existing_order(self):
         self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
         response = self.client.get(reverse('single_order_view', args=[1]))
@@ -1215,6 +1228,11 @@ class CookViewsTest(TestCase):
         f = SimpleUploadedFile(name='alfredo.jpg', content=open(settings.BASE_DIR + '/homeeats_app/alfredo.jpg', 'rb').read(), content_type='image/jpeg')
         response = self.client.post(reverse('cook_edit_dish', args=[1]), data={'cuisine': 1, 'dish_image': f, 'description': 'good ravioli', 'ingredients': 'cheese', 'price': 2.00, 'cook_time': 20, 'vegan': True, 'allergies': 'xd'})
         self.assertEqual(response.status_code, 200)
+    def test_cook_edit_dish_not_theirs_fail(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        response = self.client.get(reverse('cook_edit_dish', args=[3]))
+        self.assertEqual(response.status_code, 302)
+
 
 
 class CustomerViewsTest(TestCase):
