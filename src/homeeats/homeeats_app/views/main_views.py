@@ -67,10 +67,7 @@ def cookcreate(request):
     '''
     if cook_create_form.is_valid():
       data = cook_create_form.cleaned_data
-      if User.objects.filter(username=data['email']).exists():
-        messages.add_message(request, messages.ERROR, 'An account with this email already exists, go to login page or use a different email')
-        return render(request, 'cook_create.html', {'cook_create_form': cook_create_form})
-      elif verify_address(data['street'], data['town'], data['state']):
+      if verify_address(data['street'], data['town'], data['state']):
 
         '''
         If all information is valid, create user, cook, address objects and save to database
@@ -192,10 +189,10 @@ def reject_order(request):
     try:
       order.reject_reason = RejectReason.objects.get(reason="Expired")
     except:
-      #Create the "Expired" reject reason if not already existing
       e = RejectReason(reason="Expired")
       e.save()
       order.reject_reason = RejectReason.objects.get(reason="Expired")
+    
     order.save()
     data={
       'success':True
