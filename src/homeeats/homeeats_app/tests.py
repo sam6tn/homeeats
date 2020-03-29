@@ -1221,7 +1221,7 @@ class CookViewsTest(TestCase):
     def test_cook_create_dish(self):
         self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
         f = SimpleUploadedFile(name='alfredo.jpg', content=open(settings.BASE_DIR + '/homeeats_app/alfredo.jpg', 'rb').read(), content_type='image/jpeg')
-        response = self.client.post(reverse('create_dish'), data={'title': 'ravioli', 'cuisine': 1, 'dish_image': f, 'description': 'good ravioli', 'ingredients': 'cheese', 'price': 2.00, 'cook_time': 20, 'vegan': True, 'allergies': 'xd'})
+        response = self.client.post(reverse('create_dish'), data={'title': 'ravioli', 'cuisine': 4, 'dish_image': f, 'description': 'good ravioli', 'ingredients': 'cheese', 'price': 2.00, 'cook_time': 20, 'vegan': True, 'allergies': 'xd'})
         self.assertEqual(response.status_code, 302)
     def test_dish_create_fail(self):
         self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
@@ -1277,6 +1277,27 @@ class CookViewsTest(TestCase):
         self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
         response = self.client.get(reverse('available'))
         self.assertEquals(response.status_code, 302)
+    def test_cook_delete_dish_not_theirs_fails(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        response = self.client.get(reverse('delete_dish', args=[3]))
+        self.assertEquals(response.status_code, 302)
+    def test_edit_dish_price_too_low(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        f = SimpleUploadedFile(name='alfredo.jpg', content=open(settings.BASE_DIR + '/homeeats_app/alfredo.jpg', 'rb').read(), content_type='image/jpeg')
+        response = self.client.post(reverse('cook_edit_dish', args=[1]), data={'title': 'ravioli', 'cuisine': 1, 'dish_image': f, 'description': 'good ravioli', 'ingredients': 'cheese', 'price': 0.00, 'cook_time': 20, 'vegan': True, 'allergies': 'xd'})
+        self.assertEqual(response.status_code, 302)
+    def test_edit_dish_cook_time_too_low(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        f = SimpleUploadedFile(name='alfredo.jpg', content=open(settings.BASE_DIR + '/homeeats_app/alfredo.jpg', 'rb').read(), content_type='image/jpeg')
+        response = self.client.post(reverse('cook_edit_dish', args=[1]), data={'title': 'ravioli', 'cuisine': 1, 'dish_image': f, 'description': 'good ravioli', 'ingredients': 'cheese', 'price': 2.00, 'cook_time': 0, 'vegan': True, 'allergies': 'xd'})
+        self.assertEqual(response.status_code, 200)
+    def test_cook_request_change_twice_deletes_last_object(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        self.client.post(reverse('requestchange'), data={'kitchen_license': 'testingtesting', 'phone_number': '7037862000', 'street_address': '1815 Jefferson Park Ave', 'city': 'Charlottesville', 'state': 'VA', 'zipcode': '22903'})
+        self.assertEqual(CookChangeRequest.objects.get(kitchen_license='testingtesting').phone_number, '7037862000')
+        self.client.post(reverse('requestchange'), data={'kitchen_license': 'testingtesting', 'phone_number': '7037862000', 'street_address': '1815 Jefferson Park Ave', 'city': 'Charlottesville', 'state': 'VA', 'zipcode': '22903'})
+        self.assertEqual(CookChangeRequest.objects.get(kitchen_license='testingtesting').phone_number, '7037862000')
+        self.client.get(reverse('cookeditprofile'))
         
 class CustomerViewsTest(TestCase):
     fixtures = ['real_data.json']

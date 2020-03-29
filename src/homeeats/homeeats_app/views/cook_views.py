@@ -418,10 +418,6 @@ def cook_edit_dish(request, dish_id):
       messages.add_message(request, messages.SUCCESS, 'Dish was successfully updated!')
       return HttpResponseRedirect(reverse('cook_cuisine_dishes', args=[dish.cuisine_id]))
     else:
-      # Display an error message if the price is below 0.01
-      if (float(request.POST['price']) < 0.01):
-         messages.add_message(request, messages.ERROR, 'Price must be greater than or equal to $0.01.')
-      
       # Display an error message if the cook time is below 1 minute
       if (int(request.POST['cook_time']) < 1):
          messages.add_message(request, messages.ERROR, 'Cook time must be greater than or equal to 1 minute.')
