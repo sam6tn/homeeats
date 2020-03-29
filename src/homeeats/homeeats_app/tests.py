@@ -1252,9 +1252,24 @@ class CookViewsTest(TestCase):
         self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
         response = self.client.get(reverse('cook_edit_dish', args=[3]))
         self.assertEqual(response.status_code, 302)
-
-
-
+    def test_my_account(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        response = self.client.get(reverse('cookaccount'))
+        self.assertEquals(response.status_code, 200)
+    def test_order_history_with_rejected_and_completed_and_delete_shopping_carts(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        self.client.get(reverse('cooking_to_delivery', args=[1]))
+        self.client.get(reverse('completed_delivery', args=[1]))
+        response = self.client.get(reverse('order_history'))
+        self.assertEquals(response.status_code, 200)
+        self.client.logout()
+        self.client.login(username='test@customer.com', password='capstone')
+        self.client.post(reverse('addtocart'), data={'dish_id': 1})
+        self.client.logout()
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        response = self.client.get(reverse('available'))
+        self.assertEquals(response.status_code, 302)
+        
 class CustomerViewsTest(TestCase):
     fixtures = ['real_data.json']
     def test_delete_address_works_and_redirects(self):
