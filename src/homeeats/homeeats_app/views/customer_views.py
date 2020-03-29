@@ -668,13 +668,12 @@ def customer_edit_profile(request):
         form = UserEditForm(request.POST,
                             request.FILES,
                             instance=request.user)
-        if request.POST['first_name'] == "":
-            request.POST['first_name'] = request.user.first_name
+        # if request.POST['first_name'] == "":
+        #     request.POST['first_name'] = request.user.first_name
         
         phone_form = PhoneEditForm(request.POST,
                                    request.FILES,
                                    instance=request.user.customer)
-        
         if form.is_valid() and phone_form.is_valid():
             data = form.cleaned_data
             phone_data = phone_form.cleaned_data

@@ -414,12 +414,6 @@ class CustomerCartTest(TestCase):
         self.client.get(reverse('cart'))
         response = self.client.get(reverse('customer_home'))
         self.assertEquals(response.url, "/?next=/customer/home/")
-    def cart_order(self):
-        ShoppingCart.objects.create(total = 12.99, empty=False)
-        self.assertTrue(empty = False)
-    def cart_items(self):
-        CartItems.objects.create(quantity = 3)
-        self.assertTrue(quantity > 0)
     def test_remove(self):
         self.client.login(username='anki@anki.com', password='ankith')
         self.client.post(reverse('addtocart'), {'dish_id': 1})
@@ -546,6 +540,9 @@ class AccountCreationTest(TestCase):
         response = self.client.post(reverse('customercreate'), {'first_name': 'Dave', 'last_name': 'Chapelle', 'street': '221 Baker Street', 'town': 'Fairfax', 'state': 'VA', 'zipcode': '22000', 'email': 'dave@dave.com', 'password': 'chapchap', 'phone_number': '8888888888'})
         self.assertEquals(response.status_code, 302)
         self.assertEquals(response.url, "/")
+    def test_customer_create_with_invalid_data(self):
+        response = self.client.post(reverse('customercreate'))
+        self.assertEquals(response.status_code, 200)
         
 class AddressCreationTest(TestCase):
      def setUp(self):
@@ -970,6 +967,13 @@ class CustomerChangeCurrentAddressTest(TestCase):
         add = Address.objects.get(customer=customer, current_customer_address=True)
         self.assertEqual(add.street_name, '1815 Jefferson Park Avenue')
 
+        #Bad Address
+        response = self.client.post(reverse('customer_home'), {'street': 'ajdfkj', 'town': 'jkasdjfk', 'state': 'kjdasjf', 'zipcode': '1111'})
+        self.assertEquals(response.status_code,302)
+        response = self.client.post(reverse('customer_home'), {'town': 'jkasdjfk'})
+        self.assertEquals(response.status_code,302)
+
+
 class CookChangeRequestTest(TestCase):
     def test_cook_request_relationship(self):
         cook_user= User.objects.create(username="cook_user", is_cook=True)
@@ -1264,14 +1268,28 @@ class CustomerViewsTest(TestCase):
         self.assertEqual(response.status_code, 200)
         response = self.client.post(reverse('customer_home'), data={"cuisine": "", "search": "", "sort": ""})
         self.assertEqual(response.status_code, 200)
+        response = self.client.post(reverse('customer_home'), data={"cuisine": "", "search": "", "sort": "rating"})
+        self.assertEqual(response.status_code, 200)
+        response = self.client.post(reverse('customer_home'), data={"cuisine": "", "search": "", "sort": "price"})
+        self.assertEqual(response.status_code, 200)
+        response = self.client.post(reverse('customer_home'), data={"cuisine": "", "search": "", "sort": "reverse_price"})
+        self.assertEqual(response.status_code, 200)
+    def test_filter_dishes_by_cook(self):
+        self.client.login(username='test@customer.com', password='capstone')
+        s = ShoppingCart.objects.get(id=4)
+        s.empty = False
+        s.save()
+        response = self.client.post(reverse('customer_home'), data={"cuisine": 1})
     def test_customer_edit_profile_get(self):
         self.client.login(username='test@customer.com', password='capstone')
         response = self.client.get(reverse('customer_edit_profile'))
         self.assertEqual(response.status_code, 200)
-    # def test_customer_edit_profile_post(self):
-    #     self.client.login(username='test@customer.com', password='capstone')
-    #     response = self.client.post(reverse('customer_edit_profile'))
-    #     self.assertEqual(response.status_code, 200)
+    def test_customer_edit_profile_post(self):
+        self.client.login(username='test@customer.com', password='capstone')
+        response = self.client.post(reverse('customer_edit_profile'), data={'first_name':''})
+        self.assertEqual(response.status_code, 200)
+        response = self.client.post(reverse('customer_edit_profile'), data={'first_name':'a','last_name':'b','username':'test@customer.com','phone_number':'0123456789'})
+        self.assertEqual(response.status_code, 302)
         
 
 class MainViewsTests(TestCase):
@@ -1341,5 +1359,35 @@ class DishEditFormTests(TestCase):
         self.assertEqual(form.errors.as_json(), '{"cook_time": [{"message": "Ensure this value is greater than or equal to 1.", "code": "min_value"}]}')
         
             
+class LogoutTest(TestCase):
+    fixtures = ['test_data.json']
+    def test_logout(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        c = Cook.objects.get(user__username='ramsey@ramsey.com')
+        c.online = True
+        c.save()
+        o = Order.objects.create(
+            customer=Customer.objects.get(id=3),
+            status='c',
+            cook=c
+        )
+        s = ShoppingCart.objects.create(cook=c,customer=Customer.objects.get(id=1))
+        d = Dish.objects.get(id=1)
+        i = CartItem.objects.create(dish=d,shopping_cart=s)
+        response = self.client.get(reverse('logout_view'))
+        self.assertEquals(response.status_code, 302)
+        orders = Order.objects.filter(cook=c)
+        for order in orders:
+            order.status = 'd'
+            order.save()
+        response = self.client.get(reverse('logout_view'))
+        self.assertEquals(response.status_code, 302)
 
+# class ManagersTests(TestCase):
+#     def test_create_superuser(self):
+#         superuser = User.objects.create_superuser(email='super@user.com', username='super@user.com', password='password')
+#         self.client.login(username='super@user.com',password='password')
+#     def test_create_user(self):
+#         user = User.objects.create(username='user@user.com', password='password')
+#         self.client.login(username='user@user.com', password='password')
     
