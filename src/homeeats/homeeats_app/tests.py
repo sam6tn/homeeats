@@ -1512,11 +1512,24 @@ class LogoutTest(TestCase):
         response = self.client.get(reverse('logout_view'))
         self.assertEquals(response.status_code, 302)
 
-# class ManagersTests(TestCase):
-#     def test_create_superuser(self):
-#         superuser = User.objects.create_superuser(email='super@user.com', username='super@user.com', password='password')
-#         self.client.login(username='super@user.com',password='password')
-#     def test_create_user(self):
-#         user = User.objects.create(username='user@user.com', password='password')
-#         self.client.login(username='user@user.com', password='password')
-    
+class ModelsTests(TestCase):
+    fixtures = ['test_data.json']
+    # test the dish __str__ method
+    def test_dish_string(self):
+        d = Dish.objects.get(id=1)
+        self.assertEquals(str(d),'Tacos (1)')
+    # test the dish review __str__ method
+    def test_dish_review_string(self):
+        dr = Dish_Review.objects.get(id=1)
+        self.assertEquals(str(dr),'Tacos Review (1)')
+
+class RejectOrderTest(TestCase):
+    fixtures = ['test_data.json']
+    def test_reject_order_exception(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        o = Order.objects.get(status='p')
+        response = self.client.post(reverse('reject_order'),{'order_id':o.id})
+    def test_reject_order_not_pending(self):
+        self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
+        o = Order.objects.get(id=2)
+        response = self.client.post(reverse('reject_order'),{'order_id':o.id})
