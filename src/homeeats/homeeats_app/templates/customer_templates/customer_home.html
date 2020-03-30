@@ -259,10 +259,13 @@
                               >
                                       <i class="fa fa-plus text-success"></i>
                                   </button>
-                                <button onclick="removefromcart('{{dish.id}}')" style="padding:0;background:none;border:none;outline:none;margin-top:3px;margin-right:5px;float:right;position:relative;">
-                                    <i class="fa fa-minus text-danger"></i>
-                                </button>
-                                        
+                                  {% for item in customer.shoppingcart.cartitem_set.all %}
+                                    {% if item.dish == dish %} 
+                                        <button onclick="removefromcart('{{dish.id}}')" style="padding:0;background:none;border:none;outline:none;margin-top:3px;margin-right:5px;float:right;position:relative;">
+                                            <i class="fa fa-minus text-danger"></i>
+                                        </button>
+                                    {% endif %}
+                                {% endfor %}
                                   {% endif %}
                                   <span id="quantity{{dish.id}}" style="float:right;margin-right:5px;">
                                       {% for item in customer.shoppingcart.cartitem_set.all %}
@@ -290,9 +293,9 @@
 <script>
     function addtocart(id){
         // temp solution (covers screen and then reloads page to prevent adding dishes from different cooks)
-        if (customer.shoppingcart.empty){
-            document.getElementById("overlay").style.display = 'block'; 
-        }
+        {% if customer.shoppingcart.empty %}
+            document.getElementById("overlay").style.display = 'block';
+        {% endif %}
 
         $.ajax({
             type: "POST",
