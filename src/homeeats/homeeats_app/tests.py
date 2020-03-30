@@ -1560,3 +1560,11 @@ class MoreCustomerTests(TestCase):
         response = self.client.get(reverse('orders'))
         self.assertEquals(response.status_code,200)
 
+class ReceiverTests(TestCase):
+    fixtures = ['test_data2.json']
+    def test_dish_review_delete_receiver(self):
+        c = Cuisine.objects.create()
+        d = Dish.objects.create(cuisine=c,cook=Cook.objects.get(id=1))
+        dr = Dish_Review.objects.create(description="",customer=Customer.objects.get(id=3),dish=d)
+        dr.delete()
+        self.assertEquals(d.rating,0)
