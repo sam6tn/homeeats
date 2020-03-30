@@ -14,7 +14,7 @@ from django.conf import settings
 from django.contrib.messages import get_messages
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
-#test all views in admin_views.py
+# #test all views in admin_views.py
 class AdminTests(TestCase):
     fixtures = ['test_data2.json']
     def test_admin_revenue(self):
@@ -344,6 +344,11 @@ class CustomerCheckoutTest(TestCase):
             "payment_option": "card",
         }
         response = self.client.post(reverse('checkout'), data)
+        self.assertEquals(response.status_code, 302)
+    def test_tip_error(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        self.client.post(reverse('addtocart'), data={'dish_id': 1})
+        response = self.client.post(reverse('cart'), data={'tip':'adfdfaaddkdfklsfldfsfsdfsfsff','orderTime':'In 30 min','special_requests':'none'})
         self.assertEquals(response.status_code, 302)
     
     def test_invalid_payment(self):
@@ -1550,6 +1555,19 @@ class MoreCustomerTests(TestCase):
         )
         response = self.client.get(reverse('customer_home'))
         self.assertEquals(response.status_code,200)
+    def test_nearby_cooks_with_cart(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        self.client.post(reverse('addtocart'), data={'dish_id': 1})
+        old_address = Address.objects.get(customer=3,current_customer_address=True)
+        response = self.client.get(reverse('change_current_address', args=[4]))
+        self.assertEquals(response.status_code,302)
+    def test_exception_no_nearby_cooks(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        self.client.post(reverse('addtocart'), data={'dish_id': 1})
+        customer = Customer.objects.get(pk=3)
+        a = Address.objects.create(customer=customer, street_name='2132 someStreet Ln', city="Chantilly", state="VA", zipcode="20151")
+        response = self.client.get(reverse('change_current_address', args=[a.id]))
+        self.assertEquals(response.status_code,302)
     def test_orders_pending_status(self):
         self.client.login(username='anki@anki.com', password='ankith')
         o = Order.objects.create(
@@ -1559,4 +1577,28 @@ class MoreCustomerTests(TestCase):
         )
         response = self.client.get(reverse('orders'))
         self.assertEquals(response.status_code,200)
+    def test_double_add_to_cart(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        self.client.post(reverse('addtocart'), data={'dish_id': 1})
+        response = self.client.post(reverse('addtocart'), data={'dish_id': 1})
+        self.assertEquals(response.status_code, 200)
+    def test_dshbtn(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        self.client.post(reverse('addtocart'), data={'dish_id': 1})
+        response = self.client.post(reverse('addtocart'), data={'dish_id': 1, "dishbtn": True})
+        self.assertEquals(response.status_code, 302)
+    def test_logged_out_add(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        dish = Dish.objects.get(pk=1)
+        dish.cook_disabled = True
+        dish.save()
+        response = self.client.post(reverse('addtocart'), data={'dish_id': 1})
+        self.assertEquals(response.status_code, 302)
+    def test_logged_out_remove(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        dish = Dish.objects.get(pk=1)
+        dish.cook_disabled = True
+        dish.save()
+        response = self.client.post(reverse('removefromcart'), data={'dish_id': 1})
+        self.assertEquals(response.status_code, 302)
 
