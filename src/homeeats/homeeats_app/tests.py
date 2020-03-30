@@ -1533,3 +1533,30 @@ class RejectOrderTest(TestCase):
         self.client.login(username='ramsey@ramsey.com', password='ramseyramsey')
         o = Order.objects.get(id=2)
         response = self.client.post(reverse('reject_order'),{'order_id':o.id})
+
+class MoreCustomerTests(TestCase):
+    fixtures = ['test_data2.json']
+    def test_exception_nearby_cooks(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        old_address = Address.objects.get(customer=3,current_customer_address=True)
+        old_address.delete()
+        a = Address.objects.create(
+            street_name = "2210 Fontaine Ave",
+            city = "Charlottesville",
+            state = "VA",
+            zipcode = "22903",
+            customer = Customer.objects.get(id=3),
+            current_customer_address = True
+        )
+        response = self.client.get(reverse('customer_home'))
+        self.assertEquals(response.status_code,200)
+    def test_orders_pending_status(self):
+        self.client.login(username='anki@anki.com', password='ankith')
+        o = Order.objects.create(
+            customer = Customer.objects.get(id=3),
+            cook = Cook.objects.get(id=1),
+            status = 'p'
+        )
+        response = self.client.get(reverse('orders'))
+        self.assertEquals(response.status_code,200)
+
