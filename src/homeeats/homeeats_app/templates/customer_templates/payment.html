@@ -90,21 +90,7 @@
 {% else %}
 
 <script>
-  function removeItem(item_id, cart_id) {
-    $.ajax({
-        type: "POST",
-        url: "{% url 'removeItem' %}",
-        data: {
-        'item_id': item_id,
-        'cart_id': cart_id,
-        'csrfmiddlewaretoken': '{{ csrf_token }}'
-        },
-        dataType: 'json',
-        success: function (data) {
-          location.reload();
-        }
-    });
-  }
+
   function cash(){
     document.getElementById("cashButton").classList.add("btn-dark");
     document.getElementById("cashButton").classList.remove("btn-light");
@@ -200,7 +186,7 @@
                                           <td class="border-0 align-middle" style="width:25%"><strong>{{item.dish.title}}</strong></td>
                                           <td class="border-0 align-middle" style="width:25%"><strong>x{{item.quantity}}</strong></td>
                                           <td class="border-0 align-middle" style="width:25%"><strong>${{item.subtotal}}</strong></td>
-                                          <td onclick="removeItem('{{item.id}}', '{{cart.id}}')" class="border-0 align-middle" style="width:25%"><a href="#" class="text-dark"><i class="fa fa-trash"></i></a></td>
+                                          <!-- <td onclick="removeItem('{{item.id}}', '{{cart.id}}')" class="border-0 align-middle" style="width:25%"><a href="#" class="text-dark"><i class="fa fa-trash"></i></a></td> -->
                                         </tr>
                                       </table>
                                     </li>   
