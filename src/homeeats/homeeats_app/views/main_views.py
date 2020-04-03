@@ -113,6 +113,7 @@ def logout_view(request):
       for order in orders:
         if order.status == 'p' or order.status == 'o' or order.status == 'c':
           messages.add_message(request, messages.ERROR, 'cook_online_cant_logout')
+          render(request = request, template_name = "../templates/login.html")
           return HttpResponseRedirect(reverse('cook_home'))   
       cook.online = False
       cook.save()
@@ -129,7 +130,7 @@ def logout_view(request):
         cart.special_requests = ""
         cart.save()
   logout(request)
-  return redirect('/')
+  return render(request = request, template_name = "../templates/logout.html")
 
 def userLogin(request):
     if request.method == 'POST':
