@@ -235,13 +235,13 @@ def accept_order(request, order_id):
   customer_order = Order.objects.get(id=order_id)
   customer = Customer.objects.get(id=customer_order.customer_id)
   customer_user = models.User.objects.get(id=customer.user_id)
-  send_mail(
-      'Thank You',
-      'Your order has been confirmed.',
-      'homeeatscapstone@gmail.com',
-      [customer_user.email],
-      fail_silently=False,
-  )
+  # send_mail(
+  #     'Thank You',
+  #     'Your order has been confirmed.',
+  #     'homeeatscapstone@gmail.com',
+  #     [customer_user.email],
+  #     fail_silently=False,
+  # )
   return HttpResponseRedirect(reverse('cook_home'))
 
 @login_required
@@ -255,13 +255,13 @@ def reject_order(request, order_id, reason_id):
   customer_order = Order.objects.get(id=order_id)
   customer = Customer.objects.get(id=customer_order.customer_id)
   customer_user = models.User.objects.get(id=customer.user_id)
-  send_mail(
-      'Order Update',
-      'Your order has been rejected.',
-      'homeeatscapstone@gmail.com',
-      [customer_user.email],
-      fail_silently=False,
-  )
+  # send_mail(
+  #     'Order Update',
+  #     'Your order has been rejected.',
+  #     'homeeatscapstone@gmail.com',
+  #     [customer_user.email],
+  #     fail_silently=False,
+  # )
   return HttpResponseRedirect(reverse('cook_home'))
 
 @login_required
@@ -271,13 +271,13 @@ def cooking_to_delivery(request, order_id):
   customer_order = Order.objects.get(id=order_id)
   customer = Customer.objects.get(id=customer_order.customer_id)
   customer_user = models.User.objects.get(id=customer.user_id)
-  send_mail(
-      'Order Update',
-      'Your order is out for delivery.',
-      'homeeatscapstone@gmail.com',
-      [customer_user.email],
-      fail_silently=False,
-  )
+  # send_mail(
+  #     'Order Update',
+  #     'Your order is out for delivery.',
+  #     'homeeatscapstone@gmail.com',
+  #     [customer_user.email],
+  #     fail_silently=False,
+  # )
   return HttpResponseRedirect(reverse('cook_home'))
 
 @login_required

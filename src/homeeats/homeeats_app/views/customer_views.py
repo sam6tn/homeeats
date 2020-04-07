@@ -557,13 +557,13 @@ def checkout(request):
 
         messages.add_message(
           request, messages.SUCCESS, 'Your order has been submitted, go to the orders section to view order status!')
-        send_mail(
-            'New Order',
-            'A new order has been placed you have 5 minutes to accept.',
-            'capstonecustomer2020@gmail.com',
-            [order_cook_user.email],
-            fail_silently=False,
-        )
+        # send_mail(
+        #     'New Order',
+        #     'A new order has been placed you have 5 minutes to accept.',
+        #     'capstonecustomer2020@gmail.com',
+        #     [order_cook_user.email],
+        #     fail_silently=False,
+        # )
         return HttpResponseRedirect(reverse('customer_home'))
     else:
         return HttpResponseRedirect(reverse('customer_home'))
