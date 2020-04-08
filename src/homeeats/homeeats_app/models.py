@@ -30,6 +30,8 @@ class Cook(models.Model):
     return self.user.first_name + " " + self.user.last_name + " (" + str(self.id) + ")"
   delivery_distance_miles = models.IntegerField(default=30)
   delivery_fee = models.DecimalField(default=0, decimal_places=2, max_digits=6)
+  online_time = models.IntegerField(default=0) #number of minutes online
+  offline_time = models.IntegerField(default=0) #actually total minutes
 
 class Cuisine(models.Model):
   name = models.CharField(default="", max_length=30)

@@ -1,7 +1,9 @@
 {% extends "admin/base_site.html" %}
 
+
 {% load i18n static %}
 {% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/dashboard.css" %}" />{% endblock %}
+
 
 {% block breadcrumbs %}
 <div class="breadcrumbs">
@@ -14,6 +16,29 @@
 {% endblock %}
 
 {% block content %}
+
+<script>
+    window.onload = function() {
+    
+        var chart = new CanvasJS.Chart("chartContainer", {
+            animationEnabled: true,
+            title: {
+                text: "Cook Online Time"
+            },
+            data: [{
+                type: "pie",
+                startAngle: 0,
+                yValueFormatString: "##0.00\"%\"",
+                indexLabel: "{label} {y}",
+                dataPoints: [
+                    {y: {{online_time}}, label: "Online"},
+                    {y: {{offline_time}}, label: "Offline"},
+                ]
+            }]
+        });
+        chart.render();
+    }
+</script>
 
 <script>
     var cooksplits = {{cooksplits}};
@@ -59,6 +84,8 @@
             <th></th>
         </tr>
         </table>
+        <div id="chartContainer" style="height: 300px; width: 100%; margin-top: 50px;"></div>
+        <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
     </div>
 </div>
 

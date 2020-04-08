@@ -16,6 +16,9 @@ import urllib.request
 import urllib.parse
 import json
 import ssl
+import datetime
+from django.utils import timezone
+import pytz
 
 '''
 View of the customer creation form with form validation.
@@ -108,6 +111,9 @@ def cookcreate(request):
 def logout_view(request):
   if request.user.is_cook:
     cook = Cook.objects.get(user_id=request.user.id)
+    temp_online_time = timezone.localtime(timezone.now())-cook.user.last_login
+    cook.online_time += int(temp_online_time.total_seconds())
+    cook.save()
     if cook.online:
       orders = Order.objects.filter(cook=cook)
       for order in orders:
@@ -153,6 +159,9 @@ def userLogin(request):
                   if (cook.banned):
                     messages.add_message(request, messages.ERROR, 'You are currently banned from this site, please contact an administrator')
                     return redirect('/')
+                  temp_offline_time = timezone.localtime(timezone.now())-cook.user.last_login
+                  cook.offline_time += int(temp_offline_time.total_seconds())
+                  cook.save()
                   login(request, user)
                   return redirect('/cook/home')
                 # Checks if cook is not approved and redirects them back to the login page

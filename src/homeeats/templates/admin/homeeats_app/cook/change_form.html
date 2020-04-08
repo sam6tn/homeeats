@@ -24,7 +24,28 @@
 {% endif %}
 
 {% block content %}<div id="content-main">
-<a href="{% url 'admin_cook' original.id %}">View Order History</a>
+  <script>
+    window.onload = function() {
+        var chart = new CanvasJS.Chart("chartContainer", {
+            animationEnabled: true,
+            title: {
+                text: "Cook Online Time"
+            },
+            data: [{
+                type: "pie",
+                startAngle: 0,
+                yValueFormatString: "##0.00\"%\"",
+                indexLabel: "{label} {y}",
+                dataPoints: [
+                    {y: 79.45, label: "Online"},
+                    {y: 7.31, label: "Offline"},
+                ]
+            }]
+        });
+        chart.render();
+    }
+</script>
+<a href="{% url 'admin_cook' original.id %}">View History</a>
 {% block object-tools %}
 {% if change %}{% if not is_popup %}
   <ul class="object-tools">
@@ -67,6 +88,7 @@
 {% block after_related_objects %}{% endblock %}
 
 {% block submit_buttons_bottom %}{% submit_row %}{% endblock %}
+
 
 {% block admin_change_form_document_ready %}
     <script type="text/javascript"
