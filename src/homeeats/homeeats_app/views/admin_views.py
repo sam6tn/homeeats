@@ -73,8 +73,12 @@ def cook(request,cook_id):
         total += order.total
     total_cooksplit = float("{0:.2f}".format(float(total) * 0.8))
     total_oursplit = float("{0:.2f}".format(float(total) * 0.2))
-    online_time = cook.online_time / cook.offline_time * 100
-    offline_time = (cook.offline_time - cook.online_time) / cook.offline_time * 100
+    if (cook.offline_time != 0):
+        online_time = cook.online_time / cook.offline_time * 100
+        offline_time = (cook.offline_time - cook.online_time) / cook.offline_time * 100
+    else:
+        online_time = 0
+        offline_time = 0
     context = {
         'cook':cook,
         'orders':orders,
