@@ -159,8 +159,10 @@ def userLogin(request):
                   if (cook.banned):
                     messages.add_message(request, messages.ERROR, 'You are currently banned from this site, please contact an administrator')
                     return redirect('/')
-                  temp_offline_time = timezone.localtime(timezone.now())-cook.user.last_login
-                  cook.offline_time += int(temp_offline_time.total_seconds())
+                  if(cook.user.last_login != None):
+                    temp_offline_time = timezone.localtime(timezone.now())-cook.user.last_login
+                    cook.offline_time += int(temp_offline_time.total_seconds())
+
                   cook.save()
                   login(request, user)
                   return redirect('/cook/home')
