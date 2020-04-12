@@ -24,6 +24,7 @@ def revenue(request):
         orders = Order.objects.all().order_by('-date')
         dateform = forms.DatePickerForm()
 
+    cook_splits = {}
     homeeats_splits = {}
     total_sub=0
     total_tax=0
@@ -37,6 +38,7 @@ def revenue(request):
         total_tip += order.tip
         total += order.total
         homeeats_splits[order.id] = float("{0:.2f}".format(float(order.item_subtotal) * 0.2))
+        cook_splits[order.id] = float("{0:.2f}".format(float(order.item_subtotal) * 0.8))
 
     total_cook_revenue = Decimal(float(total_sub)*0.8).quantize(TWOPLACES)
     total_homeeats_revenue = Decimal(float(total_sub)*0.2).quantize(TWOPLACES)
@@ -51,6 +53,7 @@ def revenue(request):
     'total':total,
     'total_tip':total_tip,
     'homeeats_splits':homeeats_splits,
+    'cook_splits':cook_splits,
     'dateform':dateform
     }
     return render(request,'admin_templates/revenue.html', context)

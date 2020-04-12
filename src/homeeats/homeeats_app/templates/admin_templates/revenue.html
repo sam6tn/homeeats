@@ -20,7 +20,7 @@ integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw
 
 <script>
     var homeeats_splits = {{homeeats_splits}};
-    console.log(homeeats_splits);
+    var cook_splits = {{cook_splits}};
 </script>
 
 <form method="POST">
@@ -54,11 +54,12 @@ integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw
     <td>{{order.delivery_fee}}</td>
     <td>{{order.tip}}</td>
     <td>{{order.total}}</td>
-    <td>${{order.cook_share}}</td>
+    <td id="cook_split{{order.id}}"></td>
     <td id="homeeats_split{{order.id}}"></td>
 </tr>
 <script>
     document.getElementById("homeeats_split"+'{{order.id}}').innerHTML = homeeats_splits[{{order.id}}].toFixed(2);
+    document.getElementById("cook_split"+'{{order.id}}').innerHTML = cook_splits[{{order.id}}].toFixed(2);
 </script>
 {% endfor %}
 <tr>
